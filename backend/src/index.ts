@@ -57,6 +57,6 @@ app.use(errorHandler);
 app.listen(PORT, () => {
   console.log(`Backend server running on port ${PORT}`);
   console.log(`Webhook endpoints:`);
-  console.log(`  POST /webhooks/shopify - Shopify webhooks`);
+  console.log(`  POST /webhooks/code-repo - Code repository webhooks (GitHub/GitLab/Bitbucket)`);
   console.log(`  POST /webhooks/supabase - Supabase webhooks`);
 });

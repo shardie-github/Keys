@@ -5,21 +5,21 @@ export interface UserProfile {
   created_at: string;
   updated_at: string;
   name?: string;
-  role?: 'operator' | 'marketer' | 'builder' | 'educator' | 'founder';
-  vertical?: 'ecommerce' | 'edtech' | 'saas' | 'agency' | 'finance' | 'other';
+  role?: 'founder' | 'pm' | 'staff_engineer' | 'devops' | 'cfo' | 'investor';
+  vertical?: 'software' | 'agency' | 'internal_tools' | 'content' | 'other';
   stack: {
-    shopify?: boolean;
-    supabase?: boolean;
-    mindstudio?: boolean;
-    capcut?: boolean;
-    stripe?: boolean;
-    zapier?: boolean;
+    code_repo?: boolean;
+    issue_tracker?: boolean;
+    doc_space?: boolean;
+    ci_cd?: boolean;
+    infra?: boolean;
+    analytics?: boolean;
     [key: string]: boolean | undefined;
   };
   tone?: 'playful' | 'serious' | 'technical' | 'casual' | 'balanced';
   risk_tolerance?: 'conservative' | 'moderate' | 'aggressive';
-  kpi_focus?: 'revenue' | 'efficiency' | 'growth' | 'impact';
-  perspective?: 'operator' | 'investor' | 'cfo' | 'strategic';
+  kpi_focus?: 'velocity' | 'reliability' | 'growth' | 'revenue' | 'quality';
+  perspective?: 'founder' | 'pm' | 'staff_engineer' | 'devops' | 'cfo' | 'investor';
   behavior_embedding?: number[];
   brand_voice?: string;
   company_context?: string;
@@ -32,7 +32,7 @@ export interface PromptAtom {
   id: string;
   created_at: string;
   name: string;
-  category: 'tone' | 'stack' | 'channel' | 'constraint' | 'example' | 'perspective' | 'goal' | 'risk';
+  category: 'tone' | 'stack' | 'perspective' | 'phase' | 'domain' | 'constraint' | 'example' | 'goal' | 'risk';
   version: number;
   system_prompt?: string;
   constraints?: Record<string, any>;
@@ -89,7 +89,7 @@ export interface BackgroundEvent {
   user_id: string;
   created_at: string;
   event_type: string;
-  source: 'shopify' | 'supabase' | 'calendar' | 'manual';
+  source: 'code_repo' | 'issue_tracker' | 'ci_cd' | 'infra' | 'metrics' | 'manual' | 'schedule';
   event_data?: Record<string, any>;
   event_timestamp?: string;
   suggestion_generated: boolean;
@@ -104,7 +104,7 @@ export interface CompanionInput {
   playfulness: number;
   revenueFocus: number;
   investorPerspective: number;
-  selectedPerspective?: 'operator' | 'investor' | 'cfo' | 'blend';
+  selectedPerspective?: 'founder' | 'pm' | 'staff_engineer' | 'devops' | 'cfo' | 'investor' | 'blend';
   saveAsPreset?: string;
 }
 
@@ -150,8 +150,7 @@ export interface AgentOutput {
 // Task Intent Types
 export interface TaskIntent {
   task: string;
-  channel?: string;
-  asset?: string;
+  artifact_type?: string;  -- 'rfc', 'adr', 'test_plan', 'changelog', 'incident_report', 'roadmap'
   context?: string;
   tools?: string[];
 }

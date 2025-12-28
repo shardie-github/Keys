@@ -94,10 +94,20 @@ export function ChatInterface({ userId, initialVibeConfig }: ChatInterfaceProps)
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.length === 0 && (
           <div className="text-center text-gray-500 mt-8">
-            <p className="text-lg mb-2">Welcome to Hardonia AI Companion</p>
-            <p className="text-sm">
-              Adjust the sliders below and type your request to get started.
+            <p className="text-lg mb-2">Welcome to Cursor Venture Companion</p>
+            <p className="text-sm mb-4">
+              Your AI cofounder for ideation, specification, implementation, and operations.
             </p>
+            <div className="text-left max-w-2xl mx-auto mt-6 space-y-2">
+              <p className="text-sm font-medium text-gray-700">Try these prompts:</p>
+              <ul className="text-sm text-gray-600 space-y-1 list-disc list-inside">
+                <li>"Draft an RFC for adding SSO to our SaaS app"</li>
+                <li>"Design the architecture for a telemetry pipeline"</li>
+                <li>"Refactor our monolith into modular boundaries"</li>
+                <li>"Create a test plan for this critical module"</li>
+                <li>"Propose a weekly evolution cycle to reduce tech debt"</li>
+              </ul>
+            </div>
           </div>
         )}
 

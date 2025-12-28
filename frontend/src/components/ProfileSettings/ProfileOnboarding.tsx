@@ -53,9 +53,9 @@ export function ProfileOnboarding({ userId, onComplete }: ProfileOnboardingProps
       case 'welcome':
         return (
           <div className="text-center">
-            <h2 className="text-2xl font-bold mb-4">Welcome to Hardonia AI Companion</h2>
+            <h2 className="text-2xl font-bold mb-4">Welcome to Cursor Venture Companion</h2>
             <p className="text-gray-600 mb-6">
-              Your personalized agent that learns your preferences and helps you get things done.
+              Your AI cofounder for the entire product lifecycle: ideation, specification, implementation, DevOps, and continuous evolution.
             </p>
             <button
               onClick={nextStep}
@@ -71,7 +71,7 @@ export function ProfileOnboarding({ userId, onComplete }: ProfileOnboardingProps
           <div>
             <h2 className="text-xl font-bold mb-4">Tell us about your role</h2>
             <div className="space-y-3">
-              {(['operator', 'marketer', 'builder', 'educator', 'founder'] as const).map(
+              {(['founder', 'pm', 'staff_engineer', 'devops', 'cfo', 'investor'] as const).map(
                 (role) => (
                   <button
                     key={role}
@@ -85,24 +85,23 @@ export function ProfileOnboarding({ userId, onComplete }: ProfileOnboardingProps
                         : 'border-gray-200 hover:border-gray-300'
                     }`}
                   >
-                    <span className="font-medium capitalize">{role}</span>
+                    <span className="font-medium capitalize">{role.replace('_', ' ')}</span>
                   </button>
                 )
               )}
             </div>
             <div className="mt-6">
-              <label className="block text-sm font-medium mb-2">Vertical</label>
+              <label className="block text-sm font-medium mb-2">Project Type</label>
               <select
                 value={profile.vertical || ''}
                 onChange={(e) => updateProfile({ vertical: e.target.value as any })}
                 className="w-full p-2 border border-gray-300 rounded-lg"
               >
                 <option value="">Select...</option>
-                <option value="ecommerce">E-commerce</option>
-                <option value="edtech">EdTech</option>
-                <option value="saas">SaaS</option>
+                <option value="software">Software / SaaS</option>
                 <option value="agency">Agency</option>
-                <option value="finance">Finance</option>
+                <option value="internal_tools">Internal Tools</option>
+                <option value="content">Content Platform</option>
                 <option value="other">Other</option>
               </select>
             </div>
@@ -167,7 +166,7 @@ export function ProfileOnboarding({ userId, onComplete }: ProfileOnboardingProps
                   onChange={(e) => updateProfile({ company_context: e.target.value })}
                   className="w-full p-2 border border-gray-300 rounded-lg"
                   rows={4}
-                  placeholder="E.g., '$2M ARR SaaS, 5 person team'"
+                  placeholder="E.g., '$2M ARR SaaS, 5 person team, building developer tools'"
                 />
               </div>
             </div>

@@ -50,16 +50,16 @@ export function InputPanel({
           description="0 = Serious, 100 = Playful"
         />
         <SliderControl
-          label="Revenue Focus"
+          label="Business Outcome Focus"
           value={revenueFocus}
           onChange={setRevenueFocus}
-          description="0 = Impact, 100 = Revenue"
+          description="0 = Exploratory, 100 = ROI-obsessed"
         />
         <SliderControl
           label="Investor Perspective"
           value={investorPerspective}
           onChange={setInvestorPerspective}
-          description="0 = Operator, 100 = CFO"
+          description="0 = Pure operator/tech, 100 = Investor/CFO framing"
         />
       </div>
 
@@ -69,7 +69,7 @@ export function InputPanel({
           type="text"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          placeholder="Type your request... (e.g., 'Write a TikTok hook for my new product')"
+          placeholder="Type your request... (e.g., 'Draft an RFC for adding SSO', 'Design architecture for telemetry pipeline', 'Create test plan for critical module')"
           className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
           disabled={loading}
         />

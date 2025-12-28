@@ -41,11 +41,17 @@ export function EventFeed({ userId, maxEvents = 50 }: EventFeedProps) {
 
   const getEventIcon = (source: BackgroundEvent['source']) => {
     switch (source) {
-      case 'shopify':
-        return '🛍️';
-      case 'supabase':
-        return '🗄️';
-      case 'calendar':
+      case 'code_repo':
+        return '📦';
+      case 'issue_tracker':
+        return '🎫';
+      case 'ci_cd':
+        return '⚙️';
+      case 'infra':
+        return '🏗️';
+      case 'metrics':
+        return '📊';
+      case 'schedule':
         return '📅';
       default:
         return '📌';
@@ -54,12 +60,18 @@ export function EventFeed({ userId, maxEvents = 50 }: EventFeedProps) {
 
   const getEventColor = (source: BackgroundEvent['source']) => {
     switch (source) {
-      case 'shopify':
+      case 'code_repo':
         return 'bg-green-100 text-green-800';
-      case 'supabase':
+      case 'issue_tracker':
         return 'bg-blue-100 text-blue-800';
-      case 'calendar':
+      case 'ci_cd':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'infra':
         return 'bg-purple-100 text-purple-800';
+      case 'metrics':
+        return 'bg-indigo-100 text-indigo-800';
+      case 'schedule':
+        return 'bg-pink-100 text-pink-800';
       default:
         return 'bg-gray-100 text-gray-800';
     }

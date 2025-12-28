@@ -19,7 +19,8 @@ export default function ChatPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <header className="border-b border-gray-200 bg-white p-4">
-        <h1 className="text-xl font-bold">AI Companion Chat</h1>
+        <h1 className="text-xl font-bold">Cursor Venture Companion</h1>
+        <p className="text-sm text-gray-600">Your AI cofounder for the entire product lifecycle</p>
       </header>
       <div className="flex-1 overflow-hidden">
         <ChatInterface
