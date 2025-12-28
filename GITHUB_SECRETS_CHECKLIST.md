@@ -50,8 +50,10 @@ These need to be configured in **Vercel Dashboard** (not GitHub Secrets):
 1. **`NEXT_PUBLIC_SUPABASE_URL`** - Already added ✅
 2. **`NEXT_PUBLIC_SUPABASE_ANON_KEY`** - Supabase anonymous key
 3. **`NEXT_PUBLIC_API_BASE_URL`** - Your backend API URL
-   - Production: `https://your-backend-domain.com`
+   - ⚠️ **NOT from Supabase!** This is where your backend server is deployed
+   - Production: `https://your-backend-domain.com` (after deploying backend)
    - Preview: `https://your-backend-preview.vercel.app` (or your preview URL)
+   - See `API_BASE_URL_EXPLANATION.md` for detailed instructions
 
 ## 🔧 How to Add GitHub Secrets
 
