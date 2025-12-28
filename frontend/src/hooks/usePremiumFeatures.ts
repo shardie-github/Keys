@@ -13,7 +13,7 @@ export function usePremiumFeatures(userId: string) {
         const data = await apiService.getPremiumFeatures();
         setFeatures(data.features);
         setIsPremium(data.features.voiceToText || data.features.advancedFilters);
-      } catch (error) {
+      } catch {
         // Not premium or not authenticated
         setFeatures({
           voiceToText: false,

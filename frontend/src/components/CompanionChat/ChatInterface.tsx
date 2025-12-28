@@ -31,7 +31,7 @@ export function ChatInterface({ userId, initialVibeConfig }: ChatInterfaceProps)
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const { assemblePrompt, loading: assembling } = usePromptAssembly();
-  const { orchestrate, output, loading: orchestrating } = useAgentOrchestration();
+  const { orchestrate, loading: orchestrating } = useAgentOrchestration();
 
   const loading = assembling || orchestrating;
 
@@ -115,23 +115,23 @@ export function ChatInterface({ userId, initialVibeConfig }: ChatInterfaceProps)
               <ul className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 space-y-1.5 list-none">
                 <li className="flex items-start gap-2">
                   <span className="text-blue-500 mt-1">•</span>
-                  <span>"Draft an RFC for adding SSO to our SaaS app"</span>
+                  <span>&quot;Draft an RFC for adding SSO to our SaaS app&quot;</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-blue-500 mt-1">•</span>
-                  <span>"Design the architecture for a telemetry pipeline"</span>
+                  <span>&quot;Design the architecture for a telemetry pipeline&quot;</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-blue-500 mt-1">•</span>
-                  <span>"Refactor our monolith into modular boundaries"</span>
+                  <span>&quot;Refactor our monolith into modular boundaries&quot;</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-blue-500 mt-1">•</span>
-                  <span>"Create a test plan for this critical module"</span>
+                  <span>&quot;Create a test plan for this critical module&quot;</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-blue-500 mt-1">•</span>
-                  <span>"Propose a weekly evolution cycle to reduce tech debt"</span>
+                  <span>&quot;Propose a weekly evolution cycle to reduce tech debt&quot;</span>
                 </li>
               </ul>
             </div>

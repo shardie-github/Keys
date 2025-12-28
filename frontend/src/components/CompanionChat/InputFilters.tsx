@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import type { InputFilter, LLMProvider, InputStyle, OutputFormat } from '@/types/filters';
 import { loadFilterPreferences, saveFilterPreferences, getSmartDefaults } from '@/utils/filterStorage';
-import { FILTER_PRESETS, findMatchingPreset } from '@/utils/filterPresets';
+import { findMatchingPreset } from '@/utils/filterPresets';
 import type { UserProfile } from '@/types';
 
 interface InputFiltersProps {

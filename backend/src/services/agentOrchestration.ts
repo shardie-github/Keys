@@ -34,8 +34,8 @@ export async function orchestrateAgent(
     editableFields: getEditableFields(outputType),
     generatedAt: new Date().toISOString(),
     modelUsed: response.model,
-    tokensUsed: response.tokensUsed,
-    costUsd: response.costUsd,
+    tokensUsed: response.tokensUsed ?? 0,
+    costUsd: calculateCost(response.provider, response.model, response.tokensUsed ?? 0),
   };
 }
 

@@ -71,12 +71,41 @@ export function InputPanel({
     setIsVoiceMode(true);
     // In production, this would use Web Speech API or upload audio
     try {
-      const recognition = new (window as any).webkitSpeechRecognition();
+      interface SpeechRecognition extends EventTarget {
+        continuous: boolean;
+        interimResults: boolean;
+        start(): void;
+        onresult: ((event: SpeechRecognitionEvent) => void) | null;
+        onerror: ((event: Event) => void) | null;
+      }
+      interface SpeechRecognitionEvent extends Event {
+        results: SpeechRecognitionResultList;
+      }
+      interface SpeechRecognitionResultList {
+        [index: number]: SpeechRecognitionResult;
+        length: number;
+      }
+      interface SpeechRecognitionResult {
+        [index: number]: SpeechRecognitionAlternative;
+        isFinal: boolean;
+      }
+      interface SpeechRecognitionAlternative {
+        transcript: string;
+      }
+      
+      const SpeechRecognition = (window as unknown as { webkitSpeechRecognition?: new () => SpeechRecognition }).webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        alert('Voice recognition not supported in this browser');
+        setIsVoiceMode(false);
+        return;
+      }
+      
+      const recognition = new SpeechRecognition();
       recognition.continuous = false;
       recognition.interimResults = false;
 
-      recognition.onresult = async (event: any) => {
-        const transcript = event.results[0][0].transcript;
+      recognition.onresult = async (event: SpeechRecognitionEvent) => {
+        const transcript = event.results[0]?.[0]?.transcript || '';
         setMessage(transcript);
         setIsVoiceMode(false);
       };

@@ -265,10 +265,10 @@ export class ExtendedLLMService {
       });
 
       if (response.ok) {
-        const data = await response.json();
+        const data = (await response.json()) as { models?: Array<{ name?: string }> };
         return {
           available: true,
-          models: (data.models || []).map((m: any) => m.name),
+          models: (data.models || []).map((m) => m.name || ''),
         };
       }
     } catch (error) {
@@ -289,10 +289,10 @@ export class ExtendedLLMService {
       });
 
       if (response.ok) {
-        const data = await response.json();
+        const data = (await response.json()) as { data?: Array<{ id?: string }> };
         return {
           available: true,
-          models: (data.data || []).map((m: any) => m.id),
+          models: (data.data || []).map((m) => m.id || ''),
         };
       }
     } catch (error) {
@@ -314,10 +314,10 @@ export class ExtendedLLMService {
       });
 
       if (response.ok) {
-        const data = await response.json();
+        const data = (await response.json()) as { data?: Array<{ id?: string }> };
         return {
           available: true,
-          models: (data.data || []).map((m: any) => m.id),
+          models: (data.data || []).map((m) => m.id || ''),
         };
       }
     } catch (error) {

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import type {
-  CompanionInput,
+  // CompanionInput imported but not used - kept for future use
   PromptAssembly,
   AgentOutput,
   UserProfile,

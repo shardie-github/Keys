@@ -42,8 +42,8 @@ export interface PromptAtom {
   category: 'tone' | 'stack' | 'perspective' | 'phase' | 'domain' | 'constraint' | 'example' | 'goal' | 'risk';
   version: number;
   system_prompt?: string;
-  constraints?: Record<string, any>;
-  examples?: any[];
+  constraints?: Record<string, unknown>;
+  examples?: unknown[];
   weight: number;
   compatible_atoms?: string[];
   target_roles?: string[];
@@ -76,13 +76,13 @@ export interface AgentRun {
   user_id: string;
   created_at: string;
   trigger: 'manual' | 'event' | 'schedule' | 'chat_input';
-  trigger_data?: Record<string, any>;
+  trigger_data?: Record<string, unknown>;
   assembled_prompt?: string;
   selected_atoms?: string[];
   vibe_config_snapshot?: Partial<VibeConfig>;
   agent_type: 'suggestion' | 'generator' | 'orchestrator';
   model_used?: string;
-  generated_content?: Record<string, any>;
+  generated_content?: Record<string, unknown>;
   user_feedback?: 'approved' | 'rejected' | 'revised';
   feedback_detail?: string;
   tokens_used?: number;
@@ -97,7 +97,7 @@ export interface BackgroundEvent {
   created_at: string;
   event_type: string;
   source: 'code_repo' | 'issue_tracker' | 'ci_cd' | 'infra' | 'metrics' | 'manual' | 'schedule';
-  event_data?: Record<string, any>;
+  event_data?: Record<string, unknown>;
   event_timestamp?: string;
   suggestion_generated: boolean;
   suggestion_id?: string;
@@ -123,7 +123,7 @@ export interface PromptAssembly {
     userRole?: string;
     userVertical?: string;
     userStack?: Record<string, boolean>;
-    executionConstraints?: Record<string, any>;
+    executionConstraints?: Record<string, unknown>;
   };
   selectedAtomIds: string[];
   blendRecipe: Array<{
@@ -145,7 +145,7 @@ export type OutputType =
 
 export interface AgentOutput {
   outputType: OutputType;
-  content: string | Record<string, any>;
+  content: string | Record<string, unknown>;
   requiresApproval: boolean;
   editableFields: string[];
   generatedAt: string;

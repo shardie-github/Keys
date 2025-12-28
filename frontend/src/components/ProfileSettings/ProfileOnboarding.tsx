@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { StackSelector } from './StackSelector';
 import { VibeTuner } from './VibeTuner';
-import { PerspectiveToggle } from './PerspectiveToggle';
+// PerspectiveToggle imported but not used - kept for future use
 import type { UserProfile } from '@/types';
 
 interface ProfileOnboardingProps {
@@ -19,8 +19,6 @@ const STEPS = [
   'brand',
   'complete',
 ] as const;
-
-type Step = typeof STEPS[number];
 
 export function ProfileOnboarding({ userId, onComplete }: ProfileOnboardingProps) {
   const [currentStep, setCurrentStep] = useState<number>(0);
@@ -94,7 +92,7 @@ export function ProfileOnboarding({ userId, onComplete }: ProfileOnboardingProps
               <label className="block text-sm font-medium mb-2">Project Type</label>
               <select
                 value={profile.vertical || ''}
-                onChange={(e) => updateProfile({ vertical: e.target.value as any })}
+                onChange={(e) => updateProfile({ vertical: e.target.value as UserProfile['vertical'] })}
                 className="w-full p-2 border border-gray-300 rounded-lg"
               >
                 <option value="">Select...</option>
@@ -111,10 +109,10 @@ export function ProfileOnboarding({ userId, onComplete }: ProfileOnboardingProps
       case 'stack':
         return (
           <div>
-            <h2 className="text-xl font-bold mb-4">What's in your tech stack?</h2>
+            <h2 className="text-xl font-bold mb-4">What&apos;s in your tech stack?</h2>
             <StackSelector
               stack={(profile.stack || {}) as Record<string, boolean>}
-              onChange={(stack) => updateProfile({ stack: stack as any })}
+              onChange={(stack) => updateProfile({ stack: stack as UserProfile['stack'] })}
             />
           </div>
         );
@@ -176,9 +174,9 @@ export function ProfileOnboarding({ userId, onComplete }: ProfileOnboardingProps
       case 'complete':
         return (
           <div className="text-center">
-            <h2 className="text-2xl font-bold mb-4">You're all set!</h2>
+            <h2 className="text-2xl font-bold mb-4">You&apos;re all set!</h2>
             <p className="text-gray-600 mb-6">
-              Your profile has been created. Let's start using your AI companion.
+              Your profile has been created. Let&apos;s start using your AI companion.
             </p>
             <button
               onClick={handleComplete}
