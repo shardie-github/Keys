@@ -1,104 +1,209 @@
-# Project Scaffold Templates
+# Scaffold Prompt Templates
 
-A comprehensive, reusable template system for scaffolding full-stack applications organized by project milestones. These templates are designed to be:
+A comprehensive system of **mega prompt templates** for scaffolding full-stack applications. These templates are static, comprehensive prompts that serve as trainable bases and get dynamically modified with user inputs and filters.
 
-- **Agnostic**: Work across different tech stacks and business domains
-- **Reusable**: Adaptable through dynamic filtering and parameterization
-- **Security-First**: Built-in security considerations at every milestone
-- **Optimized**: Performance best practices included by default
-- **Task-Oriented**: Focused on implementation tasks rather than business logic
+## Core Concept
 
-## Structure
+**Mega Prompts** = Static, comprehensive prompt templates that:
+- Serve as a consistent base for training models
+- Get dynamically modified with user inputs and filters
+- Provide structure and best practices
+- Are reusable across projects and tech stacks
 
-Templates are organized by **project milestones** rather than business type, ensuring maximum reusability:
+## Architecture
 
 ```
-templates/
-├── milestones/
-│   ├── 01-initialization/
-│   ├── 02-authentication/
-│   ├── 03-database-schema/
-│   ├── 04-api-routes/
-│   ├── 05-frontend-routes/
-│   ├── 06-security-hardening/
-│   ├── 07-performance-optimization/
-│   ├── 08-testing/
-│   ├── 09-ci-cd/
-│   └── 10-deployment/
-├── catalog.json          # Template catalog with metadata
-├── filters.js            # Dynamic filtering utilities
-└── adapters.js           # Template adaptation logic
+Static Mega Prompt Template
+         ↓
+User Inputs & Profile Data
+         ↓
+Input Filters (style, format, etc.)
+         ↓
+Dynamic Variable Replacement
+         ↓
+Final Optimized Prompt
+         ↓
+Model Training/Inference
 ```
+
+## Template Structure
+
+Templates are stored as `.prompt.yaml` files:
+
+```yaml
+id: template-id
+milestone: 02-authentication
+name: Template Name
+description: What it does
+priority: high|medium|low
+dependencies: [other-template-ids]
+tags: [relevant, tags]
+stack: [express, typescript]
+security_level: required|recommended|optional
+optimization_level: required|recommended|optional
+
+# The mega prompt - static base that gets modified
+mega_prompt: |
+  You are an expert...
+  
+  ## Context
+  Role: {{user_role|default:developer}}
+  {{#if company_context}}
+  Company: {{company_context}}
+  {{/if}}
+  
+  ## Task
+  {{task_description}}
+
+variables:
+  - name: user_role
+    description: User's role
+    required: false
+    default: "developer"
+```
+
+## Variable System
+
+Templates support dynamic variables:
+
+### Simple Variables
+```yaml
+{{variable_name}}
+{{variable_name|default:fallback_value}}
+```
+
+### Conditional Blocks
+```yaml
+{{#if condition}}
+  Content shown if condition is true
+{{/if}}
+
+{{#unless condition}}
+  Content shown if condition is false
+{{/unless}}
+```
+
+### Nested Objects
+```yaml
+{{stack.frontend_framework}}
+{{user.profile.role}}
+```
+
+## Dynamic Modification
+
+Templates are modified with:
+
+1. **User Profile Data**
+   - Role, vertical, stack preferences
+   - Company context, brand voice
+   - Experience level
+
+2. **Input Filters**
+   - Style (concise, detailed, technical)
+   - Format (markdown, json, code)
+   - Tone preferences
+
+3. **Custom Variables**
+   - Project-specific overrides
+   - Framework choices
+   - Database selections
 
 ## Usage
 
-### Basic Usage
+### Automatic (Recommended)
 
-```javascript
-import { getTemplate, filterTemplates } from './templates';
+The prompt assembly engine automatically detects scaffold tasks and uses templates:
 
-// Get a specific template
-const authTemplate = getTemplate('02-authentication', 'jwt-auth');
-
-// Filter templates by criteria
-const securityTemplates = filterTemplates({
-  milestone: '06-security-hardening',
-  stack: ['express', 'typescript'],
-  priority: 'high'
-});
+```bash
+POST /assemble-prompt
+{
+  "userId": "...",
+  "taskDescription": "Scaffold authentication middleware",
+  "vibeConfig": {...},
+  "inputFilter": {
+    "style": "technical",
+    "outputFormat": "code"
+  }
+}
 ```
 
-### Dynamic Adaptation
+### Manual Template Selection
 
-Templates include placeholders and can be adapted based on:
-- Tech stack (Express, Fastify, Next.js, etc.)
-- Database (PostgreSQL, MongoDB, Supabase, etc.)
-- Authentication method (JWT, OAuth, Session-based)
-- Deployment target (Vercel, AWS, Docker, etc.)
-
-## Template Format
-
-Each template follows this structure:
-
-```yaml
-id: unique-template-id
-milestone: milestone-number
-name: Human-readable name
-description: What this template does
-priority: high|medium|low
-dependencies: [list of prerequisite templates]
-tags: [relevant tags]
-stack: [supported tech stacks]
-security_level: required|recommended|optional
-optimization_level: required|recommended|optional
-content: |
-  Template content with {{placeholders}}
-variables:
-  - name: placeholder_name
-    description: What this variable represents
-    required: true|false
-    default: default_value
-    examples: [example values]
+```bash
+POST /scaffold-templates/generate
+{
+  "taskDescription": "Setup API routes",
+  "templateIds": ["api-route-structure", "api-validation-middleware"],
+  "variables": {
+    "framework": "express",
+    "database": "supabase"
+  }
+}
 ```
 
-## Milestones Overview
+## Milestones
 
-1. **Initialization**: Project setup, structure, dependencies
-2. **Authentication**: Auth flows, token management, session handling
-3. **Database Schema**: Tables, relationships, migrations, RLS policies
-4. **API Routes**: REST/GraphQL endpoints, middleware, validation
-5. **Frontend Routes**: Pages, components, routing, state management
-6. **Security Hardening**: Headers, rate limiting, input validation, CSRF
-7. **Performance Optimization**: Caching, compression, lazy loading, CDN
-8. **Testing**: Unit, integration, E2E tests, test utilities
-9. **CI/CD**: GitHub Actions, deployment pipelines, quality gates
-10. **Deployment**: Docker, environment configs, monitoring setup
+Templates organized by project milestones:
 
-## Contributing
+1. **01-initialization**: Project setup, structure, dependencies
+2. **02-authentication**: Auth flows, tokens, sessions
+3. **03-database-schema**: Tables, RLS policies, migrations
+4. **04-api-routes**: REST endpoints, middleware, validation
+5. **05-frontend-routes**: Pages, components, routing
+6. **06-security-hardening**: Headers, CSRF, sanitization
+7. **07-performance-optimization**: Caching, compression
+8. **08-testing**: Unit, integration, E2E tests
+9. **09-ci-cd**: GitHub Actions, quality gates
+10. **10-deployment**: Docker, env configs, monitoring
 
-When adding new templates:
-1. Place in appropriate milestone directory
-2. Follow the template format
-3. Include security and optimization considerations
-4. Add to catalog.json
-5. Update this README if adding new milestone categories
+## Benefits
+
+1. **Consistency**: Same base prompts ensure consistent outputs
+2. **Trainability**: Static bases are perfect for fine-tuning models
+3. **Flexibility**: Dynamic modification adapts to any context
+4. **Reusability**: One template works across many projects
+5. **Maintainability**: Update templates once, affects all uses
+6. **Security**: Built-in security considerations in every template
+
+## Template Development
+
+When creating new templates:
+
+1. **Start with comprehensive base**: Include all relevant context
+2. **Use variables liberally**: Make templates adaptable
+3. **Include security notes**: Always consider security implications
+4. **Add optimization hints**: Performance considerations
+5. **Document variables**: Clear descriptions and defaults
+6. **Test modifications**: Ensure variables work correctly
+
+## Example Template Flow
+
+```
+Static Template:
+"You are an expert {{user_role}}. Use {{framework}}..."
+
+User Profile:
+{ role: "backend-engineer", stack: { express: true } }
+
+Input Filter:
+{ style: "technical" }
+
+Result:
+"You are an expert backend-engineer. Use Express..."
+[Technical style applied]
+```
+
+## Integration
+
+Templates integrate seamlessly with:
+- Prompt assembly engine (`promptAssembly.ts`)
+- Input reformatter (`inputReformatter.ts`)
+- User profiles and vibe configs
+- Existing filter system
+
+## Next Steps
+
+- Review existing templates: `templates/milestones/`
+- Check usage guide: `templates/USAGE.md`
+- See integration details: `templates/INTEGRATION.md`
+- Create custom templates following the format

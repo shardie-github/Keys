@@ -1,15 +1,16 @@
 /**
  * Scaffold Template Service
  * 
- * Integrates scaffold templates into the prompt assembly engine.
- * Provides template filtering, adaptation, and prompt generation for scaffolding tasks.
+ * Manages mega prompt templates that serve as static bases for dynamic modification.
+ * Templates are comprehensive prompts that get modified with user inputs and filters.
  */
 
-import { readFileSync } from 'fs';
+import { readFileSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import yaml from 'js-yaml';
 import type { UserProfile } from '../types/index.js';
+import type { InputFilter } from '../types/filters.js';
 import { logger } from '../utils/logger.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -20,6 +21,7 @@ interface TemplateVariable {
   description: string;
   required: boolean;
   default?: string;
+  type?: string;
   examples?: string[];
 }
 
@@ -34,7 +36,7 @@ interface ScaffoldTemplate {
   stack: string[];
   security_level: 'required' | 'recommended' | 'optional';
   optimization_level: 'required' | 'recommended' | 'optional';
-  content: string;
+  mega_prompt: string; // The static mega prompt template
   variables?: TemplateVariable[];
 }
 
@@ -48,11 +50,11 @@ interface TemplateFilter {
   exclude_tags?: string[];
 }
 
-interface TemplateAdaptationConfig {
-  framework?: 'express' | 'fastify' | 'nextjs';
-  database?: 'postgresql' | 'supabase' | 'mongodb';
-  authMethod?: 'jwt' | 'oauth' | 'session';
-  variables?: Record<string, string>;
+interface PromptModificationConfig {
+  userProfile?: UserProfile;
+  inputFilter?: InputFilter;
+  variables?: Record<string, any>;
+  customInstructions?: string;
 }
 
 export class ScaffoldTemplateService {
@@ -70,11 +72,16 @@ export class ScaffoldTemplateService {
   private loadCatalog() {
     try {
       const catalogPath = join(__dirname, '../../templates/catalog.json');
+      if (!existsSync(catalogPath)) {
+        logger.warn('Template catalog not found, templates will not be available');
+        this.catalog = { milestones: {} };
+        return;
+      }
       const catalogContent = readFileSync(catalogPath, 'utf-8');
       this.catalog = JSON.parse(catalogContent);
     } catch (error) {
       logger.error('Failed to load template catalog', error as Error);
-      throw new Error('Template catalog not found');
+      this.catalog = { milestones: {} };
     }
   }
 
@@ -84,35 +91,47 @@ export class ScaffoldTemplateService {
   private loadTemplates() {
     try {
       const templatesDir = join(__dirname, '../../templates/milestones');
-      const milestones = this.catalog.milestones;
+      const milestones = this.catalog.milestones || {};
 
       for (const [milestoneId, milestoneData] of Object.entries(milestones as Record<string, any>)) {
-        for (const templateMeta of milestoneData.templates) {
+        for (const templateMeta of milestoneData.templates || []) {
           try {
-            const templatePath = join(
+            // Try .prompt.yaml first (mega prompt), then .yaml (legacy)
+            const promptPath = join(
+              templatesDir,
+              milestoneId,
+              `${templateMeta.id}.prompt.yaml`
+            );
+            const legacyPath = join(
               templatesDir,
               milestoneId,
               `${templateMeta.id}.yaml`
             );
-            
-            // Check if file exists before reading
-            try {
+
+            let templatePath: string | null = null;
+            if (existsSync(promptPath)) {
+              templatePath = promptPath;
+            } else if (existsSync(legacyPath)) {
+              templatePath = legacyPath;
+            }
+
+            if (templatePath) {
               const templateContent = readFileSync(templatePath, 'utf-8');
               const template = yaml.load(templateContent) as ScaffoldTemplate;
               
               // Validate template matches catalog
               if (template && template.id === templateMeta.id) {
+                // Ensure mega_prompt exists (use content as fallback for legacy)
+                if (!template.mega_prompt && (template as any).content) {
+                  template.mega_prompt = (template as any).content;
+                }
                 this.templates.set(template.id, template);
               }
-            } catch (fileError: any) {
-              if (fileError.code === 'ENOENT') {
-                logger.debug(`Template file not found: ${templatePath}, skipping`);
-              } else {
-                logger.warn(`Failed to load template ${templateMeta.id}`, fileError as Error);
-              }
+            } else {
+              logger.debug(`Template file not found: ${templateMeta.id}, skipping`);
             }
-          } catch (error) {
-            logger.warn(`Failed to process template ${templateMeta.id}`, error as Error);
+          } catch (fileError: any) {
+            logger.warn(`Failed to load template ${templateMeta.id}`, fileError as Error);
           }
         }
       }
@@ -120,7 +139,6 @@ export class ScaffoldTemplateService {
       logger.info(`Loaded ${this.templates.size} scaffold templates`);
     } catch (error) {
       logger.error('Failed to load templates', error as Error);
-      // Don't throw - allow service to start even if some templates fail to load
     }
   }
 
@@ -209,50 +227,136 @@ export class ScaffoldTemplateService {
   }
 
   /**
-   * Adapt template content for specific tech stack
+   * Modify mega prompt template with user inputs and filters
+   * This is the core function that transforms static templates into dynamic prompts
    */
-  adaptTemplate(
+  modifyMegaPrompt(
     template: ScaffoldTemplate,
-    config: TemplateAdaptationConfig
+    config: PromptModificationConfig
   ): string {
-    let adapted = template.content;
+    let modifiedPrompt = template.mega_prompt;
 
     const {
-      framework = 'express',
-      database = 'postgresql',
-      authMethod = 'jwt',
+      userProfile,
+      inputFilter,
       variables = {},
+      customInstructions,
     } = config;
 
-    // Framework adaptations
-    adapted = this.adaptFramework(adapted, framework);
+    // Extract variables from user profile
+    const profileVariables: Record<string, any> = {
+      user_role: userProfile?.role || 'developer',
+      company_context: userProfile?.company_context,
+      brand_voice: userProfile?.brand_voice,
+      experience_level: 'intermediate', // Could be inferred from profile
+      project_type: 'fullstack',
+    };
 
-    // Database adaptations
-    adapted = this.adaptDatabase(adapted, database);
+    // Extract stack variables from profile
+    if (userProfile?.stack) {
+      profileVariables.stack = {
+        typescript: true,
+        monorepo: false,
+        frontend: userProfile.stack.nextjs || false,
+        backend: true,
+        frontend_framework: userProfile.stack.nextjs ? 'Next.js' : undefined,
+        backend_framework: 'Express',
+        database: userProfile.stack.supabase ? 'Supabase' : 'PostgreSQL',
+      };
+    }
 
-    // Auth method adaptations
-    adapted = this.adaptAuthMethod(adapted, authMethod);
+    // Merge all variables
+    const allVariables = {
+      ...profileVariables,
+      ...variables,
+      custom_instructions: customInstructions,
+      security_focus: true,
+      performance_focus: true,
+    };
 
-    // Variable substitutions
-    adapted = this.substituteVariables(adapted, variables);
+    // Apply input filter modifications
+    if (inputFilter) {
+      allVariables.style = {
+        concise: inputFilter.style === 'concise',
+        detailed: inputFilter.style === 'detailed',
+        technical: inputFilter.style === 'technical',
+      };
+    }
 
-    return adapted;
+    // Replace template variables using Handlebars-like syntax
+    modifiedPrompt = this.replaceTemplateVariables(modifiedPrompt, allVariables);
+
+    return modifiedPrompt;
+  }
+
+  /**
+   * Replace template variables in mega prompt
+   * Supports Handlebars-like syntax: {{variable}}, {{variable|default:value}}, {{#if condition}}
+   */
+  private replaceTemplateVariables(
+    prompt: string,
+    variables: Record<string, any>
+  ): string {
+    let result = prompt;
+
+    // Replace {{variable|default:value}} patterns
+    result = result.replace(/\{\{(\w+)\|default:([^}]+)\}\}/g, (match, varName, defaultValue) => {
+      const value = variables[varName];
+      return value !== undefined && value !== null ? String(value) : defaultValue.trim();
+    });
+
+    // Replace {{#if condition}} blocks
+    result = result.replace(/\{\{#if\s+(\w+)\}\}([\s\S]*?)\{\{\/if\}\}/g, (match, condition, content) => {
+      const value = variables[condition];
+      if (value && value !== false && value !== null && value !== undefined) {
+        return content;
+      }
+      return '';
+    });
+
+    // Replace {{#unless condition}} blocks
+    result = result.replace(/\{\{#unless\s+(\w+)\}\}([\s\S]*?)\{\{\/unless\}\}/g, (match, condition, content) => {
+      const value = variables[condition];
+      if (!value || value === false || value === null || value === undefined) {
+        return content;
+      }
+      return '';
+    });
+
+    // Replace nested object access {{object.property}}
+    result = result.replace(/\{\{(\w+(?:\.\w+)+)\}\}/g, (match, path) => {
+      const parts = path.split('.');
+      let value = variables;
+      for (const part of parts) {
+        value = value?.[part];
+        if (value === undefined) break;
+      }
+      return value !== undefined && value !== null ? String(value) : '';
+    });
+
+    // Replace simple {{variable}} patterns (after other replacements)
+    result = result.replace(/\{\{(\w+)\}\}/g, (match, varName) => {
+      const value = variables[varName];
+      return value !== undefined && value !== null ? String(value) : '';
+    });
+
+    return result;
   }
 
   /**
    * Generate scaffold prompt from templates
-   * Integrates with the existing prompt assembly system
+   * Combines multiple mega prompts and modifies them with user context
    */
   generateScaffoldPrompt(
     taskDescription: string,
     userProfile: UserProfile,
     selectedTemplates: string[],
-    adaptationConfig?: TemplateAdaptationConfig
+    config?: PromptModificationConfig
   ): {
     systemPrompt: string;
     userPrompt: string;
     templates: ScaffoldTemplate[];
-    adaptedContent: Record<string, string>;
+    modifiedPrompts: Record<string, string>;
   } {
     // Load selected templates
     const templates = selectedTemplates
@@ -262,119 +366,73 @@ export class ScaffoldTemplateService {
     // Order by dependencies
     const orderedTemplates = this.orderByDependencies(templates);
 
-    // Adapt templates
-    const adaptedContent: Record<string, string> = {};
-    const adaptedTemplates: string[] = [];
+    // Modify each template's mega prompt
+    const modifiedPrompts: Record<string, string> = {};
+    const modificationConfig: PromptModificationConfig = {
+      userProfile,
+      inputFilter: config?.inputFilter,
+      variables: config?.variables,
+      customInstructions: config?.customInstructions,
+    };
 
     for (const template of orderedTemplates) {
-      const adapted = this.adaptTemplate(
-        template,
-        adaptationConfig || this.inferAdaptationConfig(userProfile)
-      );
-      adaptedContent[template.id] = adapted;
-      adaptedTemplates.push(adapted);
+      const modified = this.modifyMegaPrompt(template, modificationConfig);
+      modifiedPrompts[template.id] = modified;
     }
 
-    // Generate system prompt
-    const systemPrompt = this.composeSystemPrompt(orderedTemplates, userProfile);
+    // Compose system prompt from modified mega prompts
+    const systemPrompt = this.composeSystemPrompt(orderedTemplates, modifiedPrompts, userProfile);
 
-    // Generate user prompt
-    const userPrompt = this.composeUserPrompt(
-      taskDescription,
-      orderedTemplates,
-      userProfile
-    );
+    // Compose user prompt
+    const userPrompt = this.composeUserPrompt(taskDescription, orderedTemplates, userProfile);
 
     return {
       systemPrompt,
       userPrompt,
       templates: orderedTemplates,
-      adaptedContent,
+      modifiedPrompts,
     };
   }
 
   /**
-   * Infer adaptation config from user profile
-   */
-  private inferAdaptationConfig(
-    userProfile: UserProfile
-  ): TemplateAdaptationConfig {
-    const stack = userProfile.stack || {};
-    
-    // Infer framework
-    let framework: 'express' | 'fastify' | 'nextjs' = 'express';
-    if (stack.nextjs) {
-      framework = 'nextjs';
-    }
-
-    // Infer database
-    let database: 'postgresql' | 'supabase' | 'mongodb' = 'postgresql';
-    if (stack.supabase) {
-      database = 'supabase';
-    }
-
-    // Default auth method
-    const authMethod: 'jwt' | 'oauth' | 'session' = 'jwt';
-
-    return {
-      framework,
-      database,
-      authMethod,
-    };
-  }
-
-  /**
-   * Compose system prompt from templates
+   * Compose system prompt from modified mega prompts
    */
   private composeSystemPrompt(
     templates: ScaffoldTemplate[],
+    modifiedPrompts: Record<string, string>,
     userProfile: UserProfile
   ): string {
-    let prompt = `You are an expert full-stack developer specializing in secure, optimized code scaffolding.\n\n`;
-    prompt += `Your role: ${userProfile.role || 'developer'}\n`;
-    prompt += `Your stack: ${JSON.stringify(userProfile.stack || {})}\n\n`;
+    // Combine all modified mega prompts
+    const promptParts: string[] = [];
 
-    prompt += `You will scaffold code following these milestones and best practices:\n\n`;
+    // Add base context
+    promptParts.push(
+      `You are an expert full-stack developer specializing in secure, optimized code scaffolding.\n`
+    );
+    promptParts.push(`User Role: ${userProfile.role || 'developer'}\n`);
+    promptParts.push(`Project Stack: ${JSON.stringify(userProfile.stack || {})}\n\n`);
 
-    // Group by milestone
-    const byMilestone = new Map<string, ScaffoldTemplate[]>();
+    // Add each template's modified mega prompt
     for (const template of templates) {
-      if (!byMilestone.has(template.milestone)) {
-        byMilestone.set(template.milestone, []);
-      }
-      byMilestone.get(template.milestone)!.push(template);
-    }
-
-    for (const [milestone, milestoneTemplates] of byMilestone.entries()) {
-      const milestoneName =
-        this.catalog.milestones[milestone]?.name || milestone;
-      prompt += `## ${milestoneName}\n\n`;
-
-      for (const template of milestoneTemplates) {
-        prompt += `### ${template.name}\n`;
-        prompt += `${template.description}\n\n`;
-
-        // Add security considerations
-        if (template.security_level === 'required') {
-          prompt += `**Security Requirements:** Must implement security best practices.\n`;
-        }
-
-        // Add optimization considerations
-        if (template.optimization_level === 'required') {
-          prompt += `**Performance Requirements:** Must optimize for performance.\n`;
-        }
-
-        prompt += `\n`;
+      const modifiedPrompt = modifiedPrompts[template.id];
+      if (modifiedPrompt) {
+        promptParts.push(`## ${template.name}\n\n`);
+        promptParts.push(modifiedPrompt);
+        promptParts.push(`\n\n---\n\n`);
       }
     }
 
-    prompt += `\nAlways prioritize:\n`;
-    prompt += `1. Security best practices (input validation, authentication, authorization, RLS policies)\n`;
-    prompt += `2. Performance optimization (caching, indexing, query optimization)\n`;
-    prompt += `3. Code quality (type safety, error handling, logging)\n`;
-    prompt += `4. Maintainability (clear structure, documentation, testing)\n`;
+    // Add final instructions
+    promptParts.push(
+      `\n## Final Instructions\n\n` +
+      `Always prioritize:\n` +
+      `1. Security best practices (input validation, authentication, authorization, RLS policies)\n` +
+      `2. Performance optimization (caching, indexing, query optimization)\n` +
+      `3. Code quality (type safety, error handling, logging)\n` +
+      `4. Maintainability (clear structure, documentation, testing)\n`
+    );
 
-    return prompt;
+    return promptParts.join('');
   }
 
   /**
@@ -448,141 +506,6 @@ export class ScaffoldTemplateService {
     }
 
     return ordered;
-  }
-
-  /**
-   * Framework adaptation
-   */
-  private adaptFramework(content: string, framework: string): string {
-    const adaptations: Record<string, Record<string, string>> = {
-      express: {
-        '{{import_framework}}': "import express from 'express';",
-        '{{create_app}}': 'const app = express();',
-        '{{use_middleware}}': 'app.use',
-        '{{export_app}}': 'export default app;',
-      },
-      fastify: {
-        '{{import_framework}}': "import Fastify from 'fastify';",
-        '{{create_app}}': 'const app = Fastify();',
-        '{{use_middleware}}': 'app.register',
-        '{{export_app}}': 'export default app;',
-      },
-      nextjs: {
-        '{{import_framework}}': "import { NextRequest, NextResponse } from 'next/server';",
-        '{{create_app}}': '',
-        '{{use_middleware}}': 'export function middleware',
-        '{{export_app}}': '',
-      },
-    };
-
-    const frameworkAdaptations = adaptations[framework] || adaptations.express;
-
-    let adapted = content;
-    for (const [placeholder, replacement] of Object.entries(frameworkAdaptations)) {
-      adapted = adapted.replace(
-        new RegExp(placeholder.replace(/[{}]/g, '\\$&'), 'g'),
-        replacement
-      );
-    }
-
-    return adapted;
-  }
-
-  /**
-   * Database adaptation
-   */
-  private adaptDatabase(content: string, database: string): string {
-    const adaptations: Record<string, Record<string, string>> = {
-      postgresql: {
-        '{{db_client}}': 'pg',
-        '{{db_import}}': "import { Pool } from 'pg';",
-        '{{db_create_client}}':
-          'const pool = new Pool({ connectionString: process.env.DATABASE_URL });',
-        '{{db_query}}': 'await pool.query',
-      },
-      supabase: {
-        '{{db_client}}': 'supabase',
-        '{{db_import}}': "import { createClient } from '@supabase/supabase-js';",
-        '{{db_create_client}}':
-          "const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);",
-        '{{db_query}}': "await supabase.from",
-      },
-      mongodb: {
-        '{{db_client}}': 'mongodb',
-        '{{db_import}}': "import { MongoClient } from 'mongodb';",
-        '{{db_create_client}}':
-          "const client = new MongoClient(process.env.MONGODB_URI!);",
-        '{{db_query}}': 'await collection',
-      },
-    };
-
-    const dbAdaptations = adaptations[database] || adaptations.postgresql;
-
-    let adapted = content;
-    for (const [placeholder, replacement] of Object.entries(dbAdaptations)) {
-      adapted = adapted.replace(
-        new RegExp(placeholder.replace(/[{}]/g, '\\$&'), 'g'),
-        replacement
-      );
-    }
-
-    return adapted;
-  }
-
-  /**
-   * Auth method adaptation
-   */
-  private adaptAuthMethod(content: string, authMethod: string): string {
-    const adaptations: Record<string, Record<string, string>> = {
-      jwt: {
-        '{{auth_import}}': "import jwt from 'jsonwebtoken';",
-        '{{auth_verify}}': 'jwt.verify(token, process.env.JWT_SECRET!)',
-        '{{auth_sign}}':
-          'jwt.sign(payload, process.env.JWT_SECRET!, { expiresIn: "{{expires}}" })',
-      },
-      oauth: {
-        '{{auth_import}}': "import { OAuth2Client } from 'google-auth-library';",
-        '{{auth_verify}}': 'await oauth2Client.verifyIdToken({ idToken: token })',
-        '{{auth_sign}}': '// OAuth tokens are issued by provider',
-      },
-      session: {
-        '{{auth_import}}': "import session from 'express-session';",
-        '{{auth_verify}}': 'req.session.userId',
-        '{{auth_sign}}': 'req.session.userId = userId',
-      },
-    };
-
-    const authAdaptations = adaptations[authMethod] || adaptations.jwt;
-
-    let adapted = content;
-    for (const [placeholder, replacement] of Object.entries(authAdaptations)) {
-      adapted = adapted.replace(
-        new RegExp(placeholder.replace(/[{}]/g, '\\$&'), 'g'),
-        replacement
-      );
-    }
-
-    return adapted;
-  }
-
-  /**
-   * Variable substitution
-   */
-  private substituteVariables(
-    content: string,
-    variables: Record<string, string>
-  ): string {
-    let substituted = content;
-
-    for (const [key, value] of Object.entries(variables)) {
-      const placeholder = `{{${key}}}`;
-      substituted = substituted.replace(
-        new RegExp(placeholder.replace(/[{}]/g, '\\$&'), 'g'),
-        value
-      );
-    }
-
-    return substituted;
   }
 
   /**

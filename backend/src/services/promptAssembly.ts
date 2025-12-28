@@ -331,25 +331,30 @@ async function assembleScaffoldPrompt(
     taskDescription
   );
 
-  // Generate scaffold prompt
-  const scaffoldResult = scaffoldTemplateService.generateScaffoldPrompt(
-    taskDescription,
-    profile,
-    recommendedTemplates.map((t) => t.id)
-  );
-
-  // Apply input filters if provided
-  let finalSystemPrompt = scaffoldResult.systemPrompt;
-  let finalUserPrompt = scaffoldResult.userPrompt;
-
-  if (inputFilter) {
-    const reformatted = await inputReformatter.reformatInput(
-      scaffoldResult.userPrompt,
-      inputFilter
+    // Generate scaffold prompt with input filter modifications
+    const scaffoldResult = scaffoldTemplateService.generateScaffoldPrompt(
+      taskDescription,
+      profile,
+      recommendedTemplates.map((t) => t.id),
+      {
+        inputFilter,
+        customInstructions: vibeConfig.custom_instructions,
+      }
     );
-    finalSystemPrompt = `${scaffoldResult.systemPrompt}\n\n${reformatted.systemPrompt}`;
-    finalUserPrompt = reformatted.userPrompt;
-  }
+
+    // Apply additional input filter formatting if needed
+    let finalSystemPrompt = scaffoldResult.systemPrompt;
+    let finalUserPrompt = scaffoldResult.userPrompt;
+
+    if (inputFilter) {
+      const reformatted = await inputReformatter.reformatInput(
+        scaffoldResult.userPrompt,
+        inputFilter
+      );
+      // Merge filter-based system prompt additions
+      finalSystemPrompt = `${scaffoldResult.systemPrompt}\n\n${reformatted.systemPrompt}`;
+      finalUserPrompt = reformatted.userPrompt;
+    }
 
   // Return in PromptAssemblyResult format
   return {
