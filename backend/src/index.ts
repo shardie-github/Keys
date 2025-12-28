@@ -9,6 +9,7 @@ import { webhooksRouter } from './routes/webhooks.js';
 import { adminRouter } from './routes/admin.js';
 import { presetsRouter } from './routes/presets.js';
 import { authRouter } from './routes/auth.js';
+import { inputFiltersRouter } from './routes/input-filters.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 import { optionalAuthMiddleware, authMiddleware } from './middleware/auth.js';
 import { userRateLimiterMiddleware, apiRateLimiter } from './middleware/rateLimit.js';
@@ -83,6 +84,9 @@ app.use('/assemble-prompt', assemblePromptRouter);
 app.use('/orchestrate-agent', orchestrateAgentRouter);
 app.use('/feedback', feedbackRouter);
 app.use('/presets', presetsRouter);
+
+// Input filters (require auth)
+app.use('/input-filters', inputFiltersRouter);
 
 // Admin routes (require auth)
 app.use('/admin', authMiddleware, adminRouter);

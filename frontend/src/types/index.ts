@@ -25,6 +25,13 @@ export interface UserProfile {
   company_context?: string;
   preferred_models?: string[];
   timezone?: string;
+  premium_features?: {
+    enabled: boolean;
+    voiceToText?: boolean;
+    tokenLimit?: number;
+    advancedFilters?: boolean;
+    customPrompts?: boolean;
+  };
 }
 
 // Prompt Atom Types

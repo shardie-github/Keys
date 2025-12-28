@@ -5,7 +5,9 @@ import { InputPanel } from './InputPanel';
 import { SuggestionCard } from '../OutputPanel/SuggestionCard';
 import { usePromptAssembly } from '@/hooks/usePromptAssembly';
 import { useAgentOrchestration } from '@/hooks/useAgentOrchestration';
+import { usePremiumFeatures } from '@/hooks/usePremiumFeatures';
 import type { VibeConfig, AgentOutput } from '@/types';
+import type { InputFilter } from '@/types/filters';
 
 interface Message {
   id: string;
@@ -36,9 +38,12 @@ export function ChatInterface({ userId, initialVibeConfig }: ChatInterfaceProps)
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  const { isPremium } = usePremiumFeatures(userId);
+
   const handleSend = async (
     messageText: string,
-    vibeConfig: Partial<VibeConfig>
+    vibeConfig: Partial<VibeConfig>,
+    inputFilter?: InputFilter
   ) => {
     // Update vibe config
     setCurrentVibeConfig(vibeConfig);
@@ -53,11 +58,12 @@ export function ChatInterface({ userId, initialVibeConfig }: ChatInterfaceProps)
     setMessages((prev) => [...prev, userMessage]);
 
     try {
-      // Assemble prompt
+      // Assemble prompt (will apply input filters internally if provided)
       const promptAssembly = await assemblePrompt(
         userId,
         messageText,
-        vibeConfig
+        vibeConfig,
+        inputFilter
       );
 
       // Orchestrate agent
@@ -186,6 +192,7 @@ export function ChatInterface({ userId, initialVibeConfig }: ChatInterfaceProps)
         onSend={handleSend}
         initialVibeConfig={currentVibeConfig}
         loading={loading}
+        isPremium={isPremium}
       />
     </div>
   );
