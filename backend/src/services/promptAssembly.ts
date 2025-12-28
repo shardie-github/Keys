@@ -3,6 +3,7 @@ import type { UserProfile, PromptAtom, VibeConfig, PromptAssemblyResult } from '
 import type { InputFilter } from '../types/filters.js';
 import { sliderToAtomName } from '../utils/sliderInterpolation.js';
 import { inputReformatter } from './inputReformatter.js';
+import { scaffoldTemplateService } from './scaffoldTemplateService.js';
 import { getCache, setCache } from '../cache/redis.js';
 import { logger } from '../utils/logger.js';
 
@@ -17,6 +18,13 @@ export async function assemblePrompt(
   vibeConfig: Partial<VibeConfig>,
   inputFilter?: InputFilter
 ): Promise<PromptAssemblyResult> {
+  // Check if this is a scaffold task
+  const isScaffoldTask = isScaffoldingTask(taskDescription);
+  
+  if (isScaffoldTask) {
+    return assembleScaffoldPrompt(userId, taskDescription, vibeConfig, inputFilter);
+  }
+
   // Create cache key based on inputs
   const cacheKey = `prompt:${userId}:${JSON.stringify({
     task: taskDescription.substring(0, 100), // First 100 chars for cache key
@@ -267,4 +275,106 @@ function extractConstraints(
   }
 
   return constraints;
+}
+
+/**
+ * Detect if task is a scaffolding task
+ */
+function isScaffoldingTask(taskDescription: string): boolean {
+  const lowerTask = taskDescription.toLowerCase();
+  const scaffoldKeywords = [
+    'scaffold',
+    'setup',
+    'initialize',
+    'create structure',
+    'project setup',
+    'boilerplate',
+    'template',
+    'generate',
+    'create routes',
+    'create middleware',
+    'database schema',
+    'rls policies',
+    'api routes',
+    'frontend routes',
+    'authentication setup',
+    'security headers',
+    'rate limiting',
+  ];
+
+  return scaffoldKeywords.some((keyword) => lowerTask.includes(keyword));
+}
+
+/**
+ * Assemble prompt for scaffolding tasks using template system
+ */
+async function assembleScaffoldPrompt(
+  userId: string,
+  taskDescription: string,
+  vibeConfig: Partial<VibeConfig>,
+  inputFilter?: InputFilter
+): Promise<PromptAssemblyResult> {
+  // Load user profile
+  const { data: profile, error: profileError } = await supabase
+    .from('user_profiles')
+    .select('*')
+    .eq('user_id', userId)
+    .single();
+
+  if (profileError || !profile) {
+    throw new Error('User profile not found');
+  }
+
+  // Get recommended templates
+  const recommendedTemplates = scaffoldTemplateService.getRecommendedTemplates(
+    profile,
+    taskDescription
+  );
+
+  // Generate scaffold prompt
+  const scaffoldResult = scaffoldTemplateService.generateScaffoldPrompt(
+    taskDescription,
+    profile,
+    recommendedTemplates.map((t) => t.id)
+  );
+
+  // Apply input filters if provided
+  let finalSystemPrompt = scaffoldResult.systemPrompt;
+  let finalUserPrompt = scaffoldResult.userPrompt;
+
+  if (inputFilter) {
+    const reformatted = await inputReformatter.reformatInput(
+      scaffoldResult.userPrompt,
+      inputFilter
+    );
+    finalSystemPrompt = `${scaffoldResult.systemPrompt}\n\n${reformatted.systemPrompt}`;
+    finalUserPrompt = reformatted.userPrompt;
+  }
+
+  // Return in PromptAssemblyResult format
+  return {
+    systemPrompt: finalSystemPrompt,
+    userPrompt: finalUserPrompt,
+    context: {
+      userRole: profile.role,
+      userVertical: profile.vertical,
+      userStack: profile.stack as Record<string, boolean>,
+      executionConstraints: {
+        templates: recommendedTemplates.map((t) => ({
+          id: t.id,
+          name: t.name,
+          milestone: t.milestone,
+        })),
+        adaptedContent: scaffoldResult.adaptedContent,
+      },
+    },
+    selectedAtomIds: recommendedTemplates.map((t) => t.id),
+    blendRecipe: recommendedTemplates.map((t, index) => ({
+      id: t.id,
+      name: t.name,
+      weight: t.priority === 'high' ? 1.0 : t.priority === 'medium' ? 0.7 : 0.5,
+      influence:
+        index < 2 ? 'primary' : index < 4 ? 'secondary' : ('modifier' as const),
+    })),
+  };
 }

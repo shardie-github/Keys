@@ -10,6 +10,7 @@ import { adminRouter } from './routes/admin.js';
 import { presetsRouter } from './routes/presets.js';
 import { authRouter } from './routes/auth.js';
 import { inputFiltersRouter } from './routes/input-filters.js';
+import { scaffoldTemplatesRouter } from './routes/scaffold-templates.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 import { optionalAuthMiddleware, authMiddleware } from './middleware/auth.js';
 import { userRateLimiterMiddleware, apiRateLimiter } from './middleware/rateLimit.js';
@@ -87,6 +88,9 @@ app.use('/presets', presetsRouter);
 
 // Input filters (require auth)
 app.use('/input-filters', inputFiltersRouter);
+
+// Scaffold templates (require auth)
+app.use('/scaffold-templates', scaffoldTemplatesRouter);
 
 // Admin routes (require auth)
 app.use('/admin', authMiddleware, adminRouter);
