@@ -8,6 +8,8 @@
 import { createClient } from '@supabase/supabase-js';
 import type { UserProfile } from '../types/index.js';
 import { scaffoldTemplateService } from './scaffoldTemplateService.js';
+import { templateValidationService } from './templateValidationService.js';
+import { templateAnalyticsService } from './templateAnalyticsService.js';
 import { logger } from '../utils/logger.js';
 
 const supabase = createClient(
@@ -130,12 +132,30 @@ export class UserTemplateService {
     userId: string,
     templateId: string,
     customVariables: Record<string, any>,
-    customInstructions?: string
+    customInstructions?: string,
+    options: {
+      skipValidation?: boolean;
+    } = {}
   ): Promise<UserTemplateCustomization> {
     // Verify template exists
     const template = scaffoldTemplateService.getTemplate(templateId);
     if (!template) {
       throw new Error(`Template ${templateId} not found`);
+    }
+
+    // Validate customization unless skipped
+    if (!options.skipValidation) {
+      const validation = templateValidationService.validateCustomization(
+        templateId,
+        customVariables,
+        customInstructions
+      );
+
+      if (!validation.valid) {
+        throw new Error(
+          `Validation failed: ${validation.errors.map((e) => e.message).join(', ')}`
+        );
+      }
     }
 
     // Upsert customization
@@ -269,6 +289,13 @@ export class UserTemplateService {
       variables: customization?.custom_variables,
       customInstructions: customization?.custom_instructions,
     });
+
+    // Track usage (async, don't wait)
+    templateAnalyticsService
+      .trackUsage(userId, templateId, { success: true })
+      .catch((error) => {
+        logger.warn('Failed to track template usage', error);
+      });
 
     return {
       prompt,
