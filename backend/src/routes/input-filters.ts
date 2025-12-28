@@ -146,8 +146,54 @@ router.post(
 router.get(
   '/options',
   asyncHandler(async (req, res) => {
+    const { llmService } = await import('../services/llmService.js');
+    const { extendedLLMService } = await import('../services/llmServiceExtended.js');
+
+    // Detect local LLMs
+    const [ollama, lmStudio, vllm] = await Promise.all([
+      extendedLLMService.detectOllama(),
+      extendedLLMService.detectLMStudio(),
+      extendedLLMService.detectVLLM(),
+    ]);
+
+    const models: Record<string, string[]> = {
+      openai: ['gpt-4-turbo-preview', 'gpt-4', 'gpt-3.5-turbo', 'o1-preview', 'o1-mini'],
+      anthropic: ['claude-3-opus', 'claude-3-sonnet', 'claude-3-haiku'],
+      google: ['gemini-pro', 'gemini-ultra', 'gemini-1.5-pro'],
+      meta: ['llama-3-70b', 'llama-3-8b', 'llama-2-70b', 'llama-2-13b', 'llama-2-7b'],
+      ollama: ollama.models,
+      lmstudio: lmStudio.models,
+      vllm: vllm.models,
+      together: [
+        'meta-llama/Llama-3-70b-chat-hf',
+        'mistralai/Mixtral-8x7B-Instruct-v0.1',
+        'Qwen/Qwen2.5-72B-Instruct',
+      ],
+      groq: ['llama-3-70b-8192', 'mixtral-8x7b-32768', 'gemma-7b-it'],
+      mistral: ['mistral-large', 'mistral-medium', 'mistral-small'],
+      cohere: ['command-r-plus', 'command-r', 'command'],
+      perplexity: ['llama-3-sonar-large-32k-online', 'llama-3-sonar-small-32k-online'],
+    };
+
+    // Filter out providers that aren't available
+    const availableProviders = [
+      'openai',
+      'anthropic',
+      'google',
+      ...(ollama.available ? ['ollama'] : []),
+      ...(lmStudio.available ? ['lmstudio'] : []),
+      ...(vllm.available ? ['vllm'] : []),
+      ...(process.env.TOGETHER_API_KEY ? ['together'] : []),
+      ...(process.env.GROQ_API_KEY ? ['groq'] : []),
+      ...(process.env.MISTRAL_API_KEY ? ['mistral'] : []),
+      ...(process.env.COHERE_API_KEY ? ['cohere'] : []),
+      ...(process.env.PERPLEXITY_API_KEY ? ['perplexity'] : []),
+      'meta',
+      'custom',
+    ];
+
     res.json({
-      providers: ['openai', 'anthropic', 'google', 'meta', 'custom'],
+      providers: availableProviders,
       styles: [
         'concise',
         'detailed',
@@ -166,11 +212,11 @@ router.get(
         'structured_prompt',
         'provider_native',
       ],
-      models: {
-        openai: ['gpt-4-turbo-preview', 'gpt-4', 'gpt-3.5-turbo', 'o1-preview'],
-        anthropic: ['claude-3-opus', 'claude-3-sonnet', 'claude-3-haiku'],
-        google: ['gemini-pro', 'gemini-ultra'],
-        meta: ['llama-3', 'llama-2'],
+      models,
+      localLLMs: {
+        ollama: ollama.available,
+        lmStudio: lmStudio.available,
+        vllm: vllm.available,
       },
     });
   })

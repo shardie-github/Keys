@@ -173,10 +173,25 @@ export function InputFilters({
               onChange={(e) => updateFilter({ provider: e.target.value as LLMProvider })}
               className="w-full px-2 py-1.5 text-xs border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-50 focus:ring-1 focus:ring-blue-500"
             >
-              <option value="openai">OpenAI</option>
-              <option value="anthropic">Anthropic</option>
-              <option value="google">Google</option>
-              <option value="meta">Meta</option>
+              <optgroup label="Cloud Providers">
+                <option value="openai">OpenAI</option>
+                <option value="anthropic">Anthropic</option>
+                <option value="google">Google</option>
+              </optgroup>
+              <optgroup label="Local / Open Source">
+                <option value="ollama">Ollama</option>
+                <option value="lmstudio">LM Studio</option>
+                <option value="vllm">vLLM</option>
+                <option value="meta">Meta (Local)</option>
+              </optgroup>
+              <optgroup label="Other Providers">
+                <option value="together">Together AI</option>
+                <option value="groq">Groq</option>
+                <option value="mistral">Mistral</option>
+                <option value="cohere">Cohere</option>
+                <option value="perplexity">Perplexity</option>
+              </optgroup>
+              <option value="custom">Custom</option>
             </select>
           </div>
         )}

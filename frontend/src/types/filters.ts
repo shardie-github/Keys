@@ -1,4 +1,17 @@
-export type LLMProvider = 'openai' | 'anthropic' | 'google' | 'meta' | 'custom';
+export type LLMProvider =
+  | 'openai'
+  | 'anthropic'
+  | 'google'
+  | 'meta'
+  | 'custom'
+  | 'ollama'
+  | 'lmstudio'
+  | 'vllm'
+  | 'together'
+  | 'groq'
+  | 'mistral'
+  | 'cohere'
+  | 'perplexity';
 
 export type InputStyle =
   | 'concise'

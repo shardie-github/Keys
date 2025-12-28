@@ -182,19 +182,27 @@ export class InputReformatter {
 
   // Provider-specific prompts
   private getProviderBasePrompt(provider: LLMProvider, model: string): string {
-    const prompts: Record<LLMProvider, string> = {
+    const prompts: Partial<Record<LLMProvider, string>> = {
       openai: `You are a helpful AI assistant. You are ${model}, a large language model trained by OpenAI.`,
       anthropic: `You are Claude, an AI assistant created by Anthropic. You are helpful, harmless, and honest.`,
       google: `You are a helpful AI assistant powered by Google's ${model}.`,
       meta: `You are a helpful AI assistant powered by Meta's ${model}.`,
+      ollama: `You are a helpful AI assistant running locally via Ollama (${model}).`,
+      lmstudio: `You are a helpful AI assistant running locally via LM Studio (${model}).`,
+      vllm: `You are a helpful AI assistant running locally via vLLM (${model}).`,
+      together: `You are a helpful AI assistant powered by Together AI (${model}).`,
+      groq: `You are a helpful AI assistant powered by Groq (${model}).`,
+      mistral: `You are a helpful AI assistant powered by Mistral AI (${model}).`,
+      cohere: `You are a helpful AI assistant powered by Cohere (${model}).`,
+      perplexity: `You are a helpful AI assistant powered by Perplexity (${model}).`,
       custom: 'You are a helpful AI assistant.',
     };
 
-    return prompts[provider] || prompts.custom;
+    return prompts[provider] || prompts.custom || 'You are a helpful AI assistant.';
   }
 
   private getProviderGuidelines(provider: LLMProvider, model: string): string {
-    const guidelines: Record<LLMProvider, string> = {
+    const guidelines: Partial<Record<LLMProvider, string>> = {
       openai: `
 OpenAI Best Practices:
 - Use clear, direct language
@@ -228,6 +236,14 @@ Meta AI Guidelines:
 - Provide practical examples
 `.trim(),
 
+      ollama: 'Use clear, natural language. Optimize for local inference.',
+      lmstudio: 'Use clear, natural language. Optimize for local inference.',
+      vllm: 'Use clear, natural language. Optimize for high-throughput inference.',
+      together: 'Use clear, structured responses. Optimize for cost-effective inference.',
+      groq: 'Use clear, fast responses. Optimize for low-latency inference.',
+      mistral: 'Use clear, structured responses. Follow Mistral AI best practices.',
+      cohere: 'Use clear, factual responses. Optimize for command models.',
+      perplexity: 'Use clear, research-backed responses. Cite sources when possible.',
       custom: '',
     };
 
@@ -287,14 +303,22 @@ Prompt Engineering Techniques Applied:
   }
 
   private getRoleForProvider(provider: LLMProvider): string {
-    const roles: Record<LLMProvider, string> = {
+    const roles: Partial<Record<LLMProvider, string>> = {
       openai: 'Expert AI Assistant',
       anthropic: 'Claude, Expert Assistant',
       google: 'Expert AI Assistant',
       meta: 'Expert AI Assistant',
+      ollama: 'Expert AI Assistant (Local)',
+      lmstudio: 'Expert AI Assistant (Local)',
+      vllm: 'Expert AI Assistant (Local)',
+      together: 'Expert AI Assistant',
+      groq: 'Expert AI Assistant',
+      mistral: 'Expert AI Assistant',
+      cohere: 'Expert AI Assistant',
+      perplexity: 'Expert AI Assistant',
       custom: 'Expert Assistant',
     };
-    return roles[provider] || roles.custom;
+    return roles[provider] || roles.custom || 'Expert Assistant';
   }
 
   private identifyTechniques(style: InputStyle, filter: InputFilter): string[] {
@@ -333,14 +357,22 @@ Prompt Engineering Techniques Applied:
   }
 
   private getDefaultModel(provider: LLMProvider): string {
-    const defaults: Record<LLMProvider, string> = {
+    const defaults: Partial<Record<LLMProvider, string>> = {
       openai: 'gpt-4-turbo-preview',
       anthropic: 'claude-3-sonnet',
       google: 'gemini-pro',
       meta: 'llama-3',
+      ollama: 'llama3',
+      lmstudio: 'llama-3',
+      vllm: 'llama-3',
+      together: 'meta-llama/Llama-3-70b-chat-hf',
+      groq: 'llama-3-70b-8192',
+      mistral: 'mistral-medium',
+      cohere: 'command-r-plus',
+      perplexity: 'llama-3-sonar-large-32k-online',
       custom: 'custom-model',
     };
-    return defaults[provider] || defaults.openai;
+    return defaults[provider] || defaults.openai || 'gpt-4-turbo-preview';
   }
 }
 
