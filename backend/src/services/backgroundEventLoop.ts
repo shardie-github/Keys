@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { codeRepoAdapter } from '../integrations/codeRepoAdapter.js';
-import { supabaseAdapter } from '../integrations/supabaseAdapter.js';
 import { processBackgroundEvent } from './eventProcessor.js';
+import { logger } from '../utils/logger.js';
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,
@@ -132,9 +132,14 @@ export class BackgroundEventLoop {
     const codeRepoEvents = await this.pollCodeRepoEvents(userId);
     events.push(...codeRepoEvents);
 
-    // Poll Supabase schema changes
-    const supabaseEvents = await this.pollSupabaseEvents(userId);
-    events.push(...supabaseEvents);
+      // Poll Supabase schema changes (if supabase adapter is configured)
+      try {
+        const supabaseEvents = await this.pollSupabaseEvents(userId);
+        events.push(...supabaseEvents);
+      } catch (error) {
+        // Supabase adapter may not be configured, skip
+        logger.debug('Supabase events polling skipped', { userId });
+      }
 
     return events;
   }
@@ -242,13 +247,16 @@ export class BackgroundEventLoop {
     const events: ExternalEvent[] = [];
 
     try {
+      // Import supabaseAdapter dynamically to avoid issues if not configured
+      const { supabaseAdapter } = await import('../integrations/supabaseAdapter.js');
+      
       // Detect schema changes
       const schemaChanges = await supabaseAdapter.detectSchemaChanges();
 
       for (const change of schemaChanges) {
         events.push({
           type: supabaseAdapter.schemaChangeToEventType(change),
-          source: 'supabase',
+          source: 'infra' as const, // Map supabase to infra source
           data: {
             change_type: change.type,
             table: change.table,
@@ -264,7 +272,7 @@ export class BackgroundEventLoop {
       if (hasPendingMigrations) {
         events.push({
           type: 'supabase.migration.pending',
-          source: 'supabase',
+          source: 'infra' as const,
           data: {
             message: 'There are pending migrations to apply',
           },
@@ -272,7 +280,7 @@ export class BackgroundEventLoop {
         });
       }
     } catch (error) {
-      console.error('Error polling Supabase events:', error);
+      logger.debug('Supabase events polling skipped', { userId });
     }
 
     return events;

@@ -5,9 +5,12 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
+let anthropic: Anthropic | null = null;
+if (process.env.ANTHROPIC_API_KEY) {
+  anthropic = new Anthropic({
+    apiKey: process.env.ANTHROPIC_API_KEY,
+  });
+}
 
 export interface LLMRequest {
   systemPrompt: string;
@@ -70,14 +73,18 @@ export class LLMService {
     request: LLMRequest,
     model: string
   ): Promise<LLMResponse> {
-    const response = await anthropic.messages.create({
+    if (!anthropic) {
+      throw new Error('Anthropic API key not configured');
+    }
+    
+    const response = await (anthropic as any).messages.create({
       model: model as any,
       max_tokens: request.maxTokens || 2000,
       temperature: request.temperature || 0.7,
       system: request.systemPrompt,
       messages: [
         {
-          role: 'user',
+          role: 'user' as const,
           content: request.userPrompt,
         },
       ],

@@ -124,3 +124,22 @@ export interface TaskIntent {
   context?: string;
   tools?: string[];
 }
+
+// Prompt Assembly Result Types
+export interface PromptAssemblyResult {
+  systemPrompt: string;
+  userPrompt: string;
+  context: {
+    userRole?: string;
+    userVertical?: string;
+    userStack?: Record<string, boolean>;
+    executionConstraints?: Record<string, any>;
+  };
+  selectedAtomIds: string[];
+  blendRecipe: Array<{
+    id: string;
+    name: string;
+    weight: number;
+    influence: 'primary' | 'secondary' | 'modifier';
+  }>;
+}

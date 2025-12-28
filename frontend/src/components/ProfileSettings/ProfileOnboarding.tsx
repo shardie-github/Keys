@@ -113,8 +113,8 @@ export function ProfileOnboarding({ userId, onComplete }: ProfileOnboardingProps
           <div>
             <h2 className="text-xl font-bold mb-4">What's in your tech stack?</h2>
             <StackSelector
-              stack={profile.stack || {}}
-              onChange={(stack) => updateProfile({ stack })}
+              stack={(profile.stack || {}) as Record<string, boolean>}
+              onChange={(stack) => updateProfile({ stack: stack as any })}
             />
           </div>
         );
@@ -132,7 +132,7 @@ export function ProfileOnboarding({ userId, onComplete }: ProfileOnboardingProps
                 updateProfile({
                   tone: vibe.playfulness > 70 ? 'playful' : vibe.playfulness < 30 ? 'serious' : 'balanced',
                   kpi_focus: vibe.revenueFocus > 70 ? 'revenue' : 'growth',
-                  perspective: vibe.investorPerspective > 70 ? 'cfo' : 'operator',
+                  perspective: vibe.investorPerspective > 70 ? 'cfo' : 'founder',
                 });
               }}
             />

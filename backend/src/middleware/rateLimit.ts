@@ -12,9 +12,8 @@ export const apiRateLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   handler: (req: Request, res: Response) => {
-    const retryAfter = Math.ceil(
-      (req.rateLimit?.resetTime || Date.now() + 900000 - Date.now()) / 1000
-    );
+    const resetTime = (req as any).rateLimit?.resetTime || Date.now() + 900000;
+    const retryAfter = Math.ceil((resetTime - Date.now()) / 1000);
     throw new RateLimitError('Rate limit exceeded', retryAfter);
   },
 });

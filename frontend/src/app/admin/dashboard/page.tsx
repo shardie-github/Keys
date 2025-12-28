@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { useUserProfile } from '@/hooks/useUserProfile';
 
 export default function AdminDashboard() {
   // This would fetch admin stats

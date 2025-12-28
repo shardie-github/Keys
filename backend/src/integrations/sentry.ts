@@ -1,5 +1,4 @@
 import * as Sentry from '@sentry/node';
-import { ProfilingIntegration } from '@sentry/profiling-node';
 
 export function initSentry(): void {
   if (!process.env.SENTRY_DSN) {
@@ -13,7 +12,6 @@ export function initSentry(): void {
     tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
     profilesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
     integrations: [
-      new ProfilingIntegration(),
       new Sentry.Integrations.Http({ tracing: true }),
     ],
     beforeSend(event, hint) {

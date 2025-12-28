@@ -1,29 +1,11 @@
 import { createClient } from '@supabase/supabase-js';
-import type { UserProfile, PromptAtom, VibeConfig } from '../types/index.js';
+import type { UserProfile, PromptAtom, VibeConfig, PromptAssemblyResult } from '../types/index.js';
 import { sliderToAtomName } from '../utils/sliderInterpolation.js';
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
-
-export interface PromptAssemblyResult {
-  systemPrompt: string;
-  userPrompt: string;
-  context: {
-    userRole?: string;
-    userVertical?: string;
-    userStack?: Record<string, boolean>;
-    executionConstraints?: Record<string, any>;
-  };
-  selectedAtomIds: string[];
-  blendRecipe: Array<{
-    id: string;
-    name: string;
-    weight: number;
-    influence: 'primary' | 'secondary' | 'modifier';
-  }>;
-}
 
 export async function assemblePrompt(
   userId: string,
