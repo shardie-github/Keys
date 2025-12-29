@@ -80,7 +80,7 @@ app.use('/api', userRateLimiterMiddleware);
 // Public routes
 app.use('/auth', authRouter);
 
-// Protected routes (optional auth)
+// Protected routes (require auth - enforced in route handlers)
 app.use('/profiles', profilesRouter);
 app.use('/vibe-configs', vibeConfigsRouter);
 app.use('/assemble-prompt', assemblePromptRouter);

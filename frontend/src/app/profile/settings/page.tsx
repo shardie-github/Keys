@@ -1,19 +1,41 @@
 'use client';
 
 import React from 'react';
+import { useRouter } from 'next/navigation';
 import { VibeTuner } from '@/components/ProfileSettings/VibeTuner';
 import { VibePresets } from '@/components/ProfileSettings/VibePresets';
 import { useVibeConfig } from '@/hooks/useVibeConfig';
 import { useUserProfile } from '@/hooks/useUserProfile';
+import { useAuth } from '@/contexts/AuthContext';
 
 // Force dynamic rendering since this page uses Supabase
 export const dynamic = 'force-dynamic';
 
 export default function ProfileSettingsPage() {
-  // TODO: Get userId from auth session
-  const userId = 'demo-user'; // Replace with actual auth
-  const { vibeConfig, updateVibeConfig, loading } = useVibeConfig(userId);
-  const { profile } = useUserProfile(userId);
+  const router = useRouter();
+  const { user, loading: authLoading } = useAuth();
+  const userId = user?.id;
+
+  const { vibeConfig, updateVibeConfig, loading } = useVibeConfig(userId || '');
+  const { profile } = useUserProfile(userId || '');
+
+  // Redirect to signin if not authenticated
+  React.useEffect(() => {
+    if (!authLoading && !user) {
+      router.push('/signin?returnUrl=/profile/settings');
+    }
+  }, [user, authLoading, router]);
+
+  if (authLoading || !userId) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/30 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+        <div className="text-center" role="status" aria-live="polite">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-2"></div>
+          <p className="text-gray-600 dark:text-gray-400">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   const handleVibeChange = async (vibe: {
     playfulness: number;

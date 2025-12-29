@@ -1,16 +1,28 @@
 'use client';
 
+import React from 'react';
+import { useRouter } from 'next/navigation';
 import { ChatInterface } from '@/components/CompanionChat/ChatInterface';
 import { useVibeConfig } from '@/hooks/useVibeConfig';
+import { useAuth } from '@/contexts/AuthContext';
 
 // Force dynamic rendering since this page uses Supabase
 export const dynamic = 'force-dynamic';
 
 // Note: Metadata export doesn't work with 'use client', but we'll handle SEO via layout
 export default function ChatPage() {
-  // TODO: Get userId from auth session
-  const userId = 'demo-user'; // Replace with actual auth
-  const { vibeConfig, loading } = useVibeConfig(userId);
+  const router = useRouter();
+  const { user, loading: authLoading } = useAuth();
+  const userId = user?.id;
+
+  const { vibeConfig, loading } = useVibeConfig(userId || '');
+
+  // Redirect to signin if not authenticated
+  React.useEffect(() => {
+    if (!authLoading && !user) {
+      router.push('/signin?returnUrl=/chat');
+    }
+  }, [user, authLoading, router]);
 
   if (loading) {
     return (

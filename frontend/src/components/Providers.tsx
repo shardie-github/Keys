@@ -1,19 +1,22 @@
 /**
  * Client-side Providers
  * 
- * Wraps app with error boundary and toast container
+ * Wraps app with error boundary, auth context, and toast container
  */
 
 'use client';
 
 import ErrorBoundary from './ErrorBoundary';
 import { ToastContainer } from './Toast';
+import { AuthProvider } from '@/contexts/AuthContext';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <ErrorBoundary>
-      {children}
-      <ToastContainer />
+      <AuthProvider>
+        {children}
+        <ToastContainer />
+      </AuthProvider>
     </ErrorBoundary>
   );
 }

@@ -20,7 +20,8 @@ const api = axios.create({
 api.interceptors.request.use(async (config) => {
   // Get auth token from Supabase session
   try {
-    const { supabase } = await import('@/services/supabaseClient');
+    const { createClient } = await import('@/utils/supabase/client');
+    const supabase = createClient();
     const { data: { session } } = await supabase.auth.getSession();
     
     if (session?.access_token) {
@@ -36,13 +37,11 @@ api.interceptors.request.use(async (config) => {
 export const apiService = {
   // Prompt Assembly
   async assemblePrompt(
-    userId: string,
     taskDescription: string,
     vibeConfig: Partial<VibeConfig>,
     inputFilter?: import('@/types/filters').InputFilter
   ): Promise<PromptAssembly> {
     const response = await api.post('/assemble-prompt', {
-      userId,
       taskDescription,
       vibeConfig,
       inputFilter,
