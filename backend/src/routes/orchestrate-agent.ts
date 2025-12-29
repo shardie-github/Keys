@@ -3,6 +3,8 @@ import { orchestrateAgent } from '../services/agentOrchestration.js';
 import { createClient } from '@supabase/supabase-js';
 import type { PromptAssemblyResult } from '../types/index.js';
 import { telemetryService } from '../services/telemetryService.js';
+import { authMiddleware, AuthenticatedRequest } from '../middleware/auth.js';
+import { asyncHandler } from '../middleware/errorHandler.js';
 
 const router = Router();
 const supabase = createClient(
@@ -10,9 +12,12 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-router.post('/', async (req, res) => {
-  try {
-    const { assembledPrompt, taskIntent, naturalLanguageInput, userId } = req.body;
+router.post(
+  '/',
+  authMiddleware,
+  asyncHandler(async (req: AuthenticatedRequest, res) => {
+    const userId = req.userId!; // Always use authenticated user ID
+    const { assembledPrompt, taskIntent, naturalLanguageInput } = req.body;
 
     if (!assembledPrompt || !naturalLanguageInput) {
       return res.status(400).json({
@@ -32,41 +37,34 @@ router.post('/', async (req, res) => {
     const latencyMs = Date.now() - startTime;
 
     // Log agent run
-    if (userId) {
-      const { data: run } = await supabase
-        .from('agent_runs')
-        .insert({
-          user_id: userId,
-          trigger: 'chat_input',
-          assembled_prompt: assembledPrompt.systemPrompt,
-          selected_atoms: assembledPrompt.selectedAtomIds,
-          vibe_config_snapshot: assembledPrompt.context,
-          agent_type: 'orchestrator',
-          model_used: output.modelUsed,
-          generated_content: output.content,
-          tokens_used: output.tokensUsed,
-          latency_ms: latencyMs,
-          cost_usd: output.costUsd,
-        })
-        .select()
-        .single();
+    const { data: run } = await supabase
+      .from('agent_runs')
+      .insert({
+        user_id: userId,
+        trigger: 'chat_input',
+        assembled_prompt: assembledPrompt.systemPrompt,
+        selected_atoms: assembledPrompt.selectedAtomIds,
+        vibe_config_snapshot: assembledPrompt.context,
+        agent_type: 'orchestrator',
+        model_used: output.modelUsed,
+        generated_content: output.content,
+        tokens_used: output.tokensUsed,
+        latency_ms: latencyMs,
+        cost_usd: output.costUsd,
+      })
+      .select()
+      .single();
 
-      // Track telemetry
-      if (run) {
-        await telemetryService.trackChatMessage(userId, naturalLanguageInput.length);
-        if (output.costUsd && output.tokensUsed) {
-          await telemetryService.trackCost(userId, output.costUsd, output.tokensUsed);
-        }
+    // Track telemetry
+    if (run) {
+      await telemetryService.trackChatMessage(userId, naturalLanguageInput.length);
+      if (output.costUsd && output.tokensUsed) {
+        await telemetryService.trackCost(userId, output.costUsd, output.tokensUsed);
       }
     }
 
     res.json(output);
-  } catch (error) {
-    console.error('Error orchestrating agent:', error);
-    res.status(500).json({
-      error: error instanceof Error ? error.message : 'Internal server error',
-    });
-  }
-});
+  })
+);
 
 export { router as orchestrateAgentRouter };

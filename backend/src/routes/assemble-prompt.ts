@@ -4,11 +4,12 @@ import { asyncHandler } from '../middleware/errorHandler.js';
 import { validateBody } from '../middleware/validation.js';
 import { assemblePrompt } from '../services/promptAssembly.js';
 import type { InputFilter } from '../types/filters.js';
+import { authMiddleware, AuthenticatedRequest } from '../middleware/auth.js';
+import { AuthorizationError } from '../types/errors.js';
 
 const router = Router();
 
 const assemblePromptSchema = z.object({
-  userId: z.string().uuid(),
   taskDescription: z.string().min(1),
   vibeConfig: z.object({
     playfulness: z.number().min(0).max(100).optional(),
@@ -43,10 +44,13 @@ const assemblePromptSchema = z.object({
 
 router.post(
   '/',
+  authMiddleware,
   validateBody(assemblePromptSchema),
-  asyncHandler(async (req, res) => {
-    const { userId, taskDescription, vibeConfig, inputFilter } = req.body;
+  asyncHandler(async (req: AuthenticatedRequest, res) => {
+    const userId = req.userId!; // Always use authenticated user ID
+    const { taskDescription, vibeConfig, inputFilter } = req.body;
 
+    // Ignore userId from body if present - always use authenticated user
     const result = await assemblePrompt(
       userId,
       taskDescription,

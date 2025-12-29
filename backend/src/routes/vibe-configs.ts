@@ -4,9 +4,10 @@ import { z } from 'zod';
 import { asyncHandler } from '../middleware/errorHandler.js';
 import { validateBody, validateParams } from '../middleware/validation.js';
 import { createVibeConfigSchema, updateVibeConfigSchema } from '../validation/schemas.js';
-import { NotFoundError, DatabaseError } from '../types/errors.js';
+import { NotFoundError, DatabaseError, AuthorizationError } from '../types/errors.js';
 import { logger } from '../utils/logger.js';
 import { getCache, setCache, deleteCache, cacheKeys } from '../cache/redis.js';
+import { authMiddleware, AuthenticatedRequest } from '../middleware/auth.js';
 
 const router = Router();
 const supabase = createClient(
@@ -17,10 +18,17 @@ const supabase = createClient(
 // Get user's vibe config
 router.get(
   '/:userId',
+  authMiddleware,
   validateParams(z.object({ userId: z.string().min(1) })),
-  asyncHandler(async (req, res) => {
+  asyncHandler(async (req: AuthenticatedRequest, res) => {
     const { userId } = req.params;
+    const authenticatedUserId = req.userId!;
     const requestId = req.headers['x-request-id'] as string;
+
+    // Enforce ownership: users can only access their own vibe config unless admin
+    if (userId !== authenticatedUserId && req.user?.role !== 'admin') {
+      throw new AuthorizationError('You can only access your own vibe config');
+    }
 
     // Try cache first
     const cacheKey = cacheKeys.vibeConfig(userId);
@@ -80,19 +88,19 @@ router.get(
 // Create vibe config
 router.post(
   '/',
+  authMiddleware,
   validateBody(createVibeConfigSchema),
-  asyncHandler(async (req, res) => {
+  asyncHandler(async (req: AuthenticatedRequest, res) => {
     const config = req.body;
-    const userId = (req as any).userId || config.user_id;
+    const userId = req.userId!; // Always use authenticated user ID
     const requestId = req.headers['x-request-id'] as string;
 
-    if (!userId) {
-      return res.status(400).json({ error: 'user_id is required' });
-    }
+    // Ignore user_id from body if present - always use authenticated user
+    const { user_id, ...configData } = config;
 
     const { data, error } = await supabase
       .from('vibe_configs')
-      .insert({ ...config, user_id: userId })
+      .insert({ ...configData, user_id: userId })
       .select()
       .single();
 
@@ -113,16 +121,26 @@ router.post(
 // Update vibe config
 router.patch(
   '/:userId',
+  authMiddleware,
   validateParams(z.object({ userId: z.string().min(1) })),
   validateBody(updateVibeConfigSchema),
-  asyncHandler(async (req, res) => {
+  asyncHandler(async (req: AuthenticatedRequest, res) => {
     const { userId } = req.params;
+    const authenticatedUserId = req.userId!;
     const updates = req.body;
     const requestId = req.headers['x-request-id'] as string;
 
+    // Enforce ownership: users can only update their own vibe config unless admin
+    if (userId !== authenticatedUserId && req.user?.role !== 'admin') {
+      throw new AuthorizationError('You can only update your own vibe config');
+    }
+
+    // Remove user_id from updates if present - cannot change ownership
+    const { user_id, ...updateData } = updates;
+
     const { data, error } = await supabase
       .from('vibe_configs')
-      .update(updates)
+      .update(updateData)
       .eq('user_id', userId)
       .order('created_at', { ascending: false })
       .limit(1)

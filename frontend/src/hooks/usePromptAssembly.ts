@@ -9,7 +9,6 @@ export function usePromptAssembly() {
   const [assembly, setAssembly] = useState<PromptAssembly | null>(null);
 
   const assemblePrompt = async (
-    userId: string,
     taskDescription: string,
     vibeConfig: Partial<VibeConfig>,
     inputFilter?: InputFilter
@@ -17,7 +16,7 @@ export function usePromptAssembly() {
     try {
       setLoading(true);
       setError(null);
-      const result = await apiService.assemblePrompt(userId, taskDescription, vibeConfig, inputFilter);
+      const result = await apiService.assemblePrompt(taskDescription, vibeConfig, inputFilter);
       setAssembly(result);
       return result;
     } catch (err) {

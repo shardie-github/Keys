@@ -62,7 +62,6 @@ export function ChatInterface({ userId, initialVibeConfig }: ChatInterfaceProps)
     try {
       // Assemble prompt (will apply input filters internally if provided)
       const promptAssembly = await assemblePrompt(
-        userId,
         messageText,
         vibeConfig,
         inputFilter

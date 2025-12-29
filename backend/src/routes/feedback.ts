@@ -1,6 +1,9 @@
 import { Router } from 'express';
 import { createClient } from '@supabase/supabase-js';
 import { telemetryService } from '../services/telemetryService.js';
+import { authMiddleware, AuthenticatedRequest } from '../middleware/auth.js';
+import { asyncHandler } from '../middleware/errorHandler.js';
+import { AuthorizationError, NotFoundError } from '../types/errors.js';
 
 const router = Router();
 const supabase = createClient(
@@ -8,14 +11,33 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-router.post('/', async (req, res) => {
-  try {
+router.post(
+  '/',
+  authMiddleware,
+  asyncHandler(async (req: AuthenticatedRequest, res) => {
+    const userId = req.userId!;
     const { runId, feedback, detail } = req.body;
 
     if (!runId || !feedback) {
       return res.status(400).json({
         error: 'Missing required fields: runId, feedback',
       });
+    }
+
+    // First verify the run belongs to the user
+    const { data: existingRun, error: fetchError } = await supabase
+      .from('agent_runs')
+      .select('user_id')
+      .eq('id', runId)
+      .single();
+
+    if (fetchError || !existingRun) {
+      throw new NotFoundError('Agent run not found');
+    }
+
+    // Enforce ownership: users can only provide feedback on their own runs unless admin
+    if (existingRun.user_id !== userId && req.user?.role !== 'admin') {
+      throw new AuthorizationError('You can only provide feedback on your own runs');
     }
 
     // Update agent run with feedback
@@ -30,7 +52,7 @@ router.post('/', async (req, res) => {
       .single();
 
     if (error) {
-      return res.status(400).json({ error: error.message });
+      throw new Error(error.message);
     }
 
     // Update atom success rates based on feedback
@@ -61,21 +83,16 @@ router.post('/', async (req, res) => {
     }
 
     // Track telemetry
-    if (data.user_id) {
-      const source = data.trigger === 'event' ? 'background' : 'manual';
-      await telemetryService.trackSuggestionFeedback(
-        data.user_id,
-        runId,
-        feedback,
-        source
-      );
-    }
+    const source = data.trigger === 'event' ? 'background' : 'manual';
+    await telemetryService.trackSuggestionFeedback(
+      userId,
+      runId,
+      feedback,
+      source
+    );
 
     res.json({ success: true, data });
-  } catch (error) {
-    console.error('Error submitting feedback:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
+  })
+);
 
 export { router as feedbackRouter };

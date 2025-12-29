@@ -1,19 +1,38 @@
 'use client';
 
 import React from 'react';
+import { useRouter } from 'next/navigation';
 import { RunAnalytics } from '@/components/Admin/RunAnalytics';
 import { ActionHistory } from '@/components/BackgroundAgent/ActionHistory';
 import { ProactiveSuggestions } from '@/components/BackgroundAgent/ProactiveSuggestions';
 import { useUserProfile } from '@/hooks/useUserProfile';
+import { useAuth } from '@/contexts/AuthContext';
 
 // Force dynamic rendering since this page uses Supabase
 export const dynamic = 'force-dynamic';
 
 // Note: Metadata export doesn't work with 'use client', but we'll handle SEO via layout
 export default function DashboardPage() {
-  // TODO: Get userId from auth session
-  const userId = 'demo-user'; // Replace with actual auth
-  const { profile, loading: profileLoading } = useUserProfile(userId);
+  const router = useRouter();
+  const { user, loading: authLoading } = useAuth();
+  const userId = user?.id;
+
+  const { profile, loading: profileLoading } = useUserProfile(userId || '');
+
+  // Redirect to signin if not authenticated
+  React.useEffect(() => {
+    if (!authLoading && !user) {
+      router.push('/signin?returnUrl=/dashboard');
+    }
+  }, [user, authLoading, router]);
+
+  if (authLoading || !userId) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p>Loading dashboard...</p>
+      </div>
+    );
+  }
 
   if (profileLoading) {
     return (

@@ -6,6 +6,7 @@ import type {
   UserProfile,
   VibeConfig,
 } from '@/types';
+import { toast } from '@/components/Toast';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001';
 
@@ -20,7 +21,8 @@ const api = axios.create({
 api.interceptors.request.use(async (config) => {
   // Get auth token from Supabase session
   try {
-    const { supabase } = await import('@/services/supabaseClient');
+    const { createClient } = await import('@/utils/supabase/client');
+    const supabase = createClient();
     const { data: { session } } = await supabase.auth.getSession();
     
     if (session?.access_token) {
@@ -33,16 +35,30 @@ api.interceptors.request.use(async (config) => {
   return config;
 });
 
+// Add response interceptor for error handling and toast notifications
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response) {
+      const message = error.response.data?.error?.message || error.response.data?.message || 'An error occurred';
+      toast.error(message);
+    } else if (error.request) {
+      toast.error('Network error. Please check your connection.');
+    } else {
+      toast.error('An unexpected error occurred');
+    }
+    return Promise.reject(error);
+  }
+);
+
 export const apiService = {
   // Prompt Assembly
   async assemblePrompt(
-    userId: string,
     taskDescription: string,
     vibeConfig: Partial<VibeConfig>,
     inputFilter?: import('@/types/filters').InputFilter
   ): Promise<PromptAssembly> {
     const response = await api.post('/assemble-prompt', {
-      userId,
       taskDescription,
       vibeConfig,
       inputFilter,
