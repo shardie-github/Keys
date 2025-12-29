@@ -46,6 +46,24 @@
   /* Smooth scrolling */
   html {
     scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Better touch targets for mobile */
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    touch-action: manipulation;
+  }
+
+  /* Improved text rendering */
+  body {
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   /* Reduced motion */
@@ -99,6 +117,26 @@
 
   .scrollbar-thin::-webkit-scrollbar-thumb:hover {
     background: rgba(148, 163, 184, 0.7);
+  }
+
+  /* Mobile-optimized utilities */
+  @media (max-width: 640px) {
+    .touch-target {
+      min-height: 44px;
+      min-width: 44px;
+    }
+  }
+
+  /* Better focus styles */
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-slate-800;
+  }
+
+  /* Smooth transitions */
+  .transition-smooth {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
   }
 }
 
