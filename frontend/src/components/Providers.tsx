@@ -12,6 +12,8 @@ import { ToastContainer } from './Toast';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { DiagnosticsPanel } from './DiagnosticsPanel';
 import { useAnalytics } from '@/hooks/useAnalytics';
+import { KeyboardShortcutsHelp } from './KeyboardShortcuts';
+import { useKeyboardShortcuts, defaultShortcuts } from '@/hooks/useKeyboardShortcuts';
 
 function AnalyticsProvider({ children }: { children: React.ReactNode }) {
   const { trackPageView } = useAnalytics();
@@ -32,14 +34,22 @@ function AnalyticsProvider({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+function KeyboardShortcutsProvider({ children }: { children: React.ReactNode }) {
+  useKeyboardShortcuts(defaultShortcuts, true);
+  return <>{children}</>;
+}
+
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <ErrorBoundary>
       <AuthProvider>
         <AnalyticsProvider>
-          {children}
-          <ToastContainer />
-          <DiagnosticsPanel />
+          <KeyboardShortcutsProvider>
+            {children}
+            <ToastContainer />
+            <DiagnosticsPanel />
+            <KeyboardShortcutsHelp />
+          </KeyboardShortcutsProvider>
         </AnalyticsProvider>
       </AuthProvider>
     </ErrorBoundary>
