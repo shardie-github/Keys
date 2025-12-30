@@ -17,10 +17,10 @@ export default defineConfig({
         'src/index.ts',
       ],
       thresholds: {
-        lines: 70,
-        functions: 70,
-        branches: 70,
-        statements: 70,
+        lines: 80, // AAAA-grade: 80%+ coverage
+        functions: 80,
+        branches: 75,
+        statements: 80,
       },
     },
     testTimeout: 10000,

@@ -19,6 +19,12 @@ export default defineConfig({
         '**/__tests__/**',
         '**/__mocks__/**',
       ],
+      thresholds: {
+        lines: 70, // AAAA-grade: 70%+ frontend coverage
+        functions: 70,
+        branches: 65,
+        statements: 70,
+      },
     },
   },
   resolve: {

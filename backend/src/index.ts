@@ -26,9 +26,10 @@ import {
 } from './middleware/security.js';
 import { initSentry } from './integrations/sentry.js';
 import { initRedis } from './cache/redis.js';
-import { logger } from './utils/logger';
+import { logger } from './utils/logger.js';
 import { createServer } from 'http';
 import { WebSocketServer } from './websocket/server.js';
+import { kpiTracker } from './monitoring/kpiTracker.js';
 
 dotenv.config();
 
@@ -62,17 +63,32 @@ app.use(requestLoggingMiddleware);
 import { metricsMiddleware } from './middleware/metrics.js';
 app.use(metricsMiddleware);
 
+// APM middleware for distributed tracing
+import { apmMiddleware } from './middleware/apmMiddleware.js';
+app.use(apmMiddleware);
+
+// Performance: Compression middleware
+import { compressionMiddleware, cacheControlMiddleware, queryOptimizationMiddleware } from './middleware/performance.js';
+app.use(compressionMiddleware());
+
 // Body parsing
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+// Query optimization
+app.use(queryOptimizationMiddleware);
+
 // Health check (no auth, no rate limit)
-app.get('/health', (_req, res) => {
-  res.json({
-    status: 'ok',
-    timestamp: new Date().toISOString(),
+import { healthCheckService } from './utils/healthCheck.js';
+app.get('/health', async (_req, res) => {
+  const health = await healthCheckService.runHealthChecks();
+  res.status(health.status === 'unhealthy' ? 503 : health.status === 'degraded' ? 200 : 200).json({
+    status: health.status,
+    timestamp: health.timestamp,
     environment: process.env.NODE_ENV,
     version: process.env.npm_package_version || '1.0.0',
+    checks: health.checks,
+    overallScore: health.overallScore,
   });
 });
 
@@ -108,6 +124,18 @@ app.use('/user-templates', enhancedUserTemplatesRouter);
 
 // Admin routes (require auth)
 app.use('/admin', authMiddleware, adminRouter);
+
+// KPI metrics routes (require admin)
+import { kpiRouter } from './routes/kpi.js';
+app.use('/kpi', authMiddleware, kpiRouter);
+
+// Security audit routes (require admin)
+import { securityRouter } from './routes/security.js';
+app.use('/security', authMiddleware, securityRouter);
+
+// Disaster recovery routes (require admin)
+import { disasterRecoveryRouter } from './routes/disaster-recovery.js';
+app.use('/disaster-recovery', authMiddleware, disasterRecoveryRouter);
 
 // Webhooks with raw body middleware
 const webhookMiddleware = express.raw({ type: 'application/json' });
@@ -154,5 +182,18 @@ server.listen(PORT, () => {
       'POST /webhooks/code-repo - Code repository webhooks (GitHub/GitLab/Bitbucket)',
       'POST /webhooks/supabase - Supabase webhooks',
     ],
+    kpiEndpoints: [
+      'GET /kpi/metrics - KPI metrics (admin)',
+      'GET /kpi/health - Health status',
+      'GET /security/audit - Security audit (admin)',
+    ],
+  });
+  
+  // Log initial KPI health status
+  const health = kpiTracker.getHealthStatus();
+  logger.info('KPI Health Status', {
+    status: health.status,
+    score: health.score,
+    issues: health.issues.length,
   });
 });
