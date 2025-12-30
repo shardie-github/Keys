@@ -52,7 +52,7 @@ export class AuditLogService {
     resourceType: string,
     resourceId?: string,
     details?: Record<string, any>,
-    req?: { ip?: string; headers?: Record<string, string> }
+    req?: { ip?: string; headers?: Record<string, string | string[] | undefined> }
   ): Promise<void> {
     await this.log({
       userId,
@@ -61,7 +61,7 @@ export class AuditLogService {
       resourceId,
       details,
       ipAddress: req?.ip,
-      userAgent: req?.headers?.['user-agent'],
+      userAgent: typeof req?.headers?.['user-agent'] === 'string' ? req.headers['user-agent'] : undefined,
       timestamp: new Date(),
     });
   }

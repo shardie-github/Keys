@@ -13,7 +13,6 @@ import { inputFiltersRouter } from './routes/input-filters.js';
 import { scaffoldTemplatesRouter } from './routes/scaffold-templates.js';
 import { userTemplatesRouter } from './routes/user-templates.js';
 import { enhancedUserTemplatesRouter } from './routes/enhanced-user-templates.js';
-import { billingRouter } from './routes/billing.js';
 import { extensionAuthRouter } from './routes/extension-auth.js';
 import { metricsRouter } from './routes/metrics.js';
 import { apmRouter } from './routes/apm.js';
@@ -51,6 +50,10 @@ const PORT = process.env.PORT || 3001;
 
 // Security middleware (must be first)
 app.use(securityMiddleware());
+
+// Request signing for sensitive operations
+import { requestSigningMiddleware } from './middleware/securityHardening.js';
+app.use(requestSigningMiddleware());
 
 // Request ID middleware
 app.use(requestIdMiddleware);
