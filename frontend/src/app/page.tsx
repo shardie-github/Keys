@@ -5,10 +5,10 @@ import { UpgradePrompt } from '@/components/Upsell/UpgradePrompt';
 
 export const metadata: Metadata = {
   title: 'Home',
-  description: 'Your AI cofounder for ideation, specification, implementation, and operations. Transform your product development with intelligent automation. Join 10K+ founders building faster.',
+  description: 'Your AI cofounder for ideation, specification, implementation, and operations. Transform your product development with intelligent automation.',
   openGraph: {
     title: 'Cursor Venture Companion - AI Cofounder',
-    description: 'Your AI cofounder for ideation, specification, implementation, and operations. Join 10K+ founders building faster.',
+    description: 'Your AI cofounder for ideation, specification, implementation, and operations.',
   },
 };
 

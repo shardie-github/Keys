@@ -62,7 +62,12 @@ app.use(requestLoggingMiddleware);
 import { metricsMiddleware } from './middleware/metrics.js';
 app.use(metricsMiddleware);
 
-// Body parsing
+// Stripe webhook needs raw body for signature verification
+// Mount it BEFORE JSON body parser
+import { billingRouter } from './routes/billing.js';
+app.use('/billing/webhook', express.raw({ type: 'application/json' }), billingRouter);
+
+// Body parsing (for all other routes)
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
@@ -113,7 +118,7 @@ app.use('/admin', authMiddleware, adminRouter);
 const webhookMiddleware = express.raw({ type: 'application/json' });
 app.use('/webhooks', webhookMiddleware, webhooksRouter);
 
-// Billing routes
+// Other billing routes (checkout, portal) use JSON body parser
 app.use('/billing', billingRouter);
 
 // Extension auth routes (public, rate-limited)
