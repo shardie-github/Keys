@@ -205,4 +205,74 @@ router.get('/profiles', requireRole('admin', 'superadmin'), async (req, res) => 
   }
 });
 
+/**
+ * GET /admin/health - System health check (admin only)
+ */
+router.get('/health', requireRole('admin', 'superadmin'), async (req, res) => {
+  try {
+    const startTime = Date.now();
+    
+    // Check database connectivity
+    const { error: dbError } = await supabase.from('user_profiles').select('user_id').limit(1);
+    const dbResponseTime = Date.now() - startTime;
+    const dbConnected = !dbError;
+
+    // Check Redis (if configured)
+    let redisConnected = false;
+    try {
+      const { initRedis } = await import('../cache/redis.js');
+      const redis = initRedis();
+      if (redis) {
+        await redis.ping();
+        redisConnected = true;
+      }
+    } catch {
+      // Redis not configured or unavailable
+    }
+
+    // Check Stripe (if configured)
+    const stripeConfigured = !!process.env.STRIPE_SECRET_KEY;
+
+    // Get webhook status (would need to track this in a table)
+    // For now, return unknown
+    const webhookStatus = {
+      stripe: {
+        status: stripeConfigured ? 'ok' as const : 'unknown' as const,
+        lastReceived: null as string | null,
+      },
+      github: {
+        status: 'unknown' as const,
+        lastReceived: null as string | null,
+      },
+    };
+
+    // Get system uptime (process uptime in seconds)
+    const uptime = Math.floor(process.uptime());
+    const version = process.env.npm_package_version || '1.0.0';
+
+    res.json({
+      database: {
+        connected: dbConnected,
+        responseTime: dbResponseTime,
+      },
+      webhooks: webhookStatus,
+      services: {
+        redis: {
+          connected: redisConnected,
+        },
+        stripe: {
+          configured: stripeConfigured,
+        },
+      },
+      system: {
+        uptime,
+        version,
+      },
+    });
+  } catch (error) {
+    console.error('Error checking health:', error);
+    res.status(500).json({ error: 'Health check failed' });
+  }
+});
+
 export { router as adminRouter };

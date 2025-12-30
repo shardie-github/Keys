@@ -15,6 +15,7 @@ import { userTemplatesRouter } from './routes/user-templates.js';
 import { enhancedUserTemplatesRouter } from './routes/enhanced-user-templates.js';
 import { billingRouter } from './routes/billing.js';
 import { extensionAuthRouter } from './routes/extension-auth.js';
+import { metricsRouter } from './routes/metrics.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 import { optionalAuthMiddleware, authMiddleware } from './middleware/auth.js';
 import { userRateLimiterMiddleware, apiRateLimiter } from './middleware/rateLimit.js';
@@ -123,6 +124,9 @@ app.use('/billing', billingRouter);
 
 // Extension auth routes (public, rate-limited)
 app.use('/extension-auth', extensionAuthRouter);
+
+// Metrics routes (require auth)
+app.use('/metrics', metricsRouter);
 
 // Initialize WebSocket server
 const wsServer = new WebSocketServer();

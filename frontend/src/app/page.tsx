@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Metadata } from 'next';
-import { SocialProof } from '@/components/CRO/SocialProof';
+import { SocialProofWithRealMetrics } from '@/components/CRO/SocialProofWithRealMetrics';
 import { UpgradePrompt } from '@/components/Upsell/UpgradePrompt';
 
 export const metadata: Metadata = {
@@ -107,7 +107,7 @@ export default function Home() {
       </div>
 
       {/* Social Proof Section */}
-      <SocialProof />
+      <SocialProofWithRealMetrics />
 
       {/* Upgrade Prompt */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 sm:pb-16">
