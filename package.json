@@ -19,7 +19,10 @@
     "lint:backend": "cd backend && npm run lint",
     "type-check": "npm run type-check:frontend && npm run type-check:backend",
     "type-check:frontend": "cd frontend && npm run type-check",
-    "type-check:backend": "cd backend && npm run type-check"
+    "type-check:backend": "cd backend && npm run type-check",
+    "db:verify": "tsx scripts/db-verify.ts",
+    "db:smoke": "tsx scripts/db-smoke.ts",
+    "db:reconcile": "echo 'Run migration: backend/supabase/migrations/00000000000000_backend_contract_reconcile.sql in Supabase SQL editor'"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
