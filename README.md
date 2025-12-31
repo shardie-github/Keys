@@ -36,6 +36,7 @@ See **[DEPLOYMENT.md](./DEPLOYMENT.md)** for complete deployment instructions.
 - **[STATUS.md](./STATUS.md)** - Current project status
 - **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Complete deployment guide
 - **[MIGRATION_STATUS.md](./MIGRATION_STATUS.md)** - Database migration guide
+- **[docs/BACKEND_CONTRACT_VERIFICATION.md](./docs/BACKEND_CONTRACT_VERIFICATION.md)** - Backend contract verification guide
 - **[PROOF.md](./PROOF.md)** - Verification steps and evidence
 - **[CHANGELOG.md](./CHANGELOG.md)** - RC1 changelog
 - **[ALL_PHASES_COMPLETE.md](./ALL_PHASES_COMPLETE.md)** - Completion summary

@@ -238,15 +238,98 @@ router.get('/profiles', requireRole('admin', 'superadmin'), async (req, res) => 
 
 /**
  * GET /admin/health - System health check (admin only)
+ * Validates database contract and connectivity
  */
 router.get('/health', requireRole('admin', 'superadmin'), async (req, res) => {
   try {
     const startTime = Date.now();
+    const healthChecks: Record<string, { status: 'ok' | 'error' | 'warning'; message: string; details?: any }> = {};
     
     // Check database connectivity
+    const dbStartTime = Date.now();
     const { error: dbError } = await supabase.from('user_profiles').select('user_id').limit(1);
-    const dbResponseTime = Date.now() - startTime;
+    const dbResponseTime = Date.now() - dbStartTime;
     const dbConnected = !dbError;
+    
+    healthChecks.database_connectivity = {
+      status: dbConnected ? 'ok' : 'error',
+      message: dbConnected ? 'Database is reachable' : `Database error: ${dbError?.message}`,
+      details: { responseTime: dbResponseTime },
+    };
+
+    // Check required tables exist
+    const requiredTables = [
+      'user_profiles',
+      'prompt_atoms',
+      'vibe_configs',
+      'agent_runs',
+      'background_events',
+      'user_template_customizations',
+      'organizations',
+      'organization_members',
+    ];
+    
+    const tableChecks: string[] = [];
+    const missingTables: string[] = [];
+    
+    for (const table of requiredTables) {
+      const { error } = await supabase.from(table).select('*').limit(0);
+      if (error && (error.code === 'PGRST116' || error.message?.includes('does not exist'))) {
+        missingTables.push(table);
+      } else {
+        tableChecks.push(table);
+      }
+    }
+    
+    healthChecks.required_tables = {
+      status: missingTables.length === 0 ? 'ok' : 'error',
+      message: missingTables.length === 0 
+        ? `All ${requiredTables.length} required tables exist`
+        : `Missing tables: ${missingTables.join(', ')}`,
+      details: { 
+        found: tableChecks.length,
+        missing: missingTables.length,
+        missingTables,
+      },
+    };
+
+    // Check critical functions
+    const { error: uuidError } = await supabase.rpc('gen_random_uuid');
+    const uuidAvailable = !uuidError;
+    
+    const { error: trackError } = await supabase.rpc('track_template_usage', {
+      p_user_id: '00000000-0000-0000-0000-000000000000',
+      p_template_id: 'health-check',
+      p_success: true,
+    });
+    const trackFunctionExists = !trackError || !(trackError.message?.includes('does not exist') || trackError.code === '42883');
+    
+    healthChecks.database_functions = {
+      status: uuidAvailable && trackFunctionExists ? 'ok' : 'warning',
+      message: uuidAvailable && trackFunctionExists
+        ? 'Required functions are available'
+        : `Some functions missing: ${!uuidAvailable ? 'gen_random_uuid ' : ''}${!trackFunctionExists ? 'track_template_usage' : ''}`,
+    };
+
+    // Check RLS is enabled (by trying anon query - should fail)
+    const anonClient = createClient(
+      process.env.SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+    );
+    const { data: anonData, error: anonError } = await anonClient
+      .from('user_profiles')
+      .select('*')
+      .limit(1);
+    
+    const rlsWorking = !anonData || anonData.length === 0 || 
+      (anonError && (anonError.code === 'PGRST301' || anonError.message?.includes('permission')));
+    
+    healthChecks.rls_enforcement = {
+      status: rlsWorking ? 'ok' : 'warning',
+      message: rlsWorking 
+        ? 'RLS appears to be enforcing access control'
+        : 'RLS may not be properly configured - anon client could access user data',
+    };
 
     // Check Redis (if configured)
     let redisConnected = false;
@@ -260,12 +343,21 @@ router.get('/health', requireRole('admin', 'superadmin'), async (req, res) => {
     } catch {
       // Redis not configured or unavailable
     }
+    
+    healthChecks.redis = {
+      status: redisConnected ? 'ok' : 'warning',
+      message: redisConnected ? 'Redis is connected' : 'Redis not configured or unavailable',
+    };
 
     // Check Stripe (if configured)
     const stripeConfigured = !!process.env.STRIPE_SECRET_KEY;
+    
+    healthChecks.stripe = {
+      status: stripeConfigured ? 'ok' : 'warning',
+      message: stripeConfigured ? 'Stripe is configured' : 'Stripe not configured',
+    };
 
     // Get webhook status (would need to track this in a table)
-    // For now, return unknown
     const webhookStatus = {
       stripe: {
         status: stripeConfigured ? 'ok' as const : 'unknown' as const,
@@ -281,7 +373,14 @@ router.get('/health', requireRole('admin', 'superadmin'), async (req, res) => {
     const uptime = Math.floor(process.uptime());
     const version = process.env.npm_package_version || '1.0.0';
 
-    res.json({
+    // Overall health status
+    const hasErrors = Object.values(healthChecks).some(check => check.status === 'error');
+    const hasWarnings = Object.values(healthChecks).some(check => check.status === 'warning');
+
+    res.status(hasErrors ? 503 : 200).json({
+      status: hasErrors ? 'degraded' : hasWarnings ? 'healthy' : 'healthy',
+      timestamp: new Date().toISOString(),
+      checks: healthChecks,
       database: {
         connected: dbConnected,
         responseTime: dbResponseTime,
@@ -302,7 +401,11 @@ router.get('/health', requireRole('admin', 'superadmin'), async (req, res) => {
     });
   } catch (error) {
     console.error('Error checking health:', error);
-    res.status(500).json({ error: 'Health check failed' });
+    res.status(500).json({ 
+      status: 'error',
+      error: 'Health check failed',
+      message: error instanceof Error ? error.message : 'Unknown error',
+    });
   }
 });
 
