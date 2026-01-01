@@ -61,10 +61,10 @@ function ChatPageContent() {
             </div>
             <div>
               <h1 className="text-base sm:text-lg md:text-xl font-bold text-slate-900 dark:text-slate-50">
-                Cursor Venture Companion
+                Keys
               </h1>
               <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 hidden sm:block">
-                Your AI cofounder for the entire product lifecycle
+                Your AI co-founder for operational automation
               </p>
             </div>
           </div>

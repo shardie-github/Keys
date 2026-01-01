@@ -24,10 +24,10 @@ export function generateOrganizationSchema() {
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'Cursor Venture Companion',
-    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://cursor-venture-companion.com',
-    logo: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://cursor-venture-companion.com'}/icon-512.png`,
-    description: 'Your AI cofounder for ideation, specification, implementation, and operations.',
+    name: 'Keys',
+    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://keys.dev',
+    logo: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://keys.dev'}/icon-512.png`,
+    description: 'Your day-to-day AI co-founder that works alongside Cursor. Operational automation, business process intelligence, and institutional memory.',
     sameAs: [
       'https://twitter.com/cursorventure',
       'https://github.com/cursor-venture-companion',
@@ -44,7 +44,7 @@ export function generateSoftwareApplicationSchema() {
   return {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
-    name: 'Cursor Venture Companion',
+    name: 'Keys',
     applicationCategory: 'BusinessApplication',
     operatingSystem: 'Web',
     offers: {
@@ -60,7 +60,7 @@ export function generateSoftwareApplicationSchema() {
       bestRating: '5',
       worstRating: '1',
     },
-    description: 'Your AI cofounder for ideation, specification, implementation, and operations.',
+    description: 'Your day-to-day AI co-founder that works alongside Cursor. Operational automation, business process intelligence, and institutional memory.',
     url: process.env.NEXT_PUBLIC_SITE_URL || 'https://cursor-venture-companion.com',
   };
 }

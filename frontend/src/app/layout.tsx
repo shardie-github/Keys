@@ -20,15 +20,15 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://cursor-venture-companion.com'),
   title: {
-    default: 'Cursor Venture Companion - AI Cofounder for Product Lifecycle',
-    template: '%s | Cursor Venture Companion',
+    default: 'Keys - Your AI Co-Founder for Operational Automation',
+    template: '%s | Keys',
   },
-  description: 'Your AI cofounder for ideation, specification, implementation, and operations. Transform your product development with intelligent automation.',
+  description: 'Your day-to-day AI co-founder that works alongside Cursor. Operational automation, business process intelligence, and institutional memory. No equity, just results.',
   keywords: [
     'AI cofounder',
     'product development',
     'AI assistant',
-    'venture companion',
+    'operational automation',
     'product lifecycle',
     'automation',
     'AI tools',
@@ -42,9 +42,9 @@ export const metadata: Metadata = {
     'prompt engineering',
     'AI templates',
   ],
-  authors: [{ name: 'Cursor Venture Companion' }],
-  creator: 'Cursor Venture Companion',
-  publisher: 'Cursor Venture Companion',
+  authors: [{ name: 'Keys' }],
+  creator: 'Keys',
+  publisher: 'Keys',
   formatDetection: {
     email: false,
     address: false,
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'Venture Companion',
+    title: 'Keys',
   },
   icons: {
     icon: [
@@ -70,22 +70,22 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: '/',
-    siteName: 'Cursor Venture Companion',
-    title: 'Cursor Venture Companion - AI Cofounder for Product Lifecycle',
-    description: 'Your AI cofounder for ideation, specification, implementation, and operations. Transform your product development with intelligent automation.',
+    siteName: 'Keys',
+    title: 'Keys - Your AI Co-Founder for Operational Automation',
+    description: 'Your day-to-day AI co-founder that works alongside Cursor. Operational automation, business process intelligence, and institutional memory.',
     images: [
       {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Cursor Venture Companion',
+        alt: 'Keys',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Cursor Venture Companion - AI Cofounder',
-    description: 'Your AI cofounder for ideation, specification, implementation, and operations.',
+    title: 'Keys - Your AI Co-Founder for Operational Automation',
+    description: 'Your day-to-day AI co-founder that works alongside Cursor. Operational automation and business process intelligence.',
     images: ['/og-image.png'],
     creator: '@cursorventure',
   },
@@ -120,7 +120,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#1e40af" media="(prefers-color-scheme: dark)" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="Venture Companion" />
+        <meta name="apple-mobile-web-app-title" content="Keys" />
         <link rel="apple-touch-icon" href="/icon-192.png" />
         <StructuredData type="Organization" data={generateOrganizationSchema()} />
         <StructuredData type="SoftwareApplication" data={generateSoftwareApplicationSchema()} />
