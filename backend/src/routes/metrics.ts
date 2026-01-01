@@ -21,10 +21,10 @@ router.get(
   asyncHandler(async (req: AuthenticatedRequest, res) => {
     const userId = req.userId!;
 
-    // Get user profile for subscription tier
+    // Get user profile for subscription tier and guarantees
     const { data: profile } = await supabase
       .from('user_profiles')
-      .select('subscription_tier, subscription_status')
+      .select('subscription_tier, subscription_status, guarantee_coverage, prevented_failures_count')
       .eq('user_id', userId)
       .single();
 
@@ -71,6 +71,8 @@ router.get(
       user: {
         subscriptionTier: profile?.subscription_tier || 'free',
         subscriptionStatus: profile?.subscription_status || 'free',
+        guaranteeCoverage: profile?.guarantee_coverage || [],
+        preventedFailuresCount: profile?.prevented_failures_count || 0,
       },
       usage: {
         runs: {
