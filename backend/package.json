@@ -14,7 +14,7 @@
     "test:coverage": "vitest --coverage",
     "test:integration": "vitest run --config vitest.integration.config.ts",
     "load-test": "tsx scripts/load-test.ts",
-    "migrate": "tsx scripts/run-all-migrations.ts",
+    "migrate": "tsx ../scripts/run-all-migrations.ts",
     "verify-migrations": "tsx ../scripts/verify-migrations.ts"
   },
   "dependencies": {

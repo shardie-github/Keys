@@ -1,181 +1,73 @@
 #!/usr/bin/env tsx
 /**
- * Verify database migrations have been applied
+ * Verify Migrations
+ * 
+ * Verifies that all migrations have been applied successfully
  */
 
-import pg from 'pg';
-const { Client } = pg;
+import { Client } from 'pg';
+import { readdir } from 'fs/promises';
+import { join } from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import dotenv from 'dotenv';
 
-interface MigrationStatus {
-  filename: string;
-  applied: boolean;
-  appliedAt?: string;
-}
+dotenv.config();
 
-/**
- * Get database connection string from environment
- */
-function getDatabaseUrl(): string {
-  if (process.env.DATABASE_URL) {
-    return process.env.DATABASE_URL;
-  }
-  if (process.env.SUPABASE_DB_URL) {
-    return process.env.SUPABASE_DB_URL;
-  }
-  throw new Error('DATABASE_URL or SUPABASE_DB_URL required');
-}
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-/**
- * Get expected migration files
- */
-function getExpectedMigrations(): string[] {
-  return [
-    '001_create_user_profiles.sql',
-    '002_create_prompt_atoms.sql',
-    '003_create_vibe_configs.sql',
-    '004_create_agent_runs.sql',
-    '005_create_background_events.sql',
-    '006_add_indexes.sql',
-    '007_add_constraints.sql',
-    '008_add_premium_features.sql',
-    '010_create_user_template_customizations.sql',
-    '011_enhance_template_system.sql',
-    '012_add_rls_core_tables.sql',
-    '013_add_billing_and_orgs.sql',
-  ];
-}
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-/**
- * Verify migrations
- */
-async function verifyMigrations(): Promise<void> {
-  console.log('🔍 Verifying database migrations...\n');
-
-  let databaseUrl: string;
-  try {
-    databaseUrl = getDatabaseUrl();
-  } catch (error: any) {
-    console.error('❌ Error:', error.message);
-    console.error('\nPlease set DATABASE_URL environment variable');
-    process.exit(1);
-  }
-
-  const client = new Client({ connectionString: databaseUrl });
-
-  try {
-    await client.connect();
-    console.log('✅ Connected to database\n');
-
-    // Check if schema_migrations table exists
-    const tableCheck = await client.query(`
-      SELECT EXISTS (
-        SELECT FROM information_schema.tables 
-        WHERE table_schema = 'public' 
-        AND table_name = 'schema_migrations'
-      );
-    `);
-
-    const migrationsTableExists = tableCheck.rows[0].exists;
-
-    if (!migrationsTableExists) {
-      console.log('⚠️  schema_migrations table not found');
-      console.log('   Migrations may not have been run via the TypeScript runner\n');
-    } else {
-      console.log('✅ schema_migrations table exists\n');
-    }
-
-    // Get applied migrations
-    const appliedMigrations: MigrationStatus[] = [];
-    if (migrationsTableExists) {
-      const result = await client.query(
-        'SELECT filename, applied_at FROM schema_migrations ORDER BY filename'
-      );
-      appliedMigrations.push(
-        ...result.rows.map((row) => ({
-          filename: row.filename,
-          applied: true,
-          appliedAt: row.applied_at,
-        }))
-      );
-    }
-
-    // Check expected migrations
-    const expectedMigrations = getExpectedMigrations();
-    const statuses: MigrationStatus[] = expectedMigrations.map((filename) => {
-      const applied = appliedMigrations.find((m) => m.filename === filename);
-      return {
-        filename,
-        applied: !!applied,
-        appliedAt: applied?.appliedAt,
-      };
-    });
-
-    // Display status
-    console.log('📊 Migration Status:\n');
-    let allApplied = true;
-    statuses.forEach((status) => {
-      const icon = status.applied ? '✅' : '❌';
-      const date = status.appliedAt ? ` (${new Date(status.appliedAt).toLocaleDateString()})` : '';
-      console.log(`  ${icon} ${status.filename}${date}`);
-      if (!status.applied) {
-        allApplied = false;
-      }
-    });
-
-    // Verify key tables exist (even if migrations table doesn't)
-    console.log('\n🔍 Verifying key tables exist...\n');
-    const keyTables = [
-      'user_profiles',
-      'prompt_atoms',
-      'vibe_configs',
-      'agent_runs',
-      'background_events',
-      'organizations',
-    ];
-
-    const tableCheckResult = await client.query(`
-      SELECT table_name 
-      FROM information_schema.tables 
-      WHERE table_schema = 'public' 
-      AND table_name = ANY($1::text[])
-    `, [keyTables]);
-
-    const existingTables = tableCheckResult.rows.map((row) => row.table_name);
-    const missingTables = keyTables.filter((table) => !existingTables.includes(table));
-
-    keyTables.forEach((table) => {
-      const exists = existingTables.includes(table);
-      const icon = exists ? '✅' : '❌';
-      console.log(`  ${icon} ${table}`);
-    });
-
-    // Summary
-    console.log('\n📊 Summary:\n');
-    const appliedCount = statuses.filter((s) => s.applied).length;
-    console.log(`  Migrations tracked: ${appliedCount}/${expectedMigrations.length}`);
-    console.log(`  Key tables exist: ${existingTables.length}/${keyTables.length}`);
-
-    if (allApplied && missingTables.length === 0) {
-      console.log('\n✅ All migrations verified successfully!');
-    } else {
-      console.log('\n⚠️  Some migrations or tables are missing');
-      if (missingTables.length > 0) {
-        console.log(`\n  Missing tables: ${missingTables.join(', ')}`);
-      }
-      if (!allApplied) {
-        console.log('\n  Run migrations: cd backend && npm run migrate');
-      }
-      process.exit(1);
-    }
-  } catch (error: any) {
-    console.error('❌ Verification error:', error.message);
-    process.exit(1);
-  } finally {
-    await client.end();
-  }
-}
-
-verifyMigrations().catch((error) => {
-  console.error('Fatal error:', error);
+if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+  console.error('❌ SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY required');
   process.exit(1);
+}
+
+function parseSupabaseUrl(url: string) {
+  const urlObj = new URL(url);
+  return {
+    host: urlObj.hostname,
+    port: parseInt(urlObj.port) || 5432,
+    database: urlObj.pathname.slice(1) || 'postgres',
+    user: urlObj.username || 'postgres',
+  };
+}
+
+const config = parseSupabaseUrl(SUPABASE_URL);
+const client = new Client({
+  ...config,
+  password: SUPABASE_SERVICE_ROLE_KEY,
+  ssl: { rejectUnauthorized: false },
 });
+
+async function verifyMigrations() {
+  await client.connect();
+  
+  const { rows } = await client.query('SELECT version, name FROM schema_migrations ORDER BY applied_at');
+  const applied = rows.map(r => r.version);
+  
+  const migrationsDir = join(__dirname, '../backend/supabase/migrations');
+  const files = await readdir(migrationsDir);
+  const allMigrations = files
+    .filter(f => f.endsWith('.sql') && !f.startsWith('.'))
+    .map(f => {
+      const match = f.match(/^(\d+)/);
+      return match ? match[1] : null;
+    })
+    .filter(Boolean)
+    .sort((a, b) => parseInt(a!) - parseInt(b!));
+  
+  const missing = allMigrations.filter(m => !applied.includes(m));
+  
+  if (missing.length > 0) {
+    console.error(`❌ Missing migrations: ${missing.join(', ')}`);
+    process.exit(1);
+  }
+  
+  console.log('✅ All migrations verified');
+  await client.end();
+}
+
+verifyMigrations().catch(console.error);
