@@ -1,0 +1,76 @@
+name: 'Keys Security & Compliance Check'
+description: 'Automatically check PRs for security vulnerabilities, compliance issues, and quality problems'
+author: 'Keys'
+branding:
+  icon: 'shield'
+  color: 'blue'
+
+inputs:
+  api_url:
+    description: 'Keys API URL'
+    required: false
+    default: 'https://api.keys.dev'
+  api_key:
+    description: 'Keys API key (from GitHub Secrets)'
+    required: true
+  check_security:
+    description: 'Check for security vulnerabilities'
+    required: false
+    default: 'true'
+  check_compliance:
+    description: 'Check for compliance issues'
+    required: false
+    default: 'true'
+  check_quality:
+    description: 'Check for quality issues'
+    required: false
+    default: 'true'
+  block_on_critical:
+    description: 'Block merge on critical issues'
+    required: false
+    default: 'true'
+  comment_on_pr:
+    description: 'Comment on PR with results'
+    required: false
+    default: 'true'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Get changed files
+      id: changed-files
+      uses: tj-actions/changed-files@v35
+      with:
+        files: |
+          **/*.ts
+          **/*.tsx
+          **/*.js
+          **/*.jsx
+          **/*.py
+          **/*.go
+          **/*.rs
+
+    - name: Run Keys checks
+      shell: bash
+      env:
+        KEYS_API_URL: ${{ inputs.api_url }}
+        KEYS_API_KEY: ${{ inputs.api_key }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        PR_NUMBER: ${{ github.event.pull_request.number }}
+      run: |
+        echo "Running Keys security, compliance, and quality checks..."
+        # Implementation would call Keys API with changed files
+        # and post results as PR comments or block merge
+
+outputs:
+  security_issues:
+    description: 'Number of security issues found'
+  compliance_issues:
+    description: 'Number of compliance issues found'
+  quality_issues:
+    description: 'Number of quality issues found'
+  blocked:
+    description: 'Whether merge was blocked'

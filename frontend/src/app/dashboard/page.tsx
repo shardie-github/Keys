@@ -6,6 +6,8 @@ import { RunAnalytics } from '@/components/Admin/RunAnalytics';
 import { ActionHistory } from '@/components/BackgroundAgent/ActionHistory';
 import { ProactiveSuggestions } from '@/components/BackgroundAgent/ProactiveSuggestions';
 import { UsageDashboard } from '@/components/UsageDashboard';
+import { ExportData } from '@/components/ExportData';
+import { MoatMetricsDashboard } from '@/components/MoatMetricsDashboard';
 import { useUserProfile } from '@/hooks/useUserProfile';
 import { useAuth } from '@/contexts/AuthContext';
 import { PageWrapper } from '@/components/PageWrapper';
@@ -92,8 +94,18 @@ export default function DashboardPage() {
               </AnimatedCard>
             </Reveal>
 
-            {/* Quick Stats */}
+            {/* Moat Metrics */}
             <Reveal direction="right" delay={200}>
+              <MoatMetricsDashboard />
+            </Reveal>
+
+            {/* Export Data */}
+            <Reveal direction="right" delay={300}>
+              <ExportData />
+            </Reveal>
+
+            {/* Quick Stats */}
+            <Reveal direction="right" delay={400}>
               <AnimatedCard variant="elevated" hoverable className="p-4 sm:p-6">
                 <h2 className="text-lg sm:text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Quick Stats</h2>
               <dl className="space-y-4">
