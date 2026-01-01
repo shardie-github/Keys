@@ -10,6 +10,7 @@ import { asyncHandler } from '../middleware/errorHandler.js';
 import { validateBody } from '../middleware/validation.js';
 import { checkLimit, trackUsage } from '../services/usageMetering.js';
 import { RateLimitError } from '../types/errors.js';
+import { failurePatternService } from '../services/failurePatternService.js';
 
 const router = Router();
 const supabase = createClient(
@@ -54,14 +55,49 @@ router.post(
 
     const startTime = Date.now();
 
+    // Apply failure prevention rules (defensive moat: institutional memory)
+    const preventionRules = await failurePatternService.getPreventionRules(
+      userId,
+      assembledPrompt.context
+    );
+    
+    // Enhance system prompt with prevention rules
+    const enhancedSystemPrompt = preventionRules.length > 0
+      ? `${assembledPrompt.systemPrompt}\n\n## Prevention Rules (Based on Past Failures):\n${preventionRules.map((rule, i) => `${i + 1}. ${rule}`).join('\n')}`
+      : assembledPrompt.systemPrompt;
+
+    const enhancedPrompt: PromptAssemblyResult = {
+      ...assembledPrompt,
+      systemPrompt: enhancedSystemPrompt,
+    };
+
     // Orchestrate agent
     const output = await orchestrateAgent(
-      assembledPrompt as PromptAssemblyResult,
+      enhancedPrompt,
       taskIntent || naturalLanguageInput,
       naturalLanguageInput
     );
 
     const latencyMs = Date.now() - startTime;
+
+    // Check for similar failures (defensive moat: prevent repeat mistakes)
+    const failureMatches = await failurePatternService.checkForSimilarFailures(
+      userId,
+      typeof output.content === 'string' ? output.content : JSON.stringify(output.content),
+      assembledPrompt.context
+    );
+
+    // If high-confidence failure match detected, warn user
+    const criticalMatches = failureMatches.filter(m => m.match_confidence > 0.8 && m.match_type === 'exact');
+    if (criticalMatches.length > 0) {
+      // Add warning to output
+      output.warnings = output.warnings || [];
+      output.warnings.push({
+        type: 'similar_failure_detected',
+        message: `This output is similar to a previous failure. Review carefully before using.`,
+        patternIds: criticalMatches.map(m => m.pattern_id),
+      });
+    }
 
     // Log agent run
     const { data: run } = await supabase

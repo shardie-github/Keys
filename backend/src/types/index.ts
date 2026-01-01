@@ -122,6 +122,11 @@ export interface AgentOutput {
   modelUsed: string;
   tokensUsed: number;
   costUsd: number;
+  warnings?: Array<{
+    type: string;
+    message: string;
+    patternIds?: string[];
+  }>;
 }
 
 // Task Intent Types
