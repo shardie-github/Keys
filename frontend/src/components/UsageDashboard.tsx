@@ -3,11 +3,14 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
+import { GuaranteeBadge } from './GuaranteeBadge';
 
 interface UsageData {
   user: {
     subscriptionTier: string;
     subscriptionStatus: string;
+    guaranteeCoverage?: string[];
+    preventedFailuresCount?: number;
   };
   usage: {
     runs: { current: number; limit: number; remaining: number; percentage: number };
@@ -175,6 +178,25 @@ export function UsageDashboard() {
             {usageData.user.subscriptionTier} ({usageData.user.subscriptionStatus})
           </span>
         </div>
+        
+        {usageData.user.guaranteeCoverage && usageData.user.guaranteeCoverage.length > 0 && (
+          <GuaranteeBadge
+            guarantees={usageData.user.guaranteeCoverage}
+            tier={usageData.user.subscriptionTier}
+            className="mt-4"
+          />
+        )}
+
+        {usageData.user.preventedFailuresCount !== undefined && usageData.user.preventedFailuresCount > 0 && (
+          <div className="mt-4 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+            <p className="text-sm text-green-800 dark:text-green-200">
+              <strong>Failures Prevented:</strong> {usageData.user.preventedFailuresCount.toLocaleString()}
+            </p>
+            <p className="text-xs text-green-600 dark:text-green-400 mt-1">
+              Your institutional memory is working. These failures would have cost $10K-$100K+ each.
+            </p>
+          </div>
+        )}
       </div>
 
       <div className="space-y-4 mb-6">

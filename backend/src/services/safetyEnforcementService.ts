@@ -6,6 +6,12 @@
  */
 
 import { logger } from '../utils/logger.js';
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 export interface SafetyCheckResult {
   passed: boolean;
@@ -130,6 +136,17 @@ export class SafetyEnforcementService {
     // Pass if no critical issues and all checks passed
     const passed = !blocked && securityCheck.passed && complianceCheck.passed && qualityCheck.passed;
 
+    // Track guarantee metrics if user provided
+    if (context?.userId) {
+      await this.trackGuaranteeMetrics(context.userId, {
+        security: securityCheck,
+        compliance: complianceCheck,
+        quality: qualityCheck,
+        blocked,
+        passed,
+      });
+    }
+
     return {
       passed,
       blocked,
@@ -140,6 +157,84 @@ export class SafetyEnforcementService {
         quality: qualityCheck,
       },
     };
+  }
+
+  /**
+   * Track guarantee metrics for billing and analytics
+   */
+  private async trackGuaranteeMetrics(
+    userId: string,
+    results: {
+      security: SecurityCheckResult;
+      compliance: ComplianceCheckResult;
+      quality: QualityCheckResult;
+      blocked: boolean;
+      passed: boolean;
+    }
+  ): Promise<void> {
+    try {
+      // Get user's tier and guarantee coverage
+      const { data: profile } = await supabase
+        .from('user_profiles')
+        .select('subscription_tier, guarantee_coverage, prevented_failures_count')
+        .eq('user_id', userId)
+        .single();
+
+      if (!profile) return;
+
+      const tier = profile.subscription_tier || 'free';
+      const guaranteeCoverage = profile.guarantee_coverage || [];
+
+      // Only track for Pro, Pro+, and Enterprise tiers
+      if (!['pro', 'pro+', 'enterprise'].includes(tier)) return;
+
+      // Count prevented failures (blocked outputs)
+      if (results.blocked) {
+        const preventedCount = (profile.prevented_failures_count || 0) + 1;
+        
+        await supabase
+          .from('user_profiles')
+          .update({ prevented_failures_count: preventedCount })
+          .eq('user_id', userId);
+      }
+
+      // Track guarantee coverage usage
+      const guaranteeUsage: Record<string, number> = {};
+      
+      if (guaranteeCoverage.includes('security')) {
+        guaranteeUsage.security_checks = (guaranteeUsage.security_checks || 0) + 1;
+        guaranteeUsage.security_vulnerabilities_found = results.security.vulnerabilities.length;
+        guaranteeUsage.security_vulnerabilities_blocked = results.security.vulnerabilities.filter(
+          v => v.severity === 'critical'
+        ).length;
+      }
+
+      if (guaranteeCoverage.includes('compliance')) {
+        guaranteeUsage.compliance_checks = (guaranteeUsage.compliance_checks || 0) + 1;
+        guaranteeUsage.compliance_violations_found = results.compliance.violations.length;
+        guaranteeUsage.compliance_violations_blocked = results.compliance.violations.filter(
+          v => v.severity === 'critical'
+        ).length;
+      }
+
+      if (guaranteeCoverage.includes('quality')) {
+        guaranteeUsage.quality_checks = (guaranteeUsage.quality_checks || 0) + 1;
+        guaranteeUsage.quality_issues_found = results.quality.issues.length;
+        guaranteeUsage.quality_score = results.quality.score;
+      }
+
+      // Store guarantee metrics (could be in a separate table for analytics)
+      // For now, we'll log them for tracking
+      logger.info('Guarantee metrics tracked', {
+        userId,
+        tier,
+        guaranteeCoverage,
+        preventedFailures: profile.prevented_failures_count,
+        guaranteeUsage,
+      });
+    } catch (error) {
+      logger.error('Failed to track guarantee metrics', { userId, error });
+    }
   }
 
   /**

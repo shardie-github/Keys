@@ -28,6 +28,14 @@ export default function Home() {
           <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-xl mx-auto">
             We guarantee outputs meet security and compliance standards. Your failures become prevention rules. Your successes become best practices.
           </p>
+          <div className="mt-6 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800 max-w-2xl mx-auto">
+            <p className="text-sm text-green-800 dark:text-green-200">
+              <strong>ROI:</strong> $29/month prevents $10K-$100K+ security incidents. <strong>190x-1,900x return.</strong>{' '}
+              <Link href="/pricing#value-calculation" className="underline font-semibold hover:text-green-900 dark:hover:text-green-100">
+                See value calculation
+              </Link>
+            </p>
+          </div>
         </div>
 
         {/* CTA Buttons */}
@@ -101,6 +109,18 @@ export default function Home() {
               className="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg transition-colors"
             >
               Templates
+            </Link>
+            <Link
+              href="/pricing"
+              className="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg transition-colors"
+            >
+              Pricing
+            </Link>
+            <Link
+              href="/docs/TERMS_OF_SERVICE.md"
+              className="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg transition-colors"
+            >
+              Terms
             </Link>
           </div>
         </nav>

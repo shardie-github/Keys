@@ -1,0 +1,67 @@
+{
+  "name": "keys-vscode-extension",
+  "displayName": "Keys - Never Ship Insecure Code Again",
+  "description": "IDE integration for Keys. Automatic context injection, inline suggestions, and failure prevention.",
+  "version": "0.1.0",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Other",
+    "AI",
+    "Security"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "keys.injectContext",
+        "title": "Keys: Inject Context"
+      },
+      {
+        "command": "keys.checkOutput",
+        "title": "Keys: Check Output"
+      },
+      {
+        "command": "keys.viewPatterns",
+        "title": "Keys: View Failure Patterns"
+      }
+    ],
+    "configuration": {
+      "title": "Keys",
+      "properties": {
+        "keys.apiUrl": {
+          "type": "string",
+          "default": "https://api.keys.dev",
+          "description": "Keys API URL"
+        },
+        "keys.autoInject": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically inject context on file open"
+        },
+        "keys.checkOnSave": {
+          "type": "boolean",
+          "default": true,
+          "description": "Check outputs for security/compliance issues on save"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.74.0",
+    "@types/node": "16.x",
+    "typescript": "^4.9.4"
+  },
+  "dependencies": {
+    "axios": "^1.6.0"
+  }
+}

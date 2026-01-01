@@ -14,6 +14,47 @@ const stripe = process.env.STRIPE_SECRET_KEY
     })
   : null;
 
+/**
+ * Map Stripe price ID to subscription tier and guarantee coverage
+ * In production, these would be environment variables or fetched from Stripe
+ */
+function getTierFromPriceId(priceId: string): {
+  tier: 'free' | 'pro' | 'pro+' | 'enterprise';
+  guaranteeCoverage: string[];
+  integrationAccess: string[];
+} {
+  // These would be actual Stripe price IDs in production
+  // For now, we'll use a mapping based on price ID patterns
+  const priceIdLower = priceId.toLowerCase();
+  
+  if (priceIdLower.includes('pro-plus') || priceIdLower.includes('pro+')) {
+    return {
+      tier: 'pro+',
+      guaranteeCoverage: ['security', 'compliance', 'quality'],
+      integrationAccess: ['ide', 'cicd'],
+    };
+  } else if (priceIdLower.includes('enterprise')) {
+    return {
+      tier: 'enterprise',
+      guaranteeCoverage: ['security', 'compliance', 'quality', 'sla'],
+      integrationAccess: ['ide', 'cicd'],
+    };
+  } else if (priceIdLower.includes('pro')) {
+    return {
+      tier: 'pro',
+      guaranteeCoverage: ['security', 'compliance', 'quality'],
+      integrationAccess: [],
+    };
+  }
+  
+  // Default to free
+  return {
+    tier: 'free',
+    guaranteeCoverage: [],
+    integrationAccess: [],
+  };
+}
+
 const createCheckoutSessionSchema = z.object({
   priceId: z.string().min(1),
   successUrl: z.string().url(),
@@ -158,12 +199,20 @@ router.post(
         const userId = session.client_reference_id || session.metadata?.userId;
 
         if (userId) {
-          // Update user subscription status
+          // Get tier information from price ID
+          const lineItems = await stripe.checkout.sessions.listLineItems(session.id, { limit: 1 });
+          const priceId = lineItems.data[0]?.price?.id || '';
+          const { tier, guaranteeCoverage, integrationAccess } = getTierFromPriceId(priceId);
+
+          // Update user subscription status and tier
           await supabase
             .from('user_profiles')
             .update({
               subscription_status: 'active',
+              subscription_tier: tier,
               stripe_customer_id: session.customer as string,
+              guarantee_coverage: guaranteeCoverage,
+              integration_access: integrationAccess,
             })
             .eq('user_id', userId);
         }
@@ -182,10 +231,19 @@ router.post(
           .single();
 
         if (profile) {
+          // Get tier information from subscription items
+          const priceId = subscription.items.data[0]?.price?.id || '';
+          const { tier, guaranteeCoverage, integrationAccess } = getTierFromPriceId(priceId);
+          
+          const isActive = subscription.status === 'active';
+          
           await supabase
             .from('user_profiles')
             .update({
-              subscription_status: subscription.status === 'active' ? 'active' : 'inactive',
+              subscription_status: isActive ? 'active' : 'inactive',
+              subscription_tier: isActive ? tier : 'free',
+              guarantee_coverage: isActive ? guaranteeCoverage : [],
+              integration_access: isActive ? integrationAccess : [],
             })
             .eq('user_id', profile.user_id);
         }

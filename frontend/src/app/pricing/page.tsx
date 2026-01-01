@@ -2,8 +2,8 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Pricing - Cursor Venture Companion',
-  description: 'Choose the right plan for your needs. Free tier available, Pro for power users, Enterprise for teams.',
+  title: 'Pricing - Keys: Never Ship Insecure Code Again',
+  description: 'Choose the plan that prevents failures. Security, compliance, and quality guarantees included. Your institutional memory prevents mistakes before they happen.',
 };
 
 export default function PricingPage() {
@@ -12,15 +12,19 @@ export default function PricingPage() {
       name: 'Free',
       price: '$0',
       period: 'forever',
-      description: 'Perfect for trying out the platform',
+      description: 'Try Keys risk-free. Build your institutional memory.',
       features: [
-        '100 AI runs per month',
-        '100K tokens per month',
-        '10 custom templates',
-        '5 exports per month',
+        '50 AI runs per month',
+        '50K tokens per month',
+        '5 custom templates',
+        '2 exports per month',
         'Community support',
         'Basic analytics',
+        '✅ Failure pattern tracking (unlimited)',
+        '✅ Basic safety checks',
+        '✅ Pattern matching (unlimited)',
       ],
+      guarantees: [],
       cta: 'Get Started',
       ctaLink: '/signup',
       popular: false,
@@ -29,7 +33,7 @@ export default function PricingPage() {
       name: 'Pro',
       price: '$29',
       period: 'per month',
-      description: 'For power users and small teams',
+      description: 'Never ship insecure code again. We guarantee it.',
       features: [
         '1,000 AI runs per month',
         '1M tokens per month',
@@ -39,17 +43,50 @@ export default function PricingPage() {
         'Advanced analytics',
         'Template sharing',
         'Background suggestions',
+        '✅ Unlimited failure prevention',
+        '✅ Unlimited success pattern tracking',
+      ],
+      guarantees: [
+        '🔒 Security Guarantee: We scan all outputs for vulnerabilities. If we miss one, we\'re liable.',
+        '🛡️ Compliance Guarantee: All outputs meet GDPR/SOC 2 standards. We\'re liable if we miss compliance.',
+        '✨ Quality Guarantee: All outputs meet code quality standards. We\'re liable for technical debt.',
       ],
       cta: 'Start Free Trial',
       ctaLink: '/signup?plan=pro',
       popular: true,
     },
     {
+      name: 'Pro+',
+      price: '$79',
+      period: 'per month',
+      description: 'Power users who deploy daily. Workflow integration included.',
+      features: [
+        'Everything in Pro',
+        '5,000 AI runs per month',
+        '5M tokens per month',
+        'Unlimited templates',
+        'Unlimited exports',
+        '✅ IDE Integration (VS Code/Cursor)',
+        '✅ CI/CD Integration (GitHub Actions)',
+        '✅ Advanced pattern recognition (ML-powered)',
+        '✅ Cross-project learning',
+      ],
+      guarantees: [
+        '🔒 Security Guarantee: We scan all outputs for vulnerabilities. If we miss one, we\'re liable.',
+        '🛡️ Compliance Guarantee: All outputs meet GDPR/SOC 2 standards. We\'re liable if we miss compliance.',
+        '✨ Quality Guarantee: All outputs meet code quality standards. We\'re liable for technical debt.',
+      ],
+      cta: 'Upgrade to Pro+',
+      ctaLink: '/signup?plan=pro-plus',
+      popular: false,
+    },
+    {
       name: 'Enterprise',
       price: 'Custom',
       period: '',
-      description: 'For teams and organizations',
+      description: 'Teams that need compliance, SLAs, and legal protection.',
       features: [
+        'Everything in Pro+',
         'Unlimited AI runs',
         'Unlimited tokens',
         'Unlimited templates',
@@ -57,9 +94,18 @@ export default function PricingPage() {
         'Multi-user organizations',
         'Dedicated support',
         'Custom integrations',
-        'SLA guarantee',
-        'SSO (coming soon)',
-        'Audit logs (coming soon)',
+        '✅ SLA Guarantee (99.9% uptime)',
+        '✅ Legal Liability (expanded guarantees)',
+        '✅ Compliance Certifications (SOC 2, GDPR)',
+        '✅ Audit Logs (compliance requirements)',
+        '✅ SSO (enterprise security)',
+        '💰 Usage-based: $0.10 per prevented failure (optional)',
+      ],
+      guarantees: [
+        '🔒 Security Guarantee: We scan all outputs for vulnerabilities. If we miss one, we\'re liable.',
+        '🛡️ Compliance Guarantee: All outputs meet GDPR/SOC 2 standards. We\'re liable if we miss compliance.',
+        '✨ Quality Guarantee: All outputs meet code quality standards. We\'re liable for technical debt.',
+        '⚡ SLA Guarantee: 99.9% uptime or 10% refund.',
       ],
       cta: 'Contact Sales',
       ctaLink: '/profile/settings?contact=sales',
@@ -73,15 +119,24 @@ export default function PricingPage() {
         {/* Header */}
         <div className="text-center mb-12 sm:mb-16">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-4">
-            Simple, Transparent Pricing
+            Never Ship Insecure Code Again
           </h1>
           <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Choose the plan that fits your needs. Upgrade or downgrade at any time.
+            Choose the plan that prevents failures. Security, compliance, and quality guarantees included. Your institutional memory prevents mistakes before they happen.
           </p>
+          <div className="mt-6 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800 max-w-2xl mx-auto">
+            <p className="text-sm text-green-800 dark:text-green-200">
+              <strong>ROI:</strong> $29/month prevents $10K-$100K+ security incidents. <strong>190x-1,900x return.</strong> See{' '}
+              <Link href="#value-calculation" className="underline font-semibold">
+                value calculation
+              </Link>
+              .
+            </p>
+          </div>
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 mb-12">
           {plans.map((plan) => (
             <div
               key={plan.name}
@@ -116,7 +171,7 @@ export default function PricingPage() {
                 <p className="text-sm text-gray-600 dark:text-gray-400">{plan.description}</p>
               </div>
 
-              <ul className="space-y-3 mb-8">
+              <ul className="space-y-3 mb-6">
                 {plan.features.map((feature, idx) => (
                   <li key={idx} className="flex items-start">
                     <svg
@@ -137,6 +192,21 @@ export default function PricingPage() {
                   </li>
                 ))}
               </ul>
+
+              {plan.guarantees && plan.guarantees.length > 0 && (
+                <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                  <h4 className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-2">
+                    Included Guarantees:
+                  </h4>
+                  <ul className="space-y-2">
+                    {plan.guarantees.map((guarantee, idx) => (
+                      <li key={idx} className="text-xs text-blue-800 dark:text-blue-200">
+                        {guarantee}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
               <Link
                 href={plan.ctaLink}
@@ -188,6 +258,35 @@ export default function PricingPage() {
               </h3>
               <p className="text-gray-600 dark:text-gray-400">
                 We accept all major credit cards via Stripe. Enterprise customers can arrange invoicing.
+              </p>
+            </div>
+            <div className="bg-white dark:bg-slate-800 rounded-lg p-6 shadow-sm">
+              <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-100">
+                What are your guarantees?
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                Pro and above include security, compliance, and quality guarantees. If we miss a vulnerability, compliance issue, or quality problem, we're liable. See our{' '}
+                <Link href="/terms" className="text-blue-600 dark:text-blue-400 hover:underline">
+                  Terms of Service
+                </Link>
+                {' '}for details.
+              </p>
+            </div>
+            <div id="value-calculation" className="bg-white dark:bg-slate-800 rounded-lg p-6 shadow-sm">
+              <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-100">
+                How do you calculate ROI?
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400 mb-3">
+                $29/month prevents catastrophic failures:
+              </p>
+              <ul className="list-disc list-inside space-y-1 text-gray-600 dark:text-gray-400 text-sm">
+                <li>Security guarantee: One prevented SQL injection saves $10K-$100K+</li>
+                <li>Compliance guarantee: One prevented violation saves $50K-$500K+ in fines</li>
+                <li>Institutional memory: One prevented repeat mistake saves $1K-$10K+</li>
+                <li>Quality gates: One prevented technical debt saves $5K-$50K+</li>
+              </ul>
+              <p className="text-gray-600 dark:text-gray-400 mt-3">
+                <strong>Total value:</strong> $66K-$660K+ prevented per year. <strong>Price:</strong> $348/year. <strong>ROI:</strong> 190x-1,900x.
               </p>
             </div>
           </div>

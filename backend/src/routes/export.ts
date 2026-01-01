@@ -1,14 +1,16 @@
 /**
  * Export Routes
  * 
- * Core defensive moat: Export functionality makes data valuable outside Keys,
- * but leaving still loses convenience and accumulated value.
+ * Allows users to export their institutional memory:
+ * - Failure patterns (partial value - loses pattern matching)
+ * - Success patterns (partial value - loses pattern recognition)
+ * - Audit trails (full value - compliance requirement)
  */
 
 import { Router } from 'express';
-import { createClient } from '@supabase/supabase-js';
-import { authMiddleware, AuthenticatedRequest } from '../middleware/auth.js';
 import { asyncHandler } from '../middleware/errorHandler.js';
+import { authMiddleware, AuthenticatedRequest } from '../middleware/auth.js';
+import { createClient } from '@supabase/supabase-js';
 import { logger } from '../utils/logger.js';
 
 const router = Router();
@@ -18,79 +20,8 @@ const supabase = createClient(
 );
 
 /**
- * GET /export/institutional-memory
- * Export all failure patterns, success patterns, and audit trail
- */
-router.get(
-  '/institutional-memory',
-  authMiddleware,
-  asyncHandler(async (req: AuthenticatedRequest, res) => {
-    const userId = req.userId!;
-    const format = (req.query.format as string) || 'json';
-
-    // Get failure patterns
-    const { data: failurePatterns } = await supabase
-      .from('failure_patterns')
-      .select('*')
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false });
-
-    // Get success patterns
-    const { data: successPatterns } = await supabase
-      .from('success_patterns')
-      .select('*')
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false });
-
-    // Get audit trail (agent runs with safety checks)
-    const { data: auditTrail } = await supabase
-      .from('agent_runs')
-      .select('id, created_at, trigger, agent_type, safety_checks_passed, safety_check_results, user_feedback')
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false })
-      .limit(1000); // Last 1000 runs
-
-    // Get pattern matches
-    const { data: patternMatches } = await supabase
-      .from('pattern_matches')
-      .select('*')
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false });
-
-    const exportData = {
-      exportedAt: new Date().toISOString(),
-      userId,
-      summary: {
-        failurePatterns: failurePatterns?.length || 0,
-        successPatterns: successPatterns?.length || 0,
-        auditTrailEntries: auditTrail?.length || 0,
-        patternMatches: patternMatches?.length || 0,
-      },
-      failurePatterns: failurePatterns || [],
-      successPatterns: successPatterns || [],
-      auditTrail: auditTrail || [],
-      patternMatches: patternMatches || [],
-    };
-
-    if (format === 'json') {
-      res.setHeader('Content-Type', 'application/json');
-      res.setHeader('Content-Disposition', `attachment; filename="keys-institutional-memory-${userId}-${Date.now()}.json"`);
-      res.json(exportData);
-    } else if (format === 'yaml') {
-      // Convert to YAML (simplified - in production use proper YAML library)
-      const yaml = convertToYAML(exportData);
-      res.setHeader('Content-Type', 'text/yaml');
-      res.setHeader('Content-Disposition', `attachment; filename="keys-institutional-memory-${userId}-${Date.now()}.yaml"`);
-      res.send(yaml);
-    } else {
-      res.status(400).json({ error: 'Invalid format. Use "json" or "yaml"' });
-    }
-  })
-);
-
-/**
+ * Export failure patterns
  * GET /export/failure-patterns
- * Export failure patterns as security rules (can be imported into other tools)
  */
 router.get(
   '/failure-patterns',
@@ -99,47 +30,57 @@ router.get(
     const userId = req.userId!;
     const format = (req.query.format as string) || 'json';
 
-    const { data: failurePatterns } = await supabase
+    // Get failure patterns
+    const { data: patterns, error } = await supabase
       .from('failure_patterns')
       .select('*')
       .eq('user_id', userId)
-      .eq('resolved', false)
-      .order('severity', { ascending: false })
-      .order('occurrence_count', { ascending: false });
+      .order('created_at', { ascending: false });
 
-    // Convert to security rules format
-    const securityRules = (failurePatterns || []).map(pattern => ({
-      id: pattern.id,
-      name: pattern.pattern_description,
-      type: pattern.pattern_type,
-      severity: pattern.severity,
-      pattern: pattern.pattern_signature,
-      prevention: pattern.prevention_rule,
-      promptAddition: pattern.prevention_prompt_addition,
-      occurrenceCount: pattern.occurrence_count,
-      lastOccurrence: pattern.last_occurrence,
-    }));
+    if (error) {
+      logger.error('Failed to fetch failure patterns', { userId, error });
+      return res.status(500).json({ error: 'Failed to fetch failure patterns' });
+    }
 
-    const exportData = {
-      exportedAt: new Date().toISOString(),
-      userId,
-      format: 'security-rules',
-      rules: securityRules,
-    };
-
+    // Format based on requested format
     if (format === 'json') {
       res.setHeader('Content-Type', 'application/json');
-      res.setHeader('Content-Disposition', `attachment; filename="keys-security-rules-${userId}-${Date.now()}.json"`);
-      res.json(exportData);
-    } else {
-      res.status(400).json({ error: 'Invalid format. Use "json"' });
+      res.setHeader('Content-Disposition', `attachment; filename="failure-patterns-${Date.now()}.json"`);
+      return res.json({
+        exported_at: new Date().toISOString(),
+        user_id: userId,
+        pattern_count: patterns?.length || 0,
+        patterns: patterns || [],
+        note: 'This export contains failure patterns but loses pattern matching capabilities. Pattern signatures and prevention rules are proprietary.',
+      });
+    } else if (format === 'csv') {
+      // Convert to CSV
+      const csvRows = [
+        ['Pattern Type', 'Description', 'Failure Reason', 'Prevention Rule', 'Severity', 'Occurrence Count', 'Created At'],
+        ...(patterns || []).map(p => [
+          p.pattern_type,
+          p.pattern_description,
+          p.failure_reason,
+          p.prevention_rule,
+          p.severity,
+          p.occurrence_count.toString(),
+          p.created_at,
+        ]),
+      ];
+
+      const csv = csvRows.map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
+      res.setHeader('Content-Type', 'text/csv');
+      res.setHeader('Content-Disposition', `attachment; filename="failure-patterns-${Date.now()}.csv"`);
+      return res.send(csv);
     }
+
+    return res.status(400).json({ error: 'Invalid format. Use "json" or "csv"' });
   })
 );
 
 /**
+ * Export success patterns
  * GET /export/success-patterns
- * Export success patterns as templates (can be imported into other tools)
  */
 router.get(
   '/success-patterns',
@@ -148,143 +89,182 @@ router.get(
     const userId = req.userId!;
     const format = (req.query.format as string) || 'json';
 
-    const { data: successPatterns } = await supabase
+    // Get success patterns
+    const { data: patterns, error } = await supabase
       .from('success_patterns')
       .select('*')
       .eq('user_id', userId)
-      .order('success_rate', { ascending: false })
-      .order('usage_count', { ascending: false });
+      .order('created_at', { ascending: false });
 
-    // Convert to templates format
-    const templates = (successPatterns || []).map(pattern => ({
-      id: pattern.id,
-      name: pattern.pattern_description,
-      type: pattern.pattern_type,
-      context: pattern.context,
-      outcome: pattern.outcome,
-      successFactors: pattern.success_factors,
-      outputExample: pattern.output_example,
-      successRate: pattern.success_rate,
-      usageCount: pattern.usage_count,
-    }));
+    if (error) {
+      logger.error('Failed to fetch success patterns', { userId, error });
+      return res.status(500).json({ error: 'Failed to fetch success patterns' });
+    }
 
-    const exportData = {
-      exportedAt: new Date().toISOString(),
-      userId,
-      format: 'templates',
-      templates,
-    };
-
+    // Format based on requested format
     if (format === 'json') {
       res.setHeader('Content-Type', 'application/json');
-      res.setHeader('Content-Disposition', `attachment; filename="keys-success-templates-${userId}-${Date.now()}.json"`);
-      res.json(exportData);
-    } else {
-      res.status(400).json({ error: 'Invalid format. Use "json"' });
+      res.setHeader('Content-Disposition', `attachment; filename="success-patterns-${Date.now()}.json"`);
+      return res.json({
+        exported_at: new Date().toISOString(),
+        user_id: userId,
+        pattern_count: patterns?.length || 0,
+        patterns: patterns || [],
+        note: 'This export contains success patterns but loses pattern recognition capabilities. Pattern signatures and success factors are proprietary.',
+      });
+    } else if (format === 'yaml') {
+      // Convert to YAML-like template format
+      const yaml = `# Success Patterns Export
+# Exported: ${new Date().toISOString()}
+# User ID: ${userId}
+# Pattern Count: ${patterns?.length || 0}
+# Note: This export loses pattern recognition capabilities
+
+patterns:
+${(patterns || []).map(p => `  - type: ${p.pattern_type}
+    description: ${p.pattern_description}
+    context: ${p.context}
+    outcome: ${p.outcome}
+    success_factors: ${JSON.stringify(p.success_factors)}
+    usage_count: ${p.usage_count}
+    success_rate: ${p.success_rate}
+    created_at: ${p.created_at}`).join('\n')}
+`;
+      res.setHeader('Content-Type', 'text/yaml');
+      res.setHeader('Content-Disposition', `attachment; filename="success-patterns-${Date.now()}.yaml"`);
+      return res.send(yaml);
     }
+
+    return res.status(400).json({ error: 'Invalid format. Use "json" or "yaml"' });
   })
 );
 
 /**
- * GET /export/audit-trail
- * Export audit trail for compliance
+ * Export audit trails
+ * GET /export/audit-trails
  */
 router.get(
-  '/audit-trail',
+  '/audit-trails',
   authMiddleware,
   asyncHandler(async (req: AuthenticatedRequest, res) => {
     const userId = req.userId!;
+    const format = (req.query.format as string) || 'json';
     const startDate = req.query.startDate as string;
     const endDate = req.query.endDate as string;
-    const format = (req.query.format as string) || 'json';
 
+    // Build query
     let query = supabase
       .from('agent_runs')
-      .select('id, created_at, trigger, agent_type, safety_checks_passed, safety_check_results, user_feedback, feedback_detail')
+      .select('id, user_id, input, output, template_id, created_at, safety_checks_passed, safety_check_results')
       .eq('user_id', userId)
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false })
+      .limit(10000); // Limit for performance
 
     if (startDate) {
       query = query.gte('created_at', startDate);
     }
-
     if (endDate) {
       query = query.lte('created_at', endDate);
     }
 
-    const { data: auditTrail } = await query.limit(10000); // Max 10k entries
+    const { data: runs, error } = await query;
 
-    const exportData = {
-      exportedAt: new Date().toISOString(),
-      userId,
-      format: 'audit-trail',
-      period: {
-        start: startDate || 'all',
-        end: endDate || 'all',
-      },
-      entries: auditTrail || [],
-    };
+    if (error) {
+      logger.error('Failed to fetch audit trails', { userId, error });
+      return res.status(500).json({ error: 'Failed to fetch audit trails' });
+    }
 
+    // Format based on requested format
     if (format === 'json') {
       res.setHeader('Content-Type', 'application/json');
-      res.setHeader('Content-Disposition', `attachment; filename="keys-audit-trail-${userId}-${Date.now()}.json"`);
-      res.json(exportData);
+      res.setHeader('Content-Disposition', `attachment; filename="audit-trails-${Date.now()}.json"`);
+      return res.json({
+        exported_at: new Date().toISOString(),
+        user_id: userId,
+        record_count: runs?.length || 0,
+        date_range: {
+          start: startDate || 'all',
+          end: endDate || 'all',
+        },
+        records: runs || [],
+        note: 'This export contains full audit trail data for compliance purposes.',
+      });
     } else if (format === 'csv') {
       // Convert to CSV
-      const csv = convertToCSV(exportData.entries);
+      const csvRows = [
+        ['Run ID', 'User ID', 'Input', 'Output', 'Template ID', 'Safety Checks Passed', 'Created At'],
+        ...(runs || []).map(r => [
+          r.id,
+          r.user_id,
+          JSON.stringify(r.input).substring(0, 100),
+          JSON.stringify(r.output).substring(0, 100),
+          r.template_id || '',
+          r.safety_checks_passed ? 'true' : 'false',
+          r.created_at,
+        ]),
+      ];
+
+      const csv = csvRows.map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
       res.setHeader('Content-Type', 'text/csv');
-      res.setHeader('Content-Disposition', `attachment; filename="keys-audit-trail-${userId}-${Date.now()}.csv"`);
-      res.send(csv);
-    } else {
-      res.status(400).json({ error: 'Invalid format. Use "json" or "csv"' });
+      res.setHeader('Content-Disposition', `attachment; filename="audit-trails-${Date.now()}.csv"`);
+      return res.send(csv);
     }
+
+    return res.status(400).json({ error: 'Invalid format. Use "json" or "csv"' });
   })
 );
 
-function convertToYAML(obj: any, indent = 0): string {
-  const indentStr = '  '.repeat(indent);
-  let yaml = '';
+/**
+ * Export all institutional memory
+ * GET /export/all
+ */
+router.get(
+  '/all',
+  authMiddleware,
+  asyncHandler(async (req: AuthenticatedRequest, res) => {
+    const userId = req.userId!;
 
-  if (Array.isArray(obj)) {
-    obj.forEach(item => {
-      yaml += `${indentStr}- ${convertToYAML(item, indent + 1)}\n`;
+    // Get all data
+    const [failurePatterns, successPatterns, auditTrails] = await Promise.all([
+      supabase.from('failure_patterns').select('*').eq('user_id', userId),
+      supabase.from('success_patterns').select('*').eq('user_id', userId),
+      supabase
+        .from('agent_runs')
+        .select('id, user_id, input, output, template_id, created_at, safety_checks_passed')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false })
+        .limit(1000),
+    ]);
+
+    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Content-Disposition', `attachment; filename="institutional-memory-${Date.now()}.json"`);
+    return res.json({
+      exported_at: new Date().toISOString(),
+      user_id: userId,
+      failure_patterns: {
+        count: failurePatterns.data?.length || 0,
+        patterns: failurePatterns.data || [],
+        note: 'Partial value - loses pattern matching capabilities',
+      },
+      success_patterns: {
+        count: successPatterns.data?.length || 0,
+        patterns: successPatterns.data || [],
+        note: 'Partial value - loses pattern recognition capabilities',
+      },
+      audit_trails: {
+        count: auditTrails.data?.length || 0,
+        records: auditTrails.data || [],
+        note: 'Full value - complete audit trail for compliance',
+      },
+      institutional_memory_value: {
+        failure_patterns_value: (failurePatterns.data?.length || 0) * 10, // $10 per pattern
+        success_patterns_value: (successPatterns.data?.length || 0) * 5, // $5 per pattern
+        audit_trails_value: (auditTrails.data?.length || 0) * 1, // $1 per record
+        total_value: (failurePatterns.data?.length || 0) * 10 + (successPatterns.data?.length || 0) * 5 + (auditTrails.data?.length || 0) * 1,
+        note: 'Estimated value of institutional memory. Switching to alternatives loses this value.',
+      },
     });
-  } else if (typeof obj === 'object' && obj !== null) {
-    Object.entries(obj).forEach(([key, value]) => {
-      if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-        yaml += `${indentStr}${key}:\n${convertToYAML(value, indent + 1)}`;
-      } else if (Array.isArray(value)) {
-        yaml += `${indentStr}${key}:\n${convertToYAML(value, indent + 1)}`;
-      } else {
-        yaml += `${indentStr}${key}: ${value}\n`;
-      }
-    });
-  } else {
-    return String(obj);
-  }
-
-  return yaml;
-}
-
-function convertToCSV(entries: any[]): string {
-  if (!entries || entries.length === 0) {
-    return 'id,created_at,trigger,agent_type,safety_checks_passed,user_feedback\n';
-  }
-
-  const headers = ['id', 'created_at', 'trigger', 'agent_type', 'safety_checks_passed', 'user_feedback'];
-  const rows = entries.map(entry => [
-    entry.id,
-    entry.created_at,
-    entry.trigger || '',
-    entry.agent_type || '',
-    entry.safety_checks_passed ? 'true' : 'false',
-    entry.user_feedback || '',
-  ]);
-
-  return [
-    headers.join(','),
-    ...rows.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')),
-  ].join('\n');
-}
+  })
+);
 
 export { router as exportRouter };

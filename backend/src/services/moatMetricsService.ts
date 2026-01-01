@@ -1,7 +1,14 @@
 /**
  * Moat Metrics Service
  * 
- * Tracks metrics for defensive moat effectiveness
+ * Tracks leading indicators of lock-in and defensibility:
+ * - Failure pattern accumulation
+ * - Pattern match frequency
+ * - Prevention rule application
+ * - Cross-project pattern usage
+ * - Daily usage frequency
+ * - Integration usage
+ * - Guarantee dependency
  */
 
 import { createClient } from '@supabase/supabase-js';
@@ -12,176 +19,301 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-export interface MoatMetrics {
+export interface LockInMetrics {
   userId: string;
-  period: {
-    start: string;
-    end: string;
+  failurePatternCount: number;
+  patternMatchFrequency: number; // per month
+  preventionRuleApplications: number; // per month
+  crossProjectPatternUsage: number; // number of projects using shared patterns
+  dailyUsageFrequency: number; // days per month with usage
+  ideIntegrationUsage: number; // IDE extension uses per month
+  cicdIntegrationUsage: number; // CI/CD checks per month
+  guaranteeDependency: number; // security/compliance checks per month
+  lockInScore: number; // 0-100
+  lockInLevel: 'none' | 'moderate' | 'strong';
+}
+
+export interface ChurnPredictionMetrics {
+  userId: string;
+  churnRiskScore: number; // 0-100 (higher = more likely to churn)
+  churnRiskLevel: 'low' | 'medium' | 'high';
+  indicators: {
+    lowUsage: boolean;
+    noGuaranteeDependency: boolean;
+    noIntegrationUsage: boolean;
+    lowPatternAccumulation: boolean;
   };
-  failureMemory: {
-    totalFailurePatterns: number;
-    totalSuccessPatterns: number;
-    failuresPrevented: number;
-    preventionRuleEffectiveness: number; // 0-1
-  };
-  safetyEnforcement: {
-    outputsBlocked: number;
-    warningsIssued: number;
-    securityIssuesDetected: number;
-    complianceIssuesDetected: number;
-  };
-  workflowLockIn: {
-    dailyUsageRate: number; // 0-1
-    ideIntegrationUsage: number;
-    cicdIntegrationUsage: number;
-  };
-  dataGravity: {
-    totalPatterns: number;
-    exportValue: number; // Estimated value of exported data
-    switchingCost: number; // Estimated cost of switching
-  };
+}
+
+export interface InfrastructureSignals {
+  userId: string;
+  deploymentBlocks: number; // per month
+  failurePreventionRate: number; // percentage
+  complianceChecks: number; // per month
+  auditLogQueries: number; // per month
+  infrastructureStatus: 'none' | 'moderate' | 'strong';
 }
 
 export class MoatMetricsService {
   /**
-   * Get moat metrics for a user
+   * Calculate lock-in metrics for a user
    */
-  async getMoatMetrics(
-    userId: string,
-    startDate?: string,
-    endDate?: string
-  ): Promise<MoatMetrics> {
-    const start = startDate || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
-    const end = endDate || new Date().toISOString();
+  async getLockInMetrics(userId: string): Promise<LockInMetrics> {
+    const now = new Date();
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const monthStartISO = monthStart.toISOString();
 
-    // Failure memory metrics
-    const { data: failurePatterns } = await supabase
+    // Get failure pattern count
+    const { count: failurePatternCount } = await supabase
       .from('failure_patterns')
-      .select('id, occurrence_count')
-      .eq('user_id', userId)
-      .eq('resolved', false);
-
-    const { data: successPatterns } = await supabase
-      .from('success_patterns')
-      .select('id, success_rate')
+      .select('*', { count: 'exact', head: true })
       .eq('user_id', userId);
 
-    const { data: patternMatches } = await supabase
+    // Get pattern matches this month
+    const { count: patternMatches } = await supabase
       .from('pattern_matches')
-      .select('id, match_type, action_taken')
+      .select('*', { count: 'exact', head: true })
       .eq('user_id', userId)
-      .gte('created_at', start)
-      .lte('created_at', end);
+      .gte('created_at', monthStartISO);
 
-    const failuresPrevented = patternMatches?.filter(
-      m => m.action_taken === 'blocked' || m.action_taken === 'warned'
-    ).length || 0;
-
-    const totalMatches = patternMatches?.length || 1;
-    const preventionRuleEffectiveness = failuresPrevented / totalMatches;
-
-    // Safety enforcement metrics
-    const { data: agentRuns } = await supabase
+    // Get prevention rule applications (from agent_runs with prevention rules)
+    const { count: preventionApplications } = await supabase
       .from('agent_runs')
-      .select('safety_checks_passed, safety_check_results')
+      .select('*', { count: 'exact', head: true })
       .eq('user_id', userId)
-      .gte('created_at', start)
-      .lte('created_at', end);
+      .gte('created_at', monthStartISO)
+      .not('safety_check_results', 'is', null);
 
-    const outputsBlocked = agentRuns?.filter(
-      r => r.safety_check_results && !r.safety_checks_passed
-    ).length || 0;
+    // Get cross-project pattern usage (distinct projects using patterns)
+    const { data: patternUsage } = await supabase
+      .from('pattern_matches')
+      .select('detected_in')
+      .eq('user_id', userId)
+      .gte('created_at', monthStartISO);
 
-    const securityIssues = agentRuns?.reduce((acc, run) => {
-      const results = run.safety_check_results as any;
-      if (results?.security?.vulnerabilities) {
-        return acc + results.security.vulnerabilities.length;
-      }
-      return acc;
-    }, 0) || 0;
+    const crossProjectUsage = new Set(patternUsage?.map(p => p.detected_in).filter(Boolean)).size;
 
-    const complianceIssues = agentRuns?.reduce((acc, run) => {
-      const results = run.safety_check_results as any;
-      if (results?.compliance?.violations) {
-        return acc + results.compliance.violations.length;
-      }
-      return acc;
-    }, 0) || 0;
-
-    // Workflow lock-in metrics
-    const { data: ideRuns } = await supabase
+    // Get daily usage frequency (days per month with at least one run)
+    const { data: dailyUsage } = await supabase
       .from('agent_runs')
-      .select('id')
+      .select('created_at')
       .eq('user_id', userId)
-      .eq('trigger', 'ide_integration')
-      .gte('created_at', start)
-      .lte('created_at', end);
+      .gte('created_at', monthStartISO);
 
-    const { data: cicdRuns } = await supabase
+    const uniqueDays = new Set(
+      dailyUsage?.map(run => new Date(run.created_at).toDateString()) || []
+    ).size;
+
+    // Get integration usage (would need integration_usage table or track in agent_runs metadata)
+    // For now, estimate based on user profile
+    const { data: profile } = await supabase
+      .from('user_profiles')
+      .select('integration_access')
+      .eq('user_id', userId)
+      .single();
+
+    const hasIDE = profile?.integration_access?.includes('ide') || false;
+    const hasCICD = profile?.integration_access?.includes('cicd') || false;
+
+    // Estimate integration usage (would be tracked separately in production)
+    const ideUsage = hasIDE ? Math.floor(uniqueDays * 10) : 0; // Estimate 10 uses per day
+    const cicdUsage = hasCICD ? Math.floor(uniqueDays * 2) : 0; // Estimate 2 checks per day
+
+    // Get guarantee dependency (safety checks)
+    const { count: guaranteeChecks } = await supabase
       .from('agent_runs')
-      .select('id')
+      .select('*', { count: 'exact', head: true })
       .eq('user_id', userId)
-      .eq('trigger', 'cicd_pr_check')
-      .gte('created_at', start)
-      .lte('created_at', end);
+      .gte('created_at', monthStartISO)
+      .not('safety_check_results', 'is', null);
 
-    const totalRuns = agentRuns?.length || 1;
-    const dailyUsageRate = Math.min(1, totalRuns / 30); // Normalize to daily rate
+    // Calculate lock-in score (0-100)
+    let lockInScore = 0;
+    
+    // Failure patterns (0-30 points)
+    if (failurePatternCount && failurePatternCount >= 100) lockInScore += 30;
+    else if (failurePatternCount && failurePatternCount >= 50) lockInScore += 20;
+    else if (failurePatternCount && failurePatternCount >= 10) lockInScore += 10;
 
-    // Data gravity metrics
-    const totalPatterns = (failurePatterns?.length || 0) + (successPatterns?.length || 0);
-    const exportValue = totalPatterns * 10; // Estimated value per pattern
-    const switchingCost = exportValue * 0.3; // 30% of export value
+    // Pattern matches (0-20 points)
+    if (patternMatches && patternMatches >= 50) lockInScore += 20;
+    else if (patternMatches && patternMatches >= 20) lockInScore += 15;
+    else if (patternMatches && patternMatches >= 10) lockInScore += 10;
+
+    // Daily usage (0-20 points)
+    if (uniqueDays >= 25) lockInScore += 20;
+    else if (uniqueDays >= 20) lockInScore += 15;
+    else if (uniqueDays >= 10) lockInScore += 10;
+
+    // Integration usage (0-15 points)
+    if (ideUsage >= 200 || cicdUsage >= 50) lockInScore += 15;
+    else if (ideUsage >= 100 || cicdUsage >= 25) lockInScore += 10;
+    else if (ideUsage >= 50 || cicdUsage >= 10) lockInScore += 5;
+
+    // Guarantee dependency (0-15 points)
+    if (guaranteeChecks && guaranteeChecks >= 500) lockInScore += 15;
+    else if (guaranteeChecks && guaranteeChecks >= 100) lockInScore += 10;
+    else if (guaranteeChecks && guaranteeChecks >= 50) lockInScore += 5;
+
+    const lockInLevel: 'none' | 'moderate' | 'strong' =
+      lockInScore >= 70 ? 'strong' : lockInScore >= 40 ? 'moderate' : 'none';
 
     return {
       userId,
-      period: { start, end },
-      failureMemory: {
-        totalFailurePatterns: failurePatterns?.length || 0,
-        totalSuccessPatterns: successPatterns?.length || 0,
-        failuresPrevented,
-        preventionRuleEffectiveness,
-      },
-      safetyEnforcement: {
-        outputsBlocked,
-        warningsIssued: securityIssues + complianceIssues,
-        securityIssuesDetected: securityIssues,
-        complianceIssuesDetected: complianceIssues,
-      },
-      workflowLockIn: {
-        dailyUsageRate,
-        ideIntegrationUsage: ideRuns?.length || 0,
-        cicdIntegrationUsage: cicdRuns?.length || 0,
-      },
-      dataGravity: {
-        totalPatterns,
-        exportValue,
-        switchingCost,
+      failurePatternCount: failurePatternCount || 0,
+      patternMatchFrequency: patternMatches || 0,
+      preventionRuleApplications: preventionApplications || 0,
+      crossProjectPatternUsage: crossProjectUsage,
+      dailyUsageFrequency: uniqueDays,
+      ideIntegrationUsage: ideUsage,
+      cicdIntegrationUsage: cicdUsage,
+      guaranteeDependency: guaranteeChecks || 0,
+      lockInScore,
+      lockInLevel,
+    };
+  }
+
+  /**
+   * Predict churn risk for a user
+   */
+  async getChurnPrediction(userId: string): Promise<ChurnPredictionMetrics> {
+    const lockInMetrics = await this.getLockInMetrics(userId);
+
+    let churnRiskScore = 100; // Start at 100 (highest risk)
+
+    // Reduce risk based on lock-in indicators
+    if (lockInMetrics.failurePatternCount >= 100) churnRiskScore -= 30;
+    else if (lockInMetrics.failurePatternCount >= 50) churnRiskScore -= 20;
+    else if (lockInMetrics.failurePatternCount >= 10) churnRiskScore -= 10;
+
+    if (lockInMetrics.dailyUsageFrequency >= 25) churnRiskScore -= 25;
+    else if (lockInMetrics.dailyUsageFrequency >= 20) churnRiskScore -= 15;
+    else if (lockInMetrics.dailyUsageFrequency >= 10) churnRiskScore -= 10;
+
+    if (lockInMetrics.ideIntegrationUsage >= 200 || lockInMetrics.cicdIntegrationUsage >= 50) {
+      churnRiskScore -= 20;
+    } else if (lockInMetrics.ideIntegrationUsage >= 100 || lockInMetrics.cicdIntegrationUsage >= 25) {
+      churnRiskScore -= 10;
+    }
+
+    if (lockInMetrics.guaranteeDependency >= 500) churnRiskScore -= 15;
+    else if (lockInMetrics.guaranteeDependency >= 100) churnRiskScore -= 10;
+
+    churnRiskScore = Math.max(0, Math.min(100, churnRiskScore));
+
+    const churnRiskLevel: 'low' | 'medium' | 'high' =
+      churnRiskScore <= 30 ? 'low' : churnRiskScore <= 60 ? 'medium' : 'high';
+
+    return {
+      userId,
+      churnRiskScore,
+      churnRiskLevel,
+      indicators: {
+        lowUsage: lockInMetrics.dailyUsageFrequency < 10,
+        noGuaranteeDependency: lockInMetrics.guaranteeDependency < 50,
+        noIntegrationUsage: lockInMetrics.ideIntegrationUsage === 0 && lockInMetrics.cicdIntegrationUsage === 0,
+        lowPatternAccumulation: lockInMetrics.failurePatternCount < 50,
       },
     };
   }
 
   /**
-   * Track moat event
+   * Get infrastructure signals
    */
-  async trackMoatEvent(
-    userId: string,
-    eventType: 'failure_prevented' | 'output_blocked' | 'pattern_created' | 'export_requested',
-    metadata?: Record<string, any>
-  ): Promise<void> {
-    await supabase
-      .from('agent_runs')
-      .insert({
-        user_id: userId,
-        trigger: 'moat_event',
-        trigger_data: {
-          eventType,
-          metadata,
-        },
-        agent_type: 'orchestrator',
-      });
+  async getInfrastructureSignals(userId: string): Promise<InfrastructureSignals> {
+    const now = new Date();
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const monthStartISO = monthStart.toISOString();
 
-    logger.info('Moat event tracked', { userId, eventType, metadata });
+    // Get deployment blocks (would be tracked in CI/CD integration)
+    // For now, estimate based on blocked outputs
+    const { count: blockedOutputs } = await supabase
+      .from('agent_runs')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', userId)
+      .gte('created_at', monthStartISO)
+      .eq('safety_checks_passed', false);
+
+    // Get total runs
+    const { count: totalRuns } = await supabase
+      .from('agent_runs')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', userId)
+      .gte('created_at', monthStartISO);
+
+    const failurePreventionRate = totalRuns && totalRuns > 0
+      ? Math.round((blockedOutputs || 0) / totalRuns * 100)
+      : 0;
+
+    // Get compliance checks
+    const { count: complianceChecks } = await supabase
+      .from('agent_runs')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', userId)
+      .gte('created_at', monthStartISO)
+      .not('safety_check_results', 'is', null);
+
+    // Get audit log queries (would be tracked separately)
+    // Estimate based on compliance checks
+    const auditLogQueries = Math.floor((complianceChecks || 0) / 10);
+
+    const infrastructureStatus: 'none' | 'moderate' | 'strong' =
+      blockedOutputs && blockedOutputs >= 5 && failurePreventionRate >= 80
+        ? 'strong'
+        : blockedOutputs && blockedOutputs >= 1 && failurePreventionRate >= 50
+        ? 'moderate'
+        : 'none';
+
+    return {
+      userId,
+      deploymentBlocks: blockedOutputs || 0,
+      failurePreventionRate,
+      complianceChecks: complianceChecks || 0,
+      auditLogQueries,
+      infrastructureStatus,
+    };
+  }
+
+  /**
+   * Calculate institutional memory value
+   */
+  async getInstitutionalMemoryValue(userId: string): Promise<{
+    failurePatternsValue: number;
+    successPatternsValue: number;
+    auditTrailsValue: number;
+    totalValue: number;
+    estimatedSwitchingCost: number;
+  }> {
+    const { count: failurePatternCount } = await supabase
+      .from('failure_patterns')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', userId);
+
+    const { count: successPatternCount } = await supabase
+      .from('success_patterns')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', userId);
+
+    const { count: auditTrailCount } = await supabase
+      .from('agent_runs')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', userId);
+
+    const failurePatternsValue = (failurePatternCount || 0) * 10; // $10 per pattern
+    const successPatternsValue = (successPatternCount || 0) * 5; // $5 per pattern
+    const auditTrailsValue = (auditTrailCount || 0) * 1; // $1 per record
+    const totalValue = failurePatternsValue + successPatternsValue + auditTrailsValue;
+
+    // Estimated switching cost (value lost + time to rebuild)
+    const estimatedSwitchingCost = totalValue + (failurePatternCount || 0) * 100; // $100 per pattern to rebuild
+
+    return {
+      failurePatternsValue,
+      successPatternsValue,
+      auditTrailsValue,
+      totalValue,
+      estimatedSwitchingCost,
+    };
   }
 }
 
