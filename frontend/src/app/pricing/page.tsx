@@ -2,8 +2,8 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Pricing - Keys: Never Ship Insecure Code Again',
-  description: 'Choose the plan that prevents failures. Security, compliance, and quality guarantees included. Your institutional memory prevents mistakes before they happen.',
+  title: 'Pricing - Keys: Your AI Co-Founder for Operational Automation',
+  description: 'Choose the plan that fits your operational needs. Your AI co-founder for business automation, process intelligence, and institutional memory.',
 };
 
 export default function PricingPage() {
@@ -33,7 +33,7 @@ export default function PricingPage() {
       name: 'Pro',
       price: '$29',
       period: 'per month',
-      description: 'Never ship insecure code again. We guarantee it.',
+      description: 'Your operational AI co-founder. Automate workflows and build institutional memory.',
       features: [
         '1,000 AI runs per month',
         '1M tokens per month',
@@ -43,14 +43,10 @@ export default function PricingPage() {
         'Advanced analytics',
         'Template sharing',
         'Background suggestions',
-        '✅ Unlimited failure prevention',
-        '✅ Unlimited success pattern tracking',
+        '✅ Unlimited operational automation',
+        '✅ Unlimited institutional memory',
       ],
-      guarantees: [
-        '🔒 Security Guarantee: We scan all outputs for vulnerabilities. If we miss one, we\'re liable.',
-        '🛡️ Compliance Guarantee: All outputs meet GDPR/SOC 2 standards. We\'re liable if we miss compliance.',
-        '✨ Quality Guarantee: All outputs meet code quality standards. We\'re liable for technical debt.',
-      ],
+      guarantees: [],
       cta: 'Start Free Trial',
       ctaLink: '/signup?plan=pro',
       popular: true,
@@ -59,23 +55,19 @@ export default function PricingPage() {
       name: 'Pro+',
       price: '$79',
       period: 'per month',
-      description: 'Power users who deploy daily. Workflow integration included.',
+      description: 'Power users running daily operations. Full Cursor integration included.',
       features: [
         'Everything in Pro',
         '5,000 AI runs per month',
         '5M tokens per month',
         'Unlimited templates',
         'Unlimited exports',
-        '✅ IDE Integration (VS Code/Cursor)',
+        '✅ Cursor Integration (VS Code/Cursor)',
         '✅ CI/CD Integration (GitHub Actions)',
-        '✅ Advanced pattern recognition (ML-powered)',
+        '✅ Advanced operational intelligence',
         '✅ Cross-project learning',
       ],
-      guarantees: [
-        '🔒 Security Guarantee: We scan all outputs for vulnerabilities. If we miss one, we\'re liable.',
-        '🛡️ Compliance Guarantee: All outputs meet GDPR/SOC 2 standards. We\'re liable if we miss compliance.',
-        '✨ Quality Guarantee: All outputs meet code quality standards. We\'re liable for technical debt.',
-      ],
+      guarantees: [],
       cta: 'Upgrade to Pro+',
       ctaLink: '/signup?plan=pro-plus',
       popular: false,
@@ -84,7 +76,7 @@ export default function PricingPage() {
       name: 'Enterprise',
       price: 'Custom',
       period: '',
-      description: 'Teams that need compliance, SLAs, and legal protection.',
+      description: 'Teams that need scale, SLAs, and dedicated support.',
       features: [
         'Everything in Pro+',
         'Unlimited AI runs',
@@ -95,16 +87,13 @@ export default function PricingPage() {
         'Dedicated support',
         'Custom integrations',
         '✅ SLA Guarantee (99.9% uptime)',
-        '✅ Legal Liability (expanded guarantees)',
-        '✅ Compliance Certifications (SOC 2, GDPR)',
-        '✅ Audit Logs (compliance requirements)',
+        '✅ Advanced operational analytics',
+        '✅ Custom workflow automation',
+        '✅ Audit Logs',
         '✅ SSO (enterprise security)',
-        '💰 Usage-based: $0.10 per prevented failure (optional)',
+        '💰 Usage-based pricing available',
       ],
       guarantees: [
-        '🔒 Security Guarantee: We scan all outputs for vulnerabilities. If we miss one, we\'re liable.',
-        '🛡️ Compliance Guarantee: All outputs meet GDPR/SOC 2 standards. We\'re liable if we miss compliance.',
-        '✨ Quality Guarantee: All outputs meet code quality standards. We\'re liable for technical debt.',
         '⚡ SLA Guarantee: 99.9% uptime or 10% refund.',
       ],
       cta: 'Contact Sales',
@@ -119,14 +108,14 @@ export default function PricingPage() {
         {/* Header */}
         <div className="text-center mb-12 sm:mb-16">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-4">
-            Never Ship Insecure Code Again
+            Your AI Co-Founder for Operational Automation
           </h1>
           <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Choose the plan that prevents failures. Security, compliance, and quality guarantees included. Your institutional memory prevents mistakes before they happen.
+            Choose the plan that fits your operational needs. Your AI co-founder works alongside Cursor to automate business operations and build institutional memory.
           </p>
           <div className="mt-6 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800 max-w-2xl mx-auto">
             <p className="text-sm text-green-800 dark:text-green-200">
-              <strong>ROI:</strong> $29/month prevents $10K-$100K+ security incidents. <strong>190x-1,900x return.</strong> See{' '}
+              <strong>Value:</strong> $29/month gets you an AI co-founder for operational automation. <strong>No equity, just results.</strong> See{' '}
               <Link href="#value-calculation" className="underline font-semibold">
                 value calculation
               </Link>
@@ -265,7 +254,7 @@ export default function PricingPage() {
                 What are your guarantees?
               </h3>
               <p className="text-gray-600 dark:text-gray-400">
-                Pro and above include security, compliance, and quality guarantees. If we miss a vulnerability, compliance issue, or quality problem, we're liable. See our{' '}
+                Enterprise plans include SLA guarantees. See our{' '}
                 <Link href="/terms" className="text-blue-600 dark:text-blue-400 hover:underline">
                   Terms of Service
                 </Link>
@@ -274,19 +263,19 @@ export default function PricingPage() {
             </div>
             <div id="value-calculation" className="bg-white dark:bg-slate-800 rounded-lg p-6 shadow-sm">
               <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-100">
-                How do you calculate ROI?
+                What value does Keys provide?
               </h3>
               <p className="text-gray-600 dark:text-gray-400 mb-3">
-                $29/month prevents catastrophic failures:
+                $29/month gets you an AI co-founder for operational automation:
               </p>
               <ul className="list-disc list-inside space-y-1 text-gray-600 dark:text-gray-400 text-sm">
-                <li>Security guarantee: One prevented SQL injection saves $10K-$100K+</li>
-                <li>Compliance guarantee: One prevented violation saves $50K-$500K+ in fines</li>
-                <li>Institutional memory: One prevented repeat mistake saves $1K-$10K+</li>
-                <li>Quality gates: One prevented technical debt saves $5K-$50K+</li>
+                <li>Operational automation: Automate workflows and routine tasks</li>
+                <li>Institutional memory: Build knowledge that scales with your business</li>
+                <li>Process intelligence: Learn from your operations to improve efficiency</li>
+                <li>Cursor integration: Works seamlessly with your development workflow</li>
               </ul>
               <p className="text-gray-600 dark:text-gray-400 mt-3">
-                <strong>Total value:</strong> $66K-$660K+ prevented per year. <strong>Price:</strong> $348/year. <strong>ROI:</strong> 190x-1,900x.
+                <strong>Value:</strong> Focus on building while Keys handles operational automation. <strong>No equity, just results.</strong>
               </p>
             </div>
           </div>

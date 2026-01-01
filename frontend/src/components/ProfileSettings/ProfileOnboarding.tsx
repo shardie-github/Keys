@@ -92,10 +92,10 @@ export function ProfileOnboarding({ userId, onComplete }: ProfileOnboardingProps
           <Reveal direction="fade">
             <div className="text-center">
               <h2 className="text-2xl font-bold mb-4 text-slate-900 dark:text-slate-50">
-                Welcome to Cursor Venture Companion
+                Welcome to Keys
               </h2>
               <p className="text-slate-600 dark:text-slate-400 mb-6">
-                Your AI cofounder for the entire product lifecycle: ideation, specification, implementation, DevOps, and continuous evolution.
+                Your day-to-day AI co-founder for operational automation. Works alongside Cursor to automate business operations and build institutional memory.
               </p>
               <AnimatedButton
                 variant="primary"

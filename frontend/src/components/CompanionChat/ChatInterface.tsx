@@ -118,10 +118,10 @@ export function ChatInterface({ userId, initialVibeConfig }: ChatInterfaceProps)
                 </svg>
               </div>
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-                Welcome to Cursor Venture Companion
+                Welcome to Keys
               </h2>
               <p className="text-base sm:text-lg md:text-xl mb-2 text-slate-700 dark:text-slate-300">
-                Your AI cofounder for ideation, specification, implementation, and operations.
+                Your day-to-day AI co-founder for operational automation. Works alongside Cursor to automate business operations.
               </p>
               <p className="text-sm sm:text-base text-slate-500 dark:text-slate-400 mb-6 sm:mb-8">
                 Start a conversation to get personalized assistance tailored to your needs.

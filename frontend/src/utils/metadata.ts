@@ -15,20 +15,20 @@ export function generatePageMetadata({
   image = '/og-image.png',
   noIndex = false,
 }: PageMetadataOptions): Metadata {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://cursor-venture-companion.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://keys.dev';
   const fullUrl = `${baseUrl}${path}`;
 
   return {
-    title: `${title} | Cursor Venture Companion`,
+    title: `${title} | Keys`,
     description,
     alternates: {
       canonical: fullUrl,
     },
     openGraph: {
-      title: `${title} | Cursor Venture Companion`,
+      title: `${title} | Keys`,
       description,
       url: fullUrl,
-      siteName: 'Cursor Venture Companion',
+      siteName: 'Keys',
       images: [
         {
           url: image,
@@ -42,7 +42,7 @@ export function generatePageMetadata({
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${title} | Cursor Venture Companion`,
+      title: `${title} | Keys`,
       description,
       images: [image],
     },

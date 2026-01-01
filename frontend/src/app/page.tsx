@@ -4,11 +4,11 @@ import { SocialProofWithRealMetrics } from '@/components/CRO/SocialProofWithReal
 import { UpgradePrompt } from '@/components/Upsell/UpgradePrompt';
 
 export const metadata: Metadata = {
-  title: 'Never Ship Insecure Code Again - Keys Security & Compliance',
-  description: 'Your institutional memory prevents failures before they happen. Automatic security scanning, compliance checking, and failure pattern detection. We guarantee outputs meet security and compliance standards.',
+  title: 'Keys - Your AI Co-Founder for Operational Automation',
+  description: 'Your day-to-day AI co-founder that works alongside Cursor. Operational automation, business process intelligence, and institutional memory. No equity, just results.',
   openGraph: {
-    title: 'Never Ship Insecure Code Again - Keys Security & Compliance',
-    description: 'Your institutional memory prevents failures before they happen. Automatic security scanning and compliance checking.',
+    title: 'Keys - Your AI Co-Founder for Operational Automation',
+    description: 'Your day-to-day AI co-founder that works alongside Cursor. Operational automation and business process intelligence.',
   },
 };
 
@@ -20,19 +20,19 @@ export default function Home() {
         {/* Main Heading */}
         <div className="space-y-4 sm:space-y-6">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent leading-tight">
-            Never Ship Insecure Code Again
+            Your AI Co-Founder for Operational Automation
           </h1>
           <p className="text-lg sm:text-xl md:text-2xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed font-semibold">
-            Your institutional memory prevents failures before they happen. Automatic security scanning, compliance checking, and failure pattern detection.
+            Keys works alongside Cursor as your day-to-day operational AI co-founder. Business automation, process intelligence, and institutional memory—no equity required.
           </p>
           <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-xl mx-auto">
-            We guarantee outputs meet security and compliance standards. Your failures become prevention rules. Your successes become best practices.
+            Automate operations, streamline workflows, and build institutional knowledge. Your AI partner for running and scaling your business operations.
           </p>
           <div className="mt-6 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800 max-w-2xl mx-auto">
             <p className="text-sm text-green-800 dark:text-green-200">
-              <strong>ROI:</strong> $29/month prevents $10K-$100K+ security incidents. <strong>190x-1,900x return.</strong>{' '}
+              <strong>Value:</strong> $29/month gets you an AI co-founder for operational automation. <strong>No equity, just results.</strong>{' '}
               <Link href="/pricing#value-calculation" className="underline font-semibold hover:text-green-900 dark:hover:text-green-100">
-                See value calculation
+                See pricing
               </Link>
             </p>
           </div>
@@ -60,31 +60,31 @@ export default function Home() {
         {/* Feature Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-12 sm:mt-16">
           <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow border border-gray-200 dark:border-slate-700">
-            <div className="text-3xl mb-3" aria-hidden="true">🛡️</div>
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Automatic Security Scanning</h2>
+            <div className="text-3xl mb-3" aria-hidden="true">🤖</div>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">AI Co-Founder</h2>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Every output is scanned for SQL injection, XSS, secret exposure, and other vulnerabilities. We block dangerous outputs before you see them.
+              Your day-to-day operational partner. Works alongside Cursor to automate business operations, no equity required.
             </p>
           </div>
           <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow border border-gray-200 dark:border-slate-700">
-            <div className="text-3xl mb-3" aria-hidden="true">✅</div>
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Compliance Guarantees</h2>
+            <div className="text-3xl mb-3" aria-hidden="true">⚙️</div>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Operational Automation</h2>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              All outputs meet GDPR, SOC 2, and HIPAA standards. We're liable if we miss a compliance issue.
+              Automate workflows, streamline processes, and handle routine operational tasks. Focus on building while Keys handles operations.
             </p>
           </div>
           <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow border border-gray-200 dark:border-slate-700">
             <div className="text-3xl mb-3" aria-hidden="true">🧠</div>
             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Institutional Memory</h2>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Your failures become prevention rules. Your successes become best practices. Never repeat mistakes.
+              Build knowledge over time. Your processes, decisions, and patterns become reusable intelligence for smarter operations.
             </p>
           </div>
           <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow border border-gray-200 dark:border-slate-700">
             <div className="text-3xl mb-3" aria-hidden="true">🔗</div>
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">IDE & CI/CD Integration</h2>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Cursor Integration</h2>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Automatic context injection in VS Code/Cursor. PR checks in GitHub Actions. Can't deploy without Keys.
+              Seamlessly works with Cursor. Context-aware automation that understands your codebase and operational needs.
             </p>
           </div>
         </div>
