@@ -591,8 +591,9 @@ CREATE INDEX IF NOT EXISTS idx_agent_runs_feedback ON public.agent_runs(user_fee
 CREATE INDEX IF NOT EXISTS idx_agent_runs_user_created ON public.agent_runs(user_id, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_agent_runs_trigger_created ON public.agent_runs(trigger, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_agent_runs_user_feedback ON public.agent_runs(user_id, user_feedback);
-CREATE INDEX IF NOT EXISTS idx_agent_runs_user_recent ON public.agent_runs(user_id, created_at DESC) 
-  WHERE created_at > NOW() - INTERVAL '30 days';
+-- Note: Partial index with NOW() removed - NOW() is not IMMUTABLE
+-- Use regular index instead for recent queries
+CREATE INDEX IF NOT EXISTS idx_agent_runs_user_recent ON public.agent_runs(user_id, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_agent_runs_failure_pattern ON public.agent_runs(failure_pattern_id);
 CREATE INDEX IF NOT EXISTS idx_agent_runs_success_pattern ON public.agent_runs(success_pattern_id);
 CREATE INDEX IF NOT EXISTS idx_agent_runs_safety_checks ON public.agent_runs(safety_checks_passed);
