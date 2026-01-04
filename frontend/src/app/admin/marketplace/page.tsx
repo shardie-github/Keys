@@ -62,8 +62,9 @@ export default function AdminMarketplacePage() {
 
       const data = await response.json();
       setResults(data.results || []);
-    } catch (err: any) {
-      setError(err.message || 'Failed to publish packs');
+    } catch (err) {
+      const error = err instanceof Error ? err : new Error('Failed to publish packs');
+      setError(error.message);
     } finally {
       setPublishing(false);
     }

@@ -240,6 +240,6 @@ export const onboardingMachine = createMachine(
         // The actual submission logic is handled by the parent component
         throw new Error('submitProfileData actor must be provided');
       },
-    } as any,
+    } as const,
   }
 );

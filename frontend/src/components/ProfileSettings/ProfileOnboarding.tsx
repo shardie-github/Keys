@@ -42,15 +42,15 @@ export function ProfileOnboarding({ userId, onComplete }: ProfileOnboardingProps
             if (!result) {
               throw new Error('Failed to create profile');
             }
-            logUXEvent.flowCompleted('onboarding', context.totalSteps);
+            logUXEvent.flowCompleted('onboarding', input.totalSteps);
             return result;
           } catch (error) {
-            logUXEvent.errorOccurred('onboarding', error as Error);
+            logUXEvent.errorOccurred('onboarding', error instanceof Error ? error : new Error('Unknown error'));
             throw error;
           }
         },
-      } as any,
-    }) as any,
+      },
+    } as unknown as Parameters<typeof onboardingMachine.provide>[0]),
     {
       input: {
         userId,
@@ -99,7 +99,7 @@ export function ProfileOnboarding({ userId, onComplete }: ProfileOnboardingProps
               </p>
               <AnimatedButton
                 variant="primary"
-                onClick={() => send({ type: 'NEXT' } as any)}
+                onClick={() => send({ type: 'NEXT' })}
               >
                 Get Started
               </AnimatedButton>
@@ -124,7 +124,7 @@ export function ProfileOnboarding({ userId, onComplete }: ProfileOnboardingProps
                       className="justify-start text-left"
                       onClick={() => {
                         updateProfile({ role });
-                        send({ type: 'NEXT' } as any);
+                        send({ type: 'NEXT' });
                       }}
                     >
                       <span className="font-medium capitalize">{role.replace('_', ' ')}</span>
@@ -245,7 +245,7 @@ export function ProfileOnboarding({ userId, onComplete }: ProfileOnboardingProps
               </p>
               <AnimatedButton
                 variant="primary"
-                onClick={() => send({ type: 'SUBMIT' } as any)}
+                onClick={() => send({ type: 'SUBMIT' })}
                 isLoading={isLoading}
                 isDisabled={isLoading}
               >
@@ -290,7 +290,7 @@ export function ProfileOnboarding({ userId, onComplete }: ProfileOnboardingProps
                 variant="danger"
                 onClick={() => {
                   logUXEvent.retryAttempted('onboarding', context.retryCount);
-                  send({ type: 'RETRY' } as any);
+                  send({ type: 'RETRY' });
                 }}
                 isDisabled={context.retryCount >= 3}
               >
@@ -298,7 +298,7 @@ export function ProfileOnboarding({ userId, onComplete }: ProfileOnboardingProps
               </AnimatedButton>
               <AnimatedButton
                 variant="secondary"
-                onClick={() => send({ type: 'PREV' } as any)}
+                onClick={() => send({ type: 'PREV' })}
               >
                 Go Back
               </AnimatedButton>
@@ -312,14 +312,14 @@ export function ProfileOnboarding({ userId, onComplete }: ProfileOnboardingProps
         <div className="flex justify-between mt-6">
           <AnimatedButton
             variant="ghost"
-            onClick={() => send({ type: 'PREV' } as any)}
+            onClick={() => send({ type: 'PREV' })}
           >
             ← Back
           </AnimatedButton>
           {currentStepName !== 'role' && (
             <AnimatedButton
               variant="primary"
-              onClick={() => send({ type: 'NEXT' } as any)}
+              onClick={() => send({ type: 'NEXT' })}
             >
               Next →
             </AnimatedButton>

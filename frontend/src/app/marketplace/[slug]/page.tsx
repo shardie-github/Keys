@@ -56,6 +56,43 @@ function KeyDetailContent() {
   const [selectedVersion, setSelectedVersion] = useState<string>('');
   const [activeView, setActiveView] = useState<ViewType>('skim');
 
+  const trackView = useCallback(async (keyId: string, token: string) => {
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+      await fetch(`${apiUrl}/marketplace/analytics`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          event_type: 'view',
+          key_id: keyId,
+        }),
+      });
+    } catch {
+      // Silently fail
+    }
+  }, []);
+
+  const fetchPreview = useCallback(async (isPublic: boolean, token?: string) => {
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+      const headers: HeadersInit = {};
+      if (!isPublic && token) {
+        headers.Authorization = `Bearer ${token}`;
+      }
+
+      const response = await fetch(`${apiUrl}/marketplace/packs/${slug}/preview`, { headers });
+      if (response.ok) {
+        const data = await response.json();
+        setPreviewUrl(data.previewUrl);
+      }
+    } catch (err) {
+      console.error('Failed to fetch preview:', err);
+    }
+  }, [slug]);
+
   const fetchKey = useCallback(async () => {
     try {
       setLoading(true);
@@ -127,7 +164,15 @@ function KeyDetailContent() {
     } finally {
       setLoading(false);
     }
-  }, [slug]);
+  }, [slug, trackView, fetchPreview]);
+
+  const checkAuth = useCallback(async () => {
+    const supabase = createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    setIsAuthenticated(!!user);
+  }, []);
 
   useEffect(() => {
     checkAuth();
@@ -141,52 +186,7 @@ function KeyDetailContent() {
         fetchKey();
       }, 1000);
     }
-  }, [searchParams, fetchKey]);
-
-  const checkAuth = useCallback(async () => {
-    const supabase = createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    setIsAuthenticated(!!user);
-  }, []);
-
-  const trackView = useCallback(async (keyId: string, token: string) => {
-    try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-      await fetch(`${apiUrl}/marketplace/analytics`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          event_type: 'view',
-          key_id: keyId,
-        }),
-      });
-    } catch {
-      // Silently fail
-    }
-  }, []);
-
-  const fetchPreview = useCallback(async (isPublic: boolean, token?: string) => {
-    try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-      const headers: HeadersInit = {};
-      if (!isPublic && token) {
-        headers.Authorization = `Bearer ${token}`;
-      }
-
-      const response = await fetch(`${apiUrl}/marketplace/packs/${slug}/preview`, { headers });
-      if (response.ok) {
-        const data = await response.json();
-        setPreviewUrl(data.previewUrl);
-      }
-    } catch (err) {
-      console.error('Failed to fetch preview:', err);
-    }
-  }, [slug]);
+  }, [searchParams, fetchKey, checkAuth]);
 
   const handleDownload = useCallback(async () => {
     if (!isAuthenticated) {

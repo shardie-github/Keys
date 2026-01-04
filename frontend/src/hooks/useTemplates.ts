@@ -216,8 +216,7 @@ export function useTemplateTesting(templateId: string | null) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       customVariables: Record<string, any>,
       customInstructions?: string,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      inputFilter?: any,
+      inputFilter?: Record<string, unknown>,
       taskDescription?: string
     ) => {
       if (!templateId) return;

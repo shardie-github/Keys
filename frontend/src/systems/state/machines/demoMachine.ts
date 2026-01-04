@@ -226,7 +226,7 @@ export const demoMachine = createMachine(
         
         return input.formData;
       },
-    } as any,
+    } as const,
   }
 );
 
