@@ -23,13 +23,13 @@ The host app remains sovereign. The KEY provides leverage.
 
 **✅ Correct**:
 ```typescript
-import { stripeWebhookHandler } from './node-keys/stripe-webhook-entitlement/src';
+import { stripeWebhookHandler } from './keys-assets/node-next-keys/stripe-webhook-entitlement/src';
 ```
 
 **❌ Wrong**:
 ```typescript
 // Magic auto-import or side-effect registration
-import './node-keys/stripe-webhook-entitlement'; // No!
+import './keys-assets/node-next-keys/stripe-webhook-entitlement'; // No!
 ```
 
 **Rationale**: Explicit imports make dependencies clear and enable tree-shaking.
@@ -43,7 +43,7 @@ import './node-keys/stripe-webhook-entitlement'; // No!
 **✅ Correct** (Next.js App Router):
 ```typescript
 // app/api/webhooks/stripe/route.ts
-import { stripeWebhookHandler } from '@/node-keys/stripe-webhook-entitlement/src';
+import { stripeWebhookHandler } from '@/keys-assets/node-next-keys/stripe-webhook-entitlement/src';
 
 export const POST = stripeWebhookHandler;
 ```
@@ -51,14 +51,14 @@ export const POST = stripeWebhookHandler;
 **✅ Correct** (Next.js Pages Router):
 ```typescript
 // pages/api/webhooks/stripe.ts
-import { stripeWebhookHandler } from '@/node-keys/stripe-webhook-entitlement/src';
+import { stripeWebhookHandler } from '@/keys-assets/node-next-keys/stripe-webhook-entitlement/src';
 
 export default stripeWebhookHandler;
 ```
 
 **✅ Correct** (Express):
 ```typescript
-import { stripeWebhookHandler } from './node-keys/stripe-webhook-entitlement/src';
+import { stripeWebhookHandler } from './keys-assets/node-next-keys/stripe-webhook-entitlement/src';
 
 app.post('/api/webhooks/stripe', stripeWebhookHandler);
 ```
@@ -80,7 +80,7 @@ import './node-keys/stripe-webhook-entitlement'; // Registers routes automatical
 **✅ Correct**:
 ```typescript
 // KEY validates env vars on import
-import { stripeWebhookHandler } from './node-keys/stripe-webhook-entitlement/src';
+import { stripeWebhookHandler } from './keys-assets/node-next-keys/stripe-webhook-entitlement/src';
 
 // If STRIPE_SECRET_KEY is missing, throws clear error
 ```
@@ -88,7 +88,7 @@ import { stripeWebhookHandler } from './node-keys/stripe-webhook-entitlement/src
 **❌ Wrong**:
 ```typescript
 // Silent failure or undefined behavior
-import { stripeWebhookHandler } from './node-keys/stripe-webhook-entitlement/src';
+import { stripeWebhookHandler } from './keys-assets/node-next-keys/stripe-webhook-entitlement/src';
 // Missing env vars cause mysterious failures later
 ```
 
@@ -110,7 +110,7 @@ import { stripeWebhookHandler } from './node-keys/stripe-webhook-entitlement/src
 **✅ Correct**:
 ```typescript
 // Before removal, host app has:
-import { stripeWebhookHandler } from './node-keys/stripe-webhook-entitlement/src';
+import { stripeWebhookHandler } from './keys-assets/node-next-keys/stripe-webhook-entitlement/src';
 export const POST = stripeWebhookHandler;
 
 // After removal, host app has:
@@ -134,7 +134,7 @@ export const POST = stripeWebhookHandler;
 
 ```bash
 # Copy KEY directory to project
-cp -r node-keys/stripe-webhook-entitlement ./node-keys/
+cp -r keys-assets/node-next-keys/stripe-webhook-entitlement ./keys-assets/node-next-keys/
 ```
 
 ### Step 2: Install Dependencies
@@ -156,7 +156,7 @@ STRIPE_WEBHOOK_SECRET=whsec_...
 
 ```typescript
 // Explicitly import and mount
-import { stripeWebhookHandler } from './node-keys/stripe-webhook-entitlement/src';
+import { stripeWebhookHandler } from './keys-assets/node-next-keys/stripe-webhook-entitlement/src';
 
 export const POST = stripeWebhookHandler;
 ```
@@ -177,7 +177,7 @@ npm run verify-key stripe-webhook-entitlement
 ```typescript
 // Remove all imports of the KEY
 // Before:
-import { stripeWebhookHandler } from './node-keys/stripe-webhook-entitlement/src';
+import { stripeWebhookHandler } from './keys-assets/node-next-keys/stripe-webhook-entitlement/src';
 
 // After:
 // (removed)
@@ -203,7 +203,7 @@ import { stripeWebhookHandler } from './node-keys/stripe-webhook-entitlement/src
 
 ```bash
 # Remove KEY directory
-rm -rf ./node-keys/stripe-webhook-entitlement
+rm -rf ./keys-assets/node-next-keys/stripe-webhook-entitlement
 ```
 
 ### Step 5: Verify Removal
@@ -293,7 +293,7 @@ If a KEY needs to be completely removed:
 
 ```typescript
 // app/api/webhooks/stripe/route.ts
-import { stripeWebhookHandler } from '@/node-keys/stripe-webhook-entitlement/src';
+import { stripeWebhookHandler } from '@/keys-assets/node-next-keys/stripe-webhook-entitlement/src';
 
 export const POST = stripeWebhookHandler;
 ```
@@ -302,7 +302,7 @@ export const POST = stripeWebhookHandler;
 
 ```typescript
 // pages/api/webhooks/stripe.ts
-import { stripeWebhookHandler } from '@/node-keys/stripe-webhook-entitlement/src';
+import { stripeWebhookHandler } from '@/keys-assets/node-next-keys/stripe-webhook-entitlement/src';
 
 export default stripeWebhookHandler;
 ```
@@ -311,7 +311,7 @@ export default stripeWebhookHandler;
 
 ```typescript
 // jobs/reconciliation.ts
-import { reconciliationJob } from '@/node-keys/background-reconciliation/src';
+import { reconciliationJob } from '@/keys-assets/node-next-keys/background-reconciliation/src';
 
 // Register with your job runner
 cron.schedule('0 2 * * *', reconciliationJob);
@@ -321,7 +321,7 @@ cron.schedule('0 2 * * *', reconciliationJob);
 
 ```typescript
 // app/dashboard/audit-log/page.tsx
-import { AuditLogWidget } from '@/node-keys/audit-log-capture/src';
+import { AuditLogWidget } from '@/keys-assets/node-next-keys/audit-log-capture/src';
 
 export default function AuditLogPage() {
   return <AuditLogWidget />;
@@ -332,7 +332,7 @@ export default function AuditLogPage() {
 
 ```typescript
 // migrations/001_add_rls_policies.ts
-import { createRLSPolicies } from '@/node-keys/supabase-rls-guard/src';
+import { createRLSPolicies } from '@/keys-assets/node-next-keys/supabase-rls-guard/src';
 
 export async function up() {
   await createRLSPolicies();

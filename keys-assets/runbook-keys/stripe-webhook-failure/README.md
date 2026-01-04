@@ -1,41 +1,3 @@
-# Canonical Operational Runbook Structure
-
-**Version**: 1.0.0  
-**Last Updated**: 2024-12-30  
-**Status**: Canonical — Universal runbook structure (no deviations allowed)  
-**Purpose**: Enforce consistent, predictable Runbook KEY organization
-
----
-
-## Absolute Requirement
-
-**Every Operational Runbook KEY MUST follow this exact structure. No deviations allowed.**
-
-This structure ensures:
-- Predictable navigation during incidents
-- Reduced cognitive load
-- Complete coverage of incident lifecycle
-- Consistent audit trails
-- Marketplace compatibility
-
----
-
-## Mandatory Structure
-
-Every Runbook KEY MUST contain these sections in this exact order:
-
-### 1. TITLE + SCOPE
-
-**Purpose**: Exact scenario covered, explicit exclusions
-
-**Required Content**:
-- Clear, specific title
-- Exact scenario this runbook covers
-- Explicit list of what this runbook does NOT cover
-- Related runbooks (if applicable)
-
-**Example**:
-```markdown
 # Stripe Webhook Failure Runbook
 
 ## Scope
@@ -44,27 +6,18 @@ This runbook covers:
 - Stripe webhook endpoint returning 500 errors
 - Stripe webhook signature verification failures
 - Stripe webhook events not being processed
+- Webhook delivery failures shown in Stripe dashboard
+- Subscription updates not reflecting in application
 
 This runbook does NOT cover:
 - Stripe API failures (see: Stripe API Failure Runbook)
 - Stripe subscription creation failures (see: Subscription Creation Failure Runbook)
 - Stripe payment processing failures (see: Payment Processing Failure Runbook)
-```
+- Webhook endpoint unreachable (see: Service Outage Runbook)
+- Database connection failures affecting webhooks (see: Database Connection Failure Runbook)
 
 ---
 
-### 2. WHEN TO USE THIS RUNBOOK
-
-**Purpose**: Triggers, symptoms, alerts or signals
-
-**Required Content**:
-- Specific triggers (alerts, errors, user reports)
-- Observable symptoms
-- Alert names or error messages
-- Monitoring signals
-
-**Example**:
-```markdown
 ## When to Use This Runbook
 
 Use this runbook when:
@@ -73,21 +26,10 @@ Use this runbook when:
 - Alert: "stripe_webhook_failure_rate > 5%"
 - Users report subscription updates not reflecting in app
 - Monitoring shows webhook endpoint returning 500 errors
-```
+- Webhook endpoint health check fails
 
 ---
 
-### 3. WHEN *NOT* TO USE THIS RUNBOOK
-
-**Purpose**: Similar but different scenarios
-
-**Required Content**:
-- Scenarios that seem similar but are different
-- When to use alternative runbooks
-- Common misdiagnosis cases
-
-**Example**:
-```markdown
 ## When NOT to Use This Runbook
 
 Do NOT use this runbook for:
@@ -95,29 +37,17 @@ Do NOT use this runbook for:
 - Subscription creation failing (use: Subscription Creation Failure Runbook)
 - Payment processing failing (use: Payment Processing Failure Runbook)
 - Webhook endpoint unreachable (use: Service Outage Runbook)
+- Database connection failures (use: Database Connection Failure Runbook)
 
 If you're unsure, start with this runbook's diagnosis flow.
-```
 
 ---
 
-### 4. IMMEDIATE SAFETY CHECKS (FIRST 2 MINUTES)
-
-**Purpose**: Actions that prevent making things worse
-
-**Required Content**:
-- Safety checks to perform immediately
-- Actions to avoid (what NOT to do)
-- Critical preconditions
-- Emergency stop conditions
-
-**Example**:
-```markdown
 ## Immediate Safety Checks (First 2 Minutes)
 
 **DO THESE FIRST:**
 
-1. **Check if webhook endpoint is down**
+1. **Check if webhook endpoint is responding**
    ```bash
    curl -X POST https://your-app.com/api/webhooks/stripe \
      -H "Content-Type: application/json" \
@@ -125,7 +55,7 @@ If you're unsure, start with this runbook's diagnosis flow.
    ```
    - If returns 500: Continue with this runbook
    - If returns 404: Check deployment (use: Deployment Failure Runbook)
-   - If returns 200: Issue may be resolved, verify
+   - If returns 200: Issue may be resolved, verify with Stripe dashboard
 
 2. **Verify environment variables are set**
    ```bash
@@ -139,32 +69,26 @@ If you're unsure, start with this runbook's diagnosis flow.
    - If deployed in last 15 minutes: Consider rollback
    - If no recent deployments: Continue with diagnosis
 
+4. **Check Stripe dashboard for webhook status**
+   - Navigate: Stripe Dashboard → Developers → Webhooks → [Your Endpoint]
+   - Check: Recent delivery status
+   - If all recent deliveries failed: Continue with diagnosis
+   - If some succeeded: Issue may be intermittent
+
 **DO NOT:**
 - Restart services without checking logs first
 - Change webhook secret without verifying current value
 - Disable webhooks entirely (breaks subscription updates)
-```
+- Make configuration changes without documenting them
 
 ---
 
-### 5. DIAGNOSIS FLOW
-
-**Purpose**: Ordered checks, decision points, branching paths, references to Jupyter KEYS
-
-**Required Content**:
-- Ordered sequence of diagnostic checks
-- Decision points with clear branches
-- Expected outcomes for each check
-- References to Jupyter KEYS for analysis
-- When to escalate
-
-**Example**:
-```markdown
 ## Diagnosis Flow
 
 ### Step 1: Check Webhook Endpoint Health
 
 **Action**: Verify endpoint is responding
+
 ```bash
 curl -X POST https://your-app.com/api/webhooks/stripe \
   -H "Content-Type: application/json" \
@@ -183,9 +107,16 @@ curl -X POST https://your-app.com/api/webhooks/stripe \
 - Check Stripe dashboard for recent failures
 - If failures exist, continue to Step 2
 
+**If 404 Error**:
+- Endpoint not deployed or misconfigured
+- See: Deployment Failure Runbook
+
+---
+
 ### Step 2: Verify Webhook Secret
 
 **Action**: Compare configured secret with Stripe dashboard
+
 ```bash
 # Get configured secret (from environment)
 echo $STRIPE_WEBHOOK_SECRET
@@ -205,12 +136,31 @@ echo $STRIPE_WEBHOOK_SECRET
 **If Match**:
 - Continue to Step 3
 
+---
+
 ### Step 3: Analyze Recent Webhook Events
 
 **Action**: Use Jupyter KEY to analyze webhook event patterns
-- Run: `jupyter-webhook-event-analysis` KEY
-- Input: Last 24 hours of webhook logs
-- Review: Failure patterns, error types, timing
+
+- **KEY**: `jupyter-webhook-event-analysis`
+- **Input**: Last 24 hours of webhook logs (export from Stripe dashboard)
+- **Review**: Failure patterns, error types, timing
+
+**Steps**:
+1. Export webhook logs from Stripe dashboard:
+   - Stripe Dashboard → Developers → Webhooks → [Your Endpoint] → Export logs
+   - Save as: `webhook_logs_$(date +%Y%m%d).csv`
+
+2. Run Jupyter KEY:
+   - Open: `/jupyter-keys/webhook-event-analysis/webhook-event-analysis.ipynb`
+   - Input: `webhook_logs_YYYYMMDD.csv`
+   - Execute all cells
+
+3. Review output:
+   - Delivery success rate (should be > 95%)
+   - Failure patterns (which events fail most)
+   - Timing patterns (when failures occur)
+   - Error types (signature, timeout, processing)
 
 **Expected**: Clear pattern of failures
 
@@ -221,9 +171,12 @@ echo $STRIPE_WEBHOOK_SECRET
 **If No Pattern**:
 - Continue to Step 4
 
+---
+
 ### Step 4: Check Application Logs
 
 **Action**: Review application logs for webhook processing errors
+
 ```bash
 # Filter logs for webhook errors
 grep -i "webhook" /var/log/app.log | tail -100
@@ -243,9 +196,17 @@ grep -i "webhook" /var/log/app.log | tail -100
 **If Processing Errors**:
 - Continue to Step 5
 
+**If No Errors Found**:
+- Check if logs are being written
+- Verify log level is set correctly
+- Continue to Step 5
+
+---
+
 ### Step 5: Test Webhook Processing
 
 **Action**: Send test webhook event
+
 ```bash
 # Use Stripe CLI to send test event
 stripe trigger payment_intent.succeeded \
@@ -257,28 +218,15 @@ stripe trigger payment_intent.succeeded \
 **If Fails**:
 - Check error message
 - Follow error-specific resolution steps
+- See Action Steps section
 
 **If Succeeds**:
 - Issue may be resolved
 - Monitor for recurrence
 - **STOP HERE** - Issue resolved
-```
 
 ---
 
-### 6. ACTION STEPS
-
-**Purpose**: Explicit commands / actions, references to Node / Next KEYS, reversible steps clearly marked
-
-**Required Content**:
-- Explicit, copy-pasteable commands
-- References to Node / Next KEYS for execution
-- Clear marking of reversible vs. irreversible steps
-- Preconditions for each action
-- Expected outcomes
-
-**Example**:
-```markdown
 ## Action Steps
 
 ### Action 1: Update Webhook Secret (REVERSIBLE)
@@ -293,10 +241,17 @@ stripe trigger payment_intent.succeeded \
 # 2. Update environment variable
 export STRIPE_WEBHOOK_SECRET="whsec_new_secret_here"
 
-# 3. Restart application
+# 3. Update in your environment configuration
+# For Vercel: Vercel Dashboard → Settings → Environment Variables
+# For Railway: Railway Dashboard → Variables
+# For local: .env.local file
+
+# 4. Restart application
 pm2 restart app
 # OR
 systemctl restart your-app
+# OR (Vercel)
+# Redeploy automatically triggers restart
 ```
 
 **Expected**: Webhook endpoint accepts new signatures
@@ -319,16 +274,35 @@ tail -f /var/log/app.log | grep "webhook.*processed"
 
 **Precondition**: Identified failed events in Step 3
 
-**Action**: Use Node KEY to replay events
+**Automated (Preferred)**:
+- **KEY**: `node-stripe-webhook-replay`
+- **Location**: `/node-keys/stripe-webhook-replay/src/index.ts`
+
+**Execution**:
 ```typescript
-// Use: node-stripe-webhook-replay KEY
-import { replayFailedWebhooks } from '@/keys-assets/node-next-keys/stripe-webhook-replay/src';
+import { replayFailedWebhooks } from '@/node-keys/stripe-webhook-replay/src';
 
 // Replay events from last 24 hours
 await replayFailedWebhooks({
   startTime: new Date(Date.now() - 24 * 60 * 60 * 1000),
   endpoint: '/api/webhooks/stripe',
+  dryRun: false, // Set to true to preview without executing
 });
+```
+
+**Manual Alternative (If Automation Fails)**:
+```bash
+# 1. Get failed events from Stripe Dashboard
+# Stripe Dashboard → Developers → Webhooks → [Your Endpoint] → Failed events
+
+# 2. Replay each event manually
+stripe events resend evt_1234567890
+stripe events resend evt_0987654321
+# ... repeat for each failed event ...
+
+# 3. Verify events were processed
+# Check application logs for successful processing
+tail -f /var/log/app.log | grep "webhook.*processed"
 ```
 
 **Expected**: Failed events are replayed and processed
@@ -363,7 +337,26 @@ curl https://your-app.com/health
 
 ---
 
-### Action 4: Disable Webhook Endpoint (IRREVERSIBLE - USE WITH CAUTION)
+### Action 4: Fix Webhook Processing Code (REVERSIBLE)
+
+**Precondition**: Identified code bug in Step 4
+
+**Action**:
+1. Review error logs to identify bug
+2. Fix code issue
+3. Test locally with Stripe CLI
+4. Deploy fix
+5. Verify webhook processing resumes
+
+**Expected**: Webhook processing works correctly
+
+**Verification**: Send test webhook and verify processing
+
+**Rollback**: Revert code change and redeploy
+
+---
+
+### Action 5: Disable Webhook Endpoint (IRREVERSIBLE - USE WITH CAUTION)
 
 **Precondition**: All other actions failed, service is unstable
 
@@ -385,22 +378,9 @@ git push
 **Verification**: Stripe dashboard shows endpoint unreachable
 
 **Rollback**: Uncomment route and redeploy immediately after fixing root cause
-```
 
 ---
 
-### 7. VERIFICATION
-
-**Purpose**: How to confirm resolution, what "good" looks like
-
-**Required Content**:
-- Specific verification steps
-- Success criteria
-- Monitoring checks
-- Time-based verification (ensure stability)
-
-**Example**:
-```markdown
 ## Verification
 
 ### Immediate Verification (Within 5 Minutes)
@@ -452,22 +432,9 @@ git push
 
 3. **Check Alert Status**
    - **Success**: No webhook-related alerts firing
-```
 
 ---
 
-### 8. ROLLBACK / ESCALATION
-
-**Purpose**: When to stop, how to revert, when to escalate
-
-**Required Content**:
-- Clear rollback procedures
-- Escalation triggers
-- When to stop and escalate
-- Contact information
-
-**Example**:
-```markdown
 ## Rollback / Escalation
 
 ### When to Rollback
@@ -495,7 +462,14 @@ pm2 restart app
 - Check service logs for startup errors
 - See: Service Startup Failure Runbook
 
-**If Action 4 (Disable) Was Applied**:
+**If Action 4 (Code Fix) Made Things Worse**:
+```bash
+# Revert code change
+git revert HEAD
+git push
+```
+
+**If Action 5 (Disable) Was Applied**:
 ```bash
 # Re-enable webhook endpoint immediately
 # Uncomment route and redeploy
@@ -526,22 +500,9 @@ When escalating, provide:
 3. Current state: [Service status, error messages]
 4. Evidence: [Logs, monitoring screenshots, Jupyter KEY outputs]
 5. Impact: [Number of affected users, severity]
-```
 
 ---
 
-### 9. EVIDENCE & AUDIT NOTES
-
-**Purpose**: What to record, artifacts produced, compliance relevance
-
-**Required Content**:
-- Required audit trail entries
-- Artifacts to save
-- Compliance notes
-- Post-incident documentation requirements
-
-**Example**:
-```markdown
 ## Evidence & Audit Notes
 
 ### Required Audit Trail Entries
@@ -588,29 +549,16 @@ Save these artifacts for post-incident review:
 ### Compliance Relevance
 
 **SOC 2**: This incident affects availability and security controls.  
-**PCI DSS**: Webhook failures may affect payment processing audit trail.  
+**PCI-DSS**: Webhook failures may affect payment processing audit trail.  
 **GDPR**: Subscription updates affect user data accuracy.
 
 **Required Actions**:
 - Document incident in compliance log
 - Review webhook processing for data accuracy
 - Verify no PII was exposed in error logs
-```
 
 ---
 
-### 10. POST-INCIDENT FOLLOW-UPS
-
-**Purpose**: What to review later, links to preventative KEYS
-
-**Required Content**:
-- Post-incident review items
-- Preventative measures
-- Links to related KEYS
-- Documentation updates needed
-
-**Example**:
-```markdown
 ## Post-Incident Follow-Ups
 
 ### Within 24 Hours
@@ -663,57 +611,3 @@ Save these artifacts for post-incident review:
   - Stripe API Failure Runbook
   - Database Connection Failure Runbook
   - Service Outage Runbook
-```
-
----
-
-## Structure Validation
-
-Every Runbook KEY must pass structure validation:
-
-```typescript
-interface RunbookStructure {
-  'README.md': {
-    '1. TITLE + SCOPE': boolean;
-    '2. WHEN TO USE THIS RUNBOOK': boolean;
-    '3. WHEN *NOT* TO USE THIS RUNBOOK': boolean;
-    '4. IMMEDIATE SAFETY CHECKS': boolean;
-    '5. DIAGNOSIS FLOW': boolean;
-    '6. ACTION STEPS': boolean;
-    '7. VERIFICATION': boolean;
-    '8. ROLLBACK / ESCALATION': boolean;
-    '9. EVIDENCE & AUDIT NOTES': boolean;
-    '10. POST-INCIDENT FOLLOW-UPS': boolean;
-  };
-  'checklist.md': boolean;
-  'pack.json': boolean;
-  'CHANGELOG.md': boolean;
-  'LICENSE.txt': boolean;
-}
-```
-
-Validation checks:
-- All required sections exist
-- Sections are in correct order
-- No vague language ("check logs", "investigate")
-- All commands are explicit and copy-pasteable
-- All references to other KEYS are valid
-
----
-
-## Deviations
-
-**No deviations allowed.**
-
-If a runbook needs a different structure, it must:
-1. Propose the change to the canonical structure
-2. Get approval before implementation
-3. Update this document if approved
-
-**Rationale**: Consistency enables calm execution during incidents, reduces cognitive load, and ensures complete coverage.
-
----
-
-## Version History
-
-- **1.0.0** (2024-12-30): Initial canonical structure definition

@@ -1,0 +1,179 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Node/Next Key Schema",
+  "description": "Schema for node-next-keys key.json metadata files",
+  "type": "object",
+  "required": [
+    "slug",
+    "title",
+    "description",
+    "tool",
+    "key_type",
+    "runtime",
+    "version",
+    "outcome",
+    "maturity",
+    "license_spdx",
+    "author",
+    "documentation"
+  ],
+  "properties": {
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$",
+      "maxLength": 100,
+      "description": "URL-safe identifier (lowercase alphanumeric + hyphens)"
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 200,
+      "description": "Display name of the key"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 5000,
+      "description": "Full description of what the key unlocks"
+    },
+    "tool": {
+      "type": "string",
+      "enum": ["node", "next"],
+      "description": "Tool category (node or next)"
+    },
+    "key_type": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["route", "job", "data", "ui", "integration"]
+      },
+      "minItems": 1,
+      "description": "Types of key (route, job, data, ui, integration)"
+    },
+    "runtime": {
+      "type": "string",
+      "enum": ["node", "next"],
+      "description": "Runtime environment"
+    },
+    "version": {
+      "type": "string",
+      "maxLength": 50,
+      "description": "Key version (semver recommended)"
+    },
+    "side_effects": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of side effects this key produces"
+    },
+    "required_env": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Required environment variables"
+    },
+    "optional_env": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Optional environment variables"
+    },
+    "tenant_scope": {
+      "type": "string",
+      "enum": ["per-user-tenant-id", "global", "per-tenant-id"],
+      "description": "Tenant isolation scope"
+    },
+    "compatibility": {
+      "type": "object",
+      "properties": {
+        "node": {
+          "type": "string",
+          "description": "Node.js version requirement (e.g., >=18.0.0)"
+        },
+        "next": {
+          "type": "string",
+          "description": "Next.js version requirement (e.g., >=13.0.0)"
+        },
+        "react": {
+          "type": "string",
+          "description": "React version requirement (e.g., >=18.0.0)"
+        },
+        "typescript": {
+          "type": "string",
+          "description": "TypeScript version requirement (e.g., >=5.0.0)"
+        }
+      }
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "version", "required"],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "required": {
+            "type": "boolean"
+          }
+        }
+      },
+      "description": "NPM dependencies"
+    },
+    "outcome": {
+      "type": "string",
+      "description": "Outcome category (e.g., compliance, automation, integration)"
+    },
+    "maturity": {
+      "type": "string",
+      "enum": ["starter", "operator", "scale", "enterprise"],
+      "description": "Maturity level"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Searchable tags"
+    },
+    "license_spdx": {
+      "type": "string",
+      "description": "SPDX license identifier (e.g., MIT, Apache-2.0)"
+    },
+    "author": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        }
+      }
+    },
+    "documentation": {
+      "type": "object",
+      "required": ["readme", "quickstart", "changelog"],
+      "properties": {
+        "readme": {
+          "type": "string",
+          "description": "Path to README.md"
+        },
+        "quickstart": {
+          "type": "string",
+          "description": "Path to quickstart.md"
+        },
+        "changelog": {
+          "type": "string",
+          "description": "Path to CHANGELOG.md"
+        }
+      }
+    }
+  }
+}

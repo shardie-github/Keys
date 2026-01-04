@@ -1,0 +1,157 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Runbook Pack Schema",
+  "description": "Schema for runbook pack.json metadata files",
+  "type": "object",
+  "required": [
+    "slug",
+    "title",
+    "description",
+    "tool",
+    "key_type",
+    "version",
+    "outcome",
+    "maturity",
+    "license_spdx",
+    "author",
+    "documentation"
+  ],
+  "properties": {
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$",
+      "maxLength": 100,
+      "description": "URL-safe identifier (lowercase alphanumeric + hyphens)"
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 200,
+      "description": "Display name of the runbook"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 5000,
+      "description": "Full description of what the runbook covers"
+    },
+    "tool": {
+      "type": "string",
+      "enum": ["operational"],
+      "description": "Tool category (operational for runbooks)"
+    },
+    "key_type": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["incident", "failure-mode", "decision", "recovery"]
+      },
+      "minItems": 1,
+      "description": "Types of runbook (incident, failure-mode, decision, recovery)"
+    },
+    "severity_level": {
+      "type": "string",
+      "enum": ["p0", "p1", "p2", "p3", "p4"],
+      "description": "Severity level (optional)"
+    },
+    "version": {
+      "type": "string",
+      "maxLength": 50,
+      "description": "Pack version (semver recommended)"
+    },
+    "runtime_dependency": {
+      "type": "string",
+      "enum": ["assisted", "automated"],
+      "description": "Whether runbook requires human assistance"
+    },
+    "required_access_level": {
+      "type": "string",
+      "enum": ["read", "write", "admin"],
+      "description": "Required access level to execute runbook"
+    },
+    "produces_evidence": {
+      "type": "boolean",
+      "description": "Whether runbook produces evidence/artifacts"
+    },
+    "compliance_relevance": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Compliance frameworks this runbook is relevant to"
+    },
+    "references_jupyter_keys": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^jupyter-[a-z0-9-]+$"
+      },
+      "description": "Jupyter Keys referenced by this runbook"
+    },
+    "references_node_keys": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^(node|next)-[a-z0-9-]+$"
+      },
+      "description": "Node/Next Keys referenced by this runbook"
+    },
+    "related_runbooks": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9-]+$"
+      },
+      "description": "Related runbook slugs"
+    },
+    "outcome": {
+      "type": "string",
+      "description": "Outcome category (e.g., incident-response, recovery)"
+    },
+    "maturity": {
+      "type": "string",
+      "enum": ["starter", "operator", "scale", "enterprise"],
+      "description": "Maturity level"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Searchable tags"
+    },
+    "license_spdx": {
+      "type": "string",
+      "description": "SPDX license identifier (e.g., MIT, Apache-2.0)"
+    },
+    "author": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        }
+      }
+    },
+    "documentation": {
+      "type": "object",
+      "required": ["readme", "checklist", "changelog"],
+      "properties": {
+        "readme": {
+          "type": "string",
+          "description": "Path to README.md"
+        },
+        "checklist": {
+          "type": "string",
+          "description": "Path to checklist.md"
+        },
+        "changelog": {
+          "type": "string",
+          "description": "Path to CHANGELOG.md"
+        }
+      }
+    }
+  }
+}

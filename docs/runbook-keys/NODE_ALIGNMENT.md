@@ -26,7 +26,7 @@ When a runbook needs to execute a fix, it references a Node / Next KEY:
 
 **Action**: Use Node KEY to replay events
 ```typescript
-import { replayFailedWebhooks } from '@/node-keys/stripe-webhook-replay/src';
+import { replayFailedWebhooks } from '@/keys-assets/node-next-keys/stripe-webhook-replay/src';
 
 await replayFailedWebhooks({
   startTime: new Date(Date.now() - 24 * 60 * 60 * 1000),
@@ -66,7 +66,7 @@ Every Node / Next KEY reference must specify:
 
 **Action**: Use Node KEY to update secret
 - **KEY**: `node-webhook-secret-update`
-- **Location**: `/node-keys/webhook-secret-update/src/index.ts`
+- **Location**: `/keys-assets/node-next-keys/webhook-secret-update/src/index.ts`
 - **Side Effects**:
   - Updates `STRIPE_WEBHOOK_SECRET` environment variable
   - Restarts application service
@@ -74,7 +74,7 @@ Every Node / Next KEY reference must specify:
 
 **Execution**:
 ```typescript
-import { updateWebhookSecret } from '@/node-keys/webhook-secret-update/src';
+import { updateWebhookSecret } from '@/keys-assets/node-next-keys/webhook-secret-update/src';
 
 await updateWebhookSecret({
   newSecret: process.env.NEW_STRIPE_WEBHOOK_SECRET,
@@ -97,7 +97,7 @@ If automation fails, runbooks provide manual alternatives:
 
 **Automated (Preferred)**:
 ```typescript
-import { replayFailedWebhooks } from '@/node-keys/stripe-webhook-replay/src';
+import { replayFailedWebhooks } from '@/keys-assets/node-next-keys/stripe-webhook-replay/src';
 await replayFailedWebhooks({ ... });
 ```
 
@@ -159,7 +159,7 @@ All side effects must be documented:
 
 **Execution**:
 ```typescript
-import { replayFailedWebhooks } from '@/node-keys/stripe-webhook-replay/src';
+import { replayFailedWebhooks } from '@/keys-assets/node-next-keys/stripe-webhook-replay/src';
 
 await replayFailedWebhooks({
   startTime: new Date(Date.now() - 24 * 60 * 60 * 1000),
@@ -191,7 +191,7 @@ await replayFailedWebhooks({
 
 **Execution**:
 ```typescript
-import { reconcileSubscriptions } from '@/node-keys/background-reconciliation/src';
+import { reconcileSubscriptions } from '@/keys-assets/node-next-keys/background-reconciliation/src';
 
 await reconcileSubscriptions({
   tenantId: 'tenant-123',
@@ -223,7 +223,7 @@ await reconcileSubscriptions({
 
 **Execution**:
 ```typescript
-import { replayFailedJobs } from '@/node-keys/background-job-replay/src';
+import { replayFailedJobs } from '@/keys-assets/node-next-keys/background-job-replay/src';
 
 await replayFailedJobs({
   jobType: 'reconciliation',
@@ -255,7 +255,7 @@ await replayFailedJobs({
 
 **Execution**:
 ```typescript
-import { updateRLSPolicies } from '@/node-keys/supabase-rls-guard/src';
+import { updateRLSPolicies } from '@/keys-assets/node-next-keys/supabase-rls-guard/src';
 
 await updateRLSPolicies({
   table: 'subscriptions',
@@ -288,7 +288,7 @@ await updateRLSPolicies({
 
 **Execution**:
 ```typescript
-import { checkWebhookHealth } from '@/node-keys/webhook-monitoring/src';
+import { checkWebhookHealth } from '@/keys-assets/node-next-keys/webhook-monitoring/src';
 
 const health = await checkWebhookHealth({
   endpoint: '/api/webhooks/stripe',
@@ -337,7 +337,7 @@ console.log('Health:', health);
 
 **Automated (Preferred)**:
 - **KEY**: `node-stripe-webhook-replay`
-- **Location**: `/node-keys/stripe-webhook-replay/src/index.ts`
+- **Location**: `/keys-assets/node-next-keys/stripe-webhook-replay/src/index.ts`
 - **Side Effects**:
   - Replays webhook events from Stripe
   - Updates database with event data
@@ -346,7 +346,7 @@ console.log('Health:', health);
 
 **Execution**:
 ```typescript
-import { replayFailedWebhooks } from '@/node-keys/stripe-webhook-replay/src';
+import { replayFailedWebhooks } from '@/keys-assets/node-next-keys/stripe-webhook-replay/src';
 
 const result = await replayFailedWebhooks({
   startTime: new Date(Date.now() - 24 * 60 * 60 * 1000),
