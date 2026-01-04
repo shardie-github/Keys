@@ -15,7 +15,7 @@ import { useMemo } from 'react';
  * @param options - Options for the machine
  * @returns Machine state, send function, and service
  */
-export function useMachineState<TMachine extends ReturnType<typeof import('xstate').createMachine>>(
+export function useMachineState<TMachine = any>(
   machine: TMachine,
   options?: Parameters<typeof useMachine>[1]
 ) {
@@ -23,7 +23,7 @@ export function useMachineState<TMachine extends ReturnType<typeof import('xstat
 
   const value = useMemo(() => ({
     state,
-    send,
+    send: send as any,
     service,
     // Convenience getters
     isIdle: (state as any).matches('idle'),
