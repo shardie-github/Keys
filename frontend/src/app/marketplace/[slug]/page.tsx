@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { staggerContainerVariants, scaleVariants } from '@/systems/motion/variants';
 import Script from 'next/script';
 import { toast } from '@/components/Toast';
+import { getDemoKey, type DemoKey } from '@/services/demoData';
 
 interface Key {
   id: string;
@@ -73,34 +74,52 @@ export default function KeyDetailPage() {
         data: { session },
       } = await supabase.auth.getSession();
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-      const headers: HeadersInit = {};
-      if (session?.access_token) {
-        headers.Authorization = `Bearer ${session.access_token}`;
-      }
-
-      const response = await fetch(`${apiUrl}/marketplace/keys/${slug}`, { headers });
-      if (!response.ok) {
-        if (response.status === 404) {
-          throw new Error('KEY not found');
+      // Try API first
+      try {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+        const headers: HeadersInit = {};
+        if (session?.access_token) {
+          headers.Authorization = `Bearer ${session.access_token}`;
         }
-        throw new Error('Failed to fetch KEY');
+
+        const response = await fetch(`${apiUrl}/marketplace/keys/${slug}`, { headers });
+        if (response.ok) {
+          const data = await response.json();
+          setKey(data.key);
+          setSelectedVersion(data.key.version);
+          setError(null);
+
+          // Track view analytics
+          if (session && data.key.id) {
+            trackView(data.key.id, session.access_token);
+          }
+
+          // Fetch preview if available
+          if (data.key.preview_html_path) {
+            fetchPreview(data.key.preview_public, session?.access_token);
+          }
+          return;
+        }
+      } catch (apiErr) {
+        // Fall through to demo data
       }
 
-      const data = await response.json();
-      setKey(data.key);
-      setSelectedVersion(data.key.version);
-      setError(null);
-
-      // Track view analytics
-      if (session && data.key.id) {
-        trackView(data.key.id, session.access_token);
+      // Fallback to demo data
+      const demoKey = getDemoKey(slug);
+      if (demoKey) {
+        const convertedKey: Key = {
+          ...demoKey,
+          hasAccess: false,
+          relatedKeys: [],
+          versions: [{ version: demoKey.version, created_at: new Date().toISOString() }],
+        };
+        setKey(convertedKey);
+        setSelectedVersion(demoKey.version);
+        setError(null);
+        return;
       }
 
-      // Fetch preview if available
-      if (data.key.preview_html_path) {
-        fetchPreview(data.key.preview_public, session?.access_token);
-      }
+      throw new Error('KEY not found');
     } catch (err: any) {
       setError(err.message || 'Failed to load KEY');
     } finally {
@@ -611,17 +630,50 @@ export default function KeyDetailPage() {
                 </>
               ) : (
                 <>
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={handlePurchase}
-                    className="w-full px-4 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium text-sm sm:text-base"
-                  >
-                    Unlock KEY for ${((key as any).price_cents || 9900) / 100}
-                  </motion.button>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
-                    Secure checkout via Stripe
-                  </p>
+                  {isAuthenticated ? (
+                    <>
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={handlePurchase}
+                        className="w-full px-4 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium text-sm sm:text-base"
+                      >
+                        Unlock KEY for ${((key as any).price_cents || 9900) / 100}
+                      </motion.button>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
+                        Secure checkout via Stripe
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg mb-3"
+                      >
+                        <p className="text-xs text-blue-800 dark:text-blue-200 mb-2">
+                          <strong>Demo Preview:</strong> This is a sample KEY for showcase.
+                        </p>
+                        <Link
+                          href="/signup"
+                          className="text-xs text-blue-600 dark:text-blue-400 hover:underline font-semibold"
+                        >
+                          Sign up to unlock →
+                        </Link>
+                      </motion.div>
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => router.push('/signin?returnUrl=' + encodeURIComponent(`/marketplace/${slug}`))}
+                        className="w-full px-4 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-colors font-medium text-sm sm:text-base"
+                      >
+                        Sign In to Unlock
+                      </motion.button>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
+                        Unlock for ${((key as any).price_cents || 9900) / 100}
+                      </p>
+                    </>
+                  )}
                 </>
               )}
             </motion.div>
