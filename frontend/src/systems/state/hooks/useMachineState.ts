@@ -7,6 +7,13 @@
 
 import { useMachine, useActor } from '@xstate/react';
 import { useMemo } from 'react';
+import type { ActorRefFrom, AnyStateMachine, EventObject, StateFrom, AnyActorRef } from 'xstate';
+
+interface MachineState {
+  matches: (state: string) => boolean;
+  context: Record<string, unknown>;
+  value: unknown;
+}
 
 /**
  * Hook for using a state machine
@@ -15,26 +22,29 @@ import { useMemo } from 'react';
  * @param options - Options for the machine
  * @returns Machine state, send function, and service
  */
-export function useMachineState<TMachine = any>(
+export function useMachineState<TMachine extends AnyStateMachine>(
   machine: TMachine,
-  options?: Parameters<typeof useMachine>[1]
+  options?: Parameters<typeof useMachine<TMachine>>[1]
 ) {
-  const [state, send, service] = useMachine(machine as any, options);
+  const [state, send, service] = useMachine(machine, options);
 
-  const value = useMemo(() => ({
-    state,
-    send: send as any,
-    service,
-    // Convenience getters
-    isIdle: (state as any).matches('idle'),
-    isLoading: (state as any).matches('loading') || (state as any).matches('pending') || (state as any).matches('submitting'),
-    isError: (state as any).matches('error'),
-    isSuccess: (state as any).matches('success'),
-    // Context access
-    context: (state as any).context,
-    // Current state value
-    value: (state as any).value,
-  }), [state, send, service]);
+  const value = useMemo(() => {
+    const machineState = state as unknown as MachineState;
+    return {
+      state,
+      send,
+      service,
+      // Convenience getters
+      isIdle: machineState.matches('idle'),
+      isLoading: machineState.matches('loading') || machineState.matches('pending') || machineState.matches('submitting'),
+      isError: machineState.matches('error'),
+      isSuccess: machineState.matches('success'),
+      // Context access
+      context: machineState.context,
+      // Current state value
+      value: machineState.value,
+    };
+  }, [state, send, service]);
 
   return value;
 }
@@ -45,22 +55,28 @@ export function useMachineState<TMachine = any>(
  * @param actorRef - The actor ref from a parent machine
  * @returns Actor state, send function, and service
  */
-export function useActorState(actorRef: any) {
-  const [state, send] = useActor(actorRef);
+export function useActorState<TEvent extends EventObject = EventObject>(
+  actorRef: ActorRefFrom<AnyStateMachine> | { send: (event: TEvent) => void; getSnapshot: () => MachineState }
+) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [state, send] = useActor(actorRef as any);
 
-  const value = useMemo(() => ({
-    state,
-    send,
-    // Convenience getters
-    isIdle: (state as any).matches?.('idle') ?? false,
-    isLoading: (state as any).matches?.('loading') || (state as any).matches?.('pending') || (state as any).matches?.('submitting') || false,
-    isError: (state as any).matches?.('error') ?? false,
-    isSuccess: (state as any).matches?.('success') ?? false,
-    // Context access
-    context: (state as any).context,
-    // Current state value
-    value: (state as any).value,
-  }), [state, send]);
+  const value = useMemo(() => {
+    const machineState = state as unknown as MachineState;
+    return {
+      state,
+      send,
+      // Convenience getters
+      isIdle: machineState.matches?.('idle') ?? false,
+      isLoading: machineState.matches?.('loading') || machineState.matches?.('pending') || machineState.matches?.('submitting') || false,
+      isError: machineState.matches?.('error') ?? false,
+      isSuccess: machineState.matches?.('success') ?? false,
+      // Context access
+      context: machineState.context,
+      // Current state value
+      value: machineState.value,
+    };
+  }, [state, send]);
 
   return value;
 }
