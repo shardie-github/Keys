@@ -215,7 +215,8 @@ export const demoMachine = createMachine(
       },
     },
     actors: {
-      submitFormData: async ({ input }: { input: DemoMachineContext }) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      submitFormData: async ({ input }: { input: DemoMachineContext }): Promise<any> => {
         // Simulate API call
         await new Promise((resolve) => setTimeout(resolve, 1500));
         

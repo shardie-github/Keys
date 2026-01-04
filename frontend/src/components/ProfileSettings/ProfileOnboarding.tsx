@@ -5,7 +5,7 @@ import { StackSelector } from './StackSelector';
 import { VibeTuner } from './VibeTuner';
 import type { UserProfile } from '@/types';
 import { useMachineState } from '@/systems/state';
-import { onboardingMachine, type OnboardingMachineContext } from '@/systems/state/machines/onboardingMachine';
+import { onboardingMachine, type OnboardingMachineContext, type OnboardingMachineEvent } from '@/systems/state/machines/onboardingMachine';
 import { profileService } from '@/services/profileService';
 import { AnimatedButton, AnimatedCard, Reveal } from '@/systems/motion';
 import { ProgressIndicator } from '@/components/Feedback/ProgressIndicator';
@@ -42,15 +42,15 @@ export function ProfileOnboarding({ userId, onComplete }: ProfileOnboardingProps
             if (!result) {
               throw new Error('Failed to create profile');
             }
-            logUXEvent.flowCompleted('onboarding', context.totalSteps);
+            logUXEvent.flowCompleted('onboarding', input.totalSteps);
             return result;
           } catch (error) {
-            logUXEvent.errorOccurred('onboarding', error as Error);
+            logUXEvent.errorOccurred('onboarding', error instanceof Error ? error : new Error('Unknown error'));
             throw error;
           }
         },
-      } as any,
-    }) as any,
+      } as unknown as Parameters<typeof onboardingMachine.provide>[0]['actors'],
+    }),
     {
       input: {
         userId,
@@ -64,26 +64,34 @@ export function ProfileOnboarding({ userId, onComplete }: ProfileOnboardingProps
     }
   );
 
+  // Type-safe access to profile and other context properties
+  const profile = (typeof context.profile === 'object' && context.profile !== null)
+    ? context.profile as Partial<UserProfile>
+    : {};
+  const retryCount = typeof context.retryCount === 'number' ? context.retryCount : 0;
+  const error = typeof context.error === 'string' ? context.error : undefined;
+  const currentStepIndex = typeof context.currentStep === 'number' ? context.currentStep : 0;
+  const currentStepName = STEPS[currentStepIndex] || STEPS[0];
+
   // Handle success state
   useEffect(() => {
-    if (isSuccess && context.profile) {
+    if (isSuccess && profile && Object.keys(profile).length > 0) {
       logUXEvent.successCelebrated('onboarding');
-      onComplete(context.profile);
+      onComplete(profile);
     }
-  }, [isSuccess, context.profile, onComplete]);
+  }, [isSuccess, profile, onComplete]);
 
   // Log step views
   useEffect(() => {
-    const stepName = STEPS[context.currentStep];
-    logUXEvent.stepViewed('onboarding', stepName, context.currentStep, context.totalSteps);
+    const currentStep = typeof context.currentStep === 'number' ? context.currentStep : 0;
+    const totalSteps = typeof context.totalSteps === 'number' ? context.totalSteps : STEPS.length;
+    const stepName = STEPS[currentStep] || STEPS[0];
+    logUXEvent.stepViewed('onboarding', stepName, currentStep, totalSteps);
   }, [context.currentStep, context.totalSteps]);
 
   const updateProfile = (updates: Partial<UserProfile>) => {
     send({ type: 'UPDATE_PROFILE', updates });
   };
-
-  const currentStepIndex = context.currentStep;
-  const currentStepName = STEPS[currentStepIndex];
 
   const renderStep = () => {
     switch (currentStepName) {
@@ -99,7 +107,7 @@ export function ProfileOnboarding({ userId, onComplete }: ProfileOnboardingProps
               </p>
               <AnimatedButton
                 variant="primary"
-                onClick={() => send({ type: 'NEXT' } as any)}
+                onClick={() => send({ type: 'NEXT' } as OnboardingMachineEvent)}
               >
                 Get Started
               </AnimatedButton>
@@ -119,12 +127,12 @@ export function ProfileOnboarding({ userId, onComplete }: ProfileOnboardingProps
                   (role) => (
                     <AnimatedButton
                       key={role}
-                      variant={context.profile.role === role ? 'primary' : 'secondary'}
+                      variant={profile.role === role ? 'primary' : 'secondary'}
                       fullWidth
                       className="justify-start text-left"
                       onClick={() => {
                         updateProfile({ role });
-                        send({ type: 'NEXT' } as any);
+                        send({ type: 'NEXT' } as OnboardingMachineEvent);
                       }}
                     >
                       <span className="font-medium capitalize">{role.replace('_', ' ')}</span>
@@ -137,7 +145,7 @@ export function ProfileOnboarding({ userId, onComplete }: ProfileOnboardingProps
                   Project Type
                 </label>
                 <select
-                  value={context.profile.vertical || ''}
+                  value={profile.vertical || ''}
                   onChange={(e) => updateProfile({ vertical: e.target.value as UserProfile['vertical'] })}
                   className="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
@@ -161,7 +169,7 @@ export function ProfileOnboarding({ userId, onComplete }: ProfileOnboardingProps
                 What&apos;s in your tech stack?
               </h2>
               <StackSelector
-                stack={(context.profile.stack || {}) as Record<string, boolean>}
+                stack={(profile.stack || {}) as Record<string, boolean>}
                 onChange={(stack) => updateProfile({ stack: stack as UserProfile['stack'] })}
               />
             </div>
@@ -210,7 +218,7 @@ export function ProfileOnboarding({ userId, onComplete }: ProfileOnboardingProps
                   </label>
                   <input
                     type="text"
-                    value={context.profile.brand_voice || ''}
+                    value={profile.brand_voice || ''}
                     onChange={(e) => updateProfile({ brand_voice: e.target.value })}
                     className="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Your brand name"
@@ -221,7 +229,7 @@ export function ProfileOnboarding({ userId, onComplete }: ProfileOnboardingProps
                     Company Context
                   </label>
                   <textarea
-                    value={context.profile.company_context || ''}
+                    value={profile.company_context || ''}
                     onChange={(e) => updateProfile({ company_context: e.target.value })}
                     className="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     rows={4}
@@ -245,7 +253,7 @@ export function ProfileOnboarding({ userId, onComplete }: ProfileOnboardingProps
               </p>
               <AnimatedButton
                 variant="primary"
-                onClick={() => send({ type: 'SUBMIT' } as any)}
+                onClick={() => send({ type: 'SUBMIT' } as OnboardingMachineEvent)}
                 isLoading={isLoading}
                 isDisabled={isLoading}
               >
@@ -283,22 +291,22 @@ export function ProfileOnboarding({ userId, onComplete }: ProfileOnboardingProps
               ✗ Error
             </p>
             <p className="text-sm text-red-600 dark:text-red-400 mb-4">
-              {context.error || 'Something went wrong'}
+              {error || 'Something went wrong'}
             </p>
             <div className="flex gap-2">
               <AnimatedButton
                 variant="danger"
                 onClick={() => {
-                  logUXEvent.retryAttempted('onboarding', context.retryCount);
-                  send({ type: 'RETRY' } as any);
+                  logUXEvent.retryAttempted('onboarding', retryCount);
+                  send({ type: 'RETRY' } as OnboardingMachineEvent);
                 }}
-                isDisabled={context.retryCount >= 3}
+                isDisabled={retryCount >= 3}
               >
-                Retry ({3 - context.retryCount} left)
+                Retry ({3 - retryCount} left)
               </AnimatedButton>
               <AnimatedButton
                 variant="secondary"
-                onClick={() => send({ type: 'PREV' } as any)}
+                onClick={() => send({ type: 'PREV' } as OnboardingMachineEvent)}
               >
                 Go Back
               </AnimatedButton>
@@ -312,14 +320,14 @@ export function ProfileOnboarding({ userId, onComplete }: ProfileOnboardingProps
         <div className="flex justify-between mt-6">
           <AnimatedButton
             variant="ghost"
-            onClick={() => send({ type: 'PREV' } as any)}
+            onClick={() => send({ type: 'PREV' } as OnboardingMachineEvent)}
           >
             ← Back
           </AnimatedButton>
           {currentStepName !== 'role' && (
             <AnimatedButton
               variant="primary"
-              onClick={() => send({ type: 'NEXT' } as any)}
+              onClick={() => send({ type: 'NEXT' } as OnboardingMachineEvent)}
             >
               Next →
             </AnimatedButton>

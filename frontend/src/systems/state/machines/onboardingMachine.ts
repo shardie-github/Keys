@@ -235,7 +235,8 @@ export const onboardingMachine = createMachine(
       },
     },
     actors: {
-      submitProfileData: async () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      submitProfileData: async (): Promise<any> => {
         // This will be provided by the component that uses the machine
         // The actual submission logic is handled by the parent component
         throw new Error('submitProfileData actor must be provided');
