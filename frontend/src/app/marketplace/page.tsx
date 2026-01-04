@@ -164,7 +164,7 @@ export default function MarketplacePage() {
         <h1 className="text-4xl font-bold mb-4">KEYS Marketplace</h1>
         <p className="text-gray-600 mb-6">
           Discover and unlock practical capability in Cursor, Jupyter, Node.js, and more. 
-          Each KEY unlocks a specific workflow, component, or runbook you can integrate into your projects.
+          Each key unlocks a specific workflow, component, or runbook you can integrate into your projects.
         </p>
 
         {/* Discovery Recommendations */}
@@ -203,7 +203,7 @@ export default function MarketplacePage() {
         <div className="flex flex-wrap gap-4 mb-6">
           <input
             type="text"
-            placeholder="Search KEYS..."
+            placeholder="Search keys..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="px-4 py-2 border rounded-lg flex-1 min-w-[200px]"
@@ -240,7 +240,7 @@ export default function MarketplacePage() {
       {/* Key Grid */}
       {keys.length === 0 ? (
         <div className="text-center py-12 text-gray-500">
-          No KEYS found. Try adjusting your filters.
+          No keys found. Try adjusting your filters.
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -294,7 +294,7 @@ export default function MarketplacePage() {
           >
             <h3 className="text-xl font-semibold mb-2">Starter Bundle</h3>
             <p className="text-gray-600 text-sm mb-4">
-              Essential KEYS for getting started
+              Essential keys for getting started
             </p>
             <div className="text-lg font-bold">View Bundle →</div>
           </Link>
@@ -304,7 +304,7 @@ export default function MarketplacePage() {
           >
             <h3 className="text-xl font-semibold mb-2">Operator Bundle</h3>
             <p className="text-gray-600 text-sm mb-4">
-              Runbooks and operational KEYS
+              Runbooks and operational keys
             </p>
             <div className="text-lg font-bold">View Bundle →</div>
           </Link>
@@ -314,7 +314,7 @@ export default function MarketplacePage() {
           >
             <h3 className="text-xl font-semibold mb-2">Pro Tier</h3>
             <p className="text-gray-600 text-sm mb-4">
-              All KEYS, unlimited access
+              All keys, unlimited access
             </p>
             <div className="text-lg font-bold">View Tier →</div>
           </Link>
