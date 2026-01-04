@@ -341,7 +341,7 @@ export default function KeyDetailPage() {
           {/* Related Keys */}
           {key.relatedKeys && key.relatedKeys.length > 0 && (
             <div className="mb-8">
-              <h3 className="text-lg font-semibold mb-4">Related KEYS</h3>
+              <h3 className="text-lg font-semibold mb-4">Related Keys</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {key.relatedKeys.map((related) => (
                   <Link

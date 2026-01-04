@@ -166,7 +166,7 @@ export default function BundlesPage() {
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Bundles</h1>
       <p className="text-gray-600 mb-8">
-        Save by purchasing multiple KEYS together. Already own some KEYS? 
+        Save by purchasing multiple keys together. Already own some keys? 
         Your discount is automatically applied.
       </p>
 
@@ -206,7 +206,7 @@ export default function BundlesPage() {
                   </div>
                   {hasDiscount && (
                     <p className="text-sm text-green-600 mt-1">
-                      Save ${(discount.discount / 100).toFixed(2)} (you own {discount.ownedKeys.length} KEYS)
+                      Save ${(discount.discount / 100).toFixed(2)} (you own {discount.ownedKeys.length} keys)
                     </p>
                   )}
                 </div>

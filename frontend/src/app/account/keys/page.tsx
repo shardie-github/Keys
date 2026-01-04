@@ -60,7 +60,7 @@ export default function AccountKeysPage() {
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="text-center">Loading your KEYS...</div>
+        <div className="text-center">Loading your Keyring...</div>
       </div>
     );
   }
@@ -75,11 +75,11 @@ export default function AccountKeysPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">My KEYS</h1>
+      <h1 className="text-3xl font-bold mb-6">My Keys</h1>
 
       {entitlements.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-gray-600 mb-4">You don't have any unlocked KEYS yet.</p>
+          <p className="text-gray-600 mb-4">You don't have any unlocked keys yet.</p>
           <Link
             href="/marketplace"
             className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
