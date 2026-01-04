@@ -23,7 +23,7 @@ This structure ensures:
 ## Standard Structure
 
 ```
-/node-keys/<key-slug>/
+/keys-assets/node-next-keys/<key-slug>/
 ├── README.md              # User-facing documentation
 ├── quickstart.md          # Quick integration guide
 ├── key.json               # Marketplace metadata
@@ -123,7 +123,7 @@ Copy `src/index.ts` to your project.
 ## Basic Usage
 
 ```typescript
-import { stripeWebhookHandler } from './node-keys/stripe-webhook-entitlement/src';
+import { stripeWebhookHandler } from './keys-assets/node-next-keys/stripe-webhook-entitlement/src';
 
 export default stripeWebhookHandler;
 ```

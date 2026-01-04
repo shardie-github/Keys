@@ -1,0 +1,116 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Library Index Schema",
+  "description": "Schema for library.json index files (Jupyter Keys marketplace)",
+  "type": "object",
+  "required": [
+    "version",
+    "packs"
+  ],
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Schema version (e.g., 1.0.0)"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 datetime when index was generated"
+    },
+    "packs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "slug",
+          "title",
+          "version",
+          "license_spdx",
+          "assets"
+        ],
+        "properties": {
+          "slug": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$",
+            "maxLength": 100,
+            "description": "URL-safe identifier (lowercase alphanumeric + hyphens)"
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 200,
+            "description": "Display name"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 5000,
+            "description": "Full description"
+          },
+          "category": {
+            "type": "string",
+            "maxLength": 100,
+            "description": "Category name"
+          },
+          "difficulty": {
+            "type": "string",
+            "enum": ["beginner", "intermediate", "advanced", "expert"],
+            "description": "Difficulty level"
+          },
+          "runtime_minutes": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Estimated runtime in minutes"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Searchable tags"
+          },
+          "version": {
+            "type": "string",
+            "maxLength": 50,
+            "description": "Pack version (semver recommended)"
+          },
+          "license_spdx": {
+            "type": "string",
+            "description": "SPDX license identifier (e.g., MIT, Apache-2.0)"
+          },
+          "preview_public": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether preview HTML is publicly accessible"
+          },
+          "assets": {
+            "type": "object",
+            "required": ["zip"],
+            "properties": {
+              "cover": {
+                "type": "string",
+                "description": "Path to cover image"
+              },
+              "preview_html": {
+                "type": "string",
+                "description": "Path to preview HTML file"
+              },
+              "zip": {
+                "type": "string",
+                "description": "Path to ZIP archive (required)"
+              },
+              "changelog_md": {
+                "type": "string",
+                "description": "Path to changelog markdown"
+              }
+            }
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "SHA256 hash of ZIP file (64 hex characters)"
+          }
+        }
+      }
+    }
+  }
+}

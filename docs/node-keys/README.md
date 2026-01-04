@@ -109,7 +109,7 @@ Five production-ready KEYS are provided as examples:
    - UI KEY
    - Audit log dashboard widget
 
-See `/node-keys/` directory for implementations.
+See `/keys-assets/node-next-keys/` directory for implementations.
 
 ---
 
@@ -119,7 +119,7 @@ See `/node-keys/` directory for implementations.
 
 ```bash
 # 1. Copy KEY to your project
-cp -r node-keys/stripe-webhook-entitlement ./node-keys/
+cp -r keys-assets/node-next-keys/stripe-webhook-entitlement ./keys-assets/node-next-keys/
 
 # 2. Install dependencies
 npm install stripe
@@ -129,7 +129,7 @@ npm install stripe
 
 # 4. Mount route handler
 # app/api/webhooks/stripe/route.ts
-import { stripeWebhookHandler } from '@/node-keys/stripe-webhook-entitlement/src';
+import { stripeWebhookHandler } from '@/keys-assets/node-next-keys/stripe-webhook-entitlement/src';
 export const POST = stripeWebhookHandler;
 ```
 
@@ -138,7 +138,7 @@ export const POST = stripeWebhookHandler;
 ```bash
 # 1. Remove route mounts and imports
 # 2. Remove KEY directory
-rm -rf ./node-keys/stripe-webhook-entitlement
+rm -rf ./keys-assets/node-next-keys/stripe-webhook-entitlement
 # 3. Verify app still works
 npm run build
 ```

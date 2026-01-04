@@ -51,7 +51,7 @@ Fix:
 2. Run: npm install stripe
 3. Restart your application
 
-See: /node-keys/stripe-webhook-entitlement/quickstart.md
+See: /keys-assets/node-next-keys/stripe-webhook-entitlement/quickstart.md
 ```
 
 **Audit Impact**:
@@ -98,7 +98,7 @@ Fix:
 3. Verify key is not expired or revoked
 4. Restart your application
 
-See: /node-keys/stripe-webhook-entitlement/README.md
+See: /keys-assets/node-next-keys/stripe-webhook-entitlement/README.md
 ```
 
 **Audit Impact**:

@@ -108,7 +108,7 @@ The minimum viable library consists of:
 #### B. Structure (Canonical Folder Structure)
 
 ```
-/node-keys/<key-slug>/
+/keys-assets/node-next-keys/<key-slug>/
 ├── README.md
 ├── quickstart.md
 ├── key.json
