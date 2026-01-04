@@ -10,7 +10,7 @@
 import { useState } from 'react';
 import { AnimatedButton, AnimatedCard, Reveal, PageTransition } from '@/systems/motion';
 import { useMachineState } from '@/systems/state';
-import { demoMachine } from '@/systems/state/machines/demoMachine';
+import { demoMachine, type DemoMachineEvent } from '@/systems/state/machines/demoMachine';
 
 export default function PlaygroundPage() {
   const [showMotionDemo, setShowMotionDemo] = useState(true);
@@ -100,8 +100,16 @@ export default function PlaygroundPage() {
 function StateMachineDemo() {
   const { state, send, context } = useMachineState(demoMachine);
 
-  const currentStep = context.currentStep;
-  const totalSteps = context.totalSteps;
+  const currentStep = typeof context.currentStep === 'number' ? context.currentStep : 0;
+  const totalSteps = typeof context.totalSteps === 'number' ? context.totalSteps : 1;
+  const retryCount = typeof context.retryCount === 'number' ? context.retryCount : 0;
+  
+  // Type-safe access to formData
+  const formData = (typeof context.formData === 'object' && context.formData !== null) 
+    ? context.formData as { name?: string; email?: string; preferences?: string[] }
+    : { name: undefined, email: undefined, preferences: undefined };
+  
+  const error = typeof context.error === 'string' ? context.error : undefined;
 
   return (
     <div className="space-y-4">
@@ -145,14 +153,14 @@ function StateMachineDemo() {
             placeholder="Name"
             className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg mb-4 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100"
             onChange={(e) =>
-              send({ type: 'UPDATE_DATA', data: { name: e.target.value } })
+              send({ type: 'UPDATE_DATA', data: { name: e.target.value } } as DemoMachineEvent)
             }
           />
           <div className="flex gap-2">
             <AnimatedButton
               variant="primary"
               onClick={() => send({ type: 'NEXT' })}
-              isDisabled={!context.formData.name}
+              isDisabled={!formData.name}
             >
               Next
             </AnimatedButton>
@@ -170,7 +178,7 @@ function StateMachineDemo() {
             placeholder="email@example.com"
             className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg mb-4 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100"
             onChange={(e) =>
-              send({ type: 'UPDATE_DATA', data: { email: e.target.value } })
+              send({ type: 'UPDATE_DATA', data: { email: e.target.value } } as DemoMachineEvent)
             }
           />
           <div className="flex gap-2">
@@ -180,7 +188,7 @@ function StateMachineDemo() {
             <AnimatedButton
               variant="primary"
               onClick={() => send({ type: 'NEXT' })}
-              isDisabled={!context.formData.email?.includes('@')}
+              isDisabled={!formData.email?.includes('@')}
             >
               Next
             </AnimatedButton>
@@ -199,11 +207,11 @@ function StateMachineDemo() {
                 <input
                   type="checkbox"
                   onChange={(e) => {
-                    const current = context.formData.preferences || [];
+                    const current = formData.preferences || [];
                     const updated = e.target.checked
                       ? [...current, option]
                       : current.filter((p: string) => p !== option);
-                    send({ type: 'UPDATE_DATA', data: { preferences: updated } });
+                    send({ type: 'UPDATE_DATA', data: { preferences: updated } } as DemoMachineEvent);
                   }}
                 />
                 <span className="text-sm text-slate-700 dark:text-slate-300">{option}</span>
@@ -217,7 +225,7 @@ function StateMachineDemo() {
             <AnimatedButton
               variant="primary"
               onClick={() => send({ type: 'SUBMIT' })}
-              isDisabled={!context.formData.preferences?.length}
+              isDisabled={!formData.preferences?.length}
             >
               Submit
             </AnimatedButton>
@@ -256,11 +264,11 @@ function StateMachineDemo() {
               ✗ Error
             </p>
             <p className="text-sm text-red-600 dark:text-red-400 mb-4">
-              {context.error || 'Something went wrong'}
+              {error || 'Something went wrong'}
             </p>
             <div className="flex gap-2">
               <AnimatedButton variant="danger" onClick={() => send({ type: 'RETRY' })}>
-                Retry ({3 - context.retryCount} left)
+                 Retry ({3 - retryCount} left)
               </AnimatedButton>
               <AnimatedButton variant="secondary" onClick={() => send({ type: 'PREV' })}>
                 Go Back
