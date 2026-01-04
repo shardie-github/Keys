@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 import { toast } from '@/components/Toast';
@@ -23,7 +23,7 @@ interface BundleDiscount {
   ownedKeys: string[];
 }
 
-export default function BundlesPage() {
+function BundlesContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const bundleType = searchParams.get('type');
@@ -33,29 +33,15 @@ export default function BundlesPage() {
   const [error, setError] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  useEffect(() => {
-    checkAuth();
-    fetchBundles();
-    
-    // Handle purchase completion
-    if (searchParams?.get('purchased') === 'true') {
-      toast.success('Bundle purchase successful! Your KEYS are now unlocked.');
-      // Refetch to update entitlements
-      setTimeout(() => {
-        fetchBundles();
-      }, 1000);
-    }
-  }, [bundleType, searchParams]);
-
-  const checkAuth = async () => {
+  const checkAuth = useCallback(async () => {
     const supabase = createClient();
     const {
       data: { user },
     } = await supabase.auth.getUser();
     setIsAuthenticated(!!user);
-  };
+  }, []);
 
-  const fetchBundles = async () => {
+  const fetchBundles = useCallback(async () => {
     try {
       setLoading(true);
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
@@ -74,14 +60,29 @@ export default function BundlesPage() {
       if (isAuthenticated) {
         fetchDiscounts(data.bundles || []);
       }
-    } catch (err: any) {
-      setError(err.message || 'Failed to load bundles');
+    } catch (err) {
+      const error = err as Error;
+      setError(error.message || 'Failed to load bundles');
     } finally {
       setLoading(false);
     }
-  };
+  }, [bundleType, isAuthenticated, fetchDiscounts]);
 
-  const fetchDiscounts = async (bundlesList: Bundle[]) => {
+  useEffect(() => {
+    checkAuth();
+    fetchBundles();
+    
+    // Handle purchase completion
+    if (searchParams?.get('purchased') === 'true') {
+      toast.success('Bundle purchase successful! Your KEYS are now unlocked.');
+      // Refetch to update entitlements
+      setTimeout(() => {
+        fetchBundles();
+      }, 1000);
+    }
+  }, [bundleType, searchParams, checkAuth, fetchBundles]);
+
+  const fetchDiscounts = useCallback(async (bundlesList: Bundle[]) => {
     const supabase = createClient();
     const {
       data: { session },
@@ -110,9 +111,9 @@ export default function BundlesPage() {
     }
 
     setDiscounts(discountMap);
-  };
+  }, []);
 
-  const handlePurchase = async (bundleSlug: string) => {
+  const handlePurchase = useCallback(async (bundleSlug: string) => {
     if (!isAuthenticated) {
       router.push(`/signin?returnUrl=/marketplace/bundles`);
       return;
@@ -151,10 +152,11 @@ export default function BundlesPage() {
       const data = await response.json();
       toast.info('Redirecting to checkout...');
       window.location.href = data.url;
-    } catch (err: any) {
-      toast.error(err.message || 'Failed to start purchase. Please try again.');
+    } catch (err) {
+      const error = err as Error;
+      toast.error(error.message || 'Failed to start purchase. Please try again.');
     }
-  };
+  }, [isAuthenticated, router]);
 
   if (loading) {
     return (
@@ -216,7 +218,7 @@ export default function BundlesPage() {
                   </div>
                   {hasDiscount && (
                     <p className="text-sm text-green-600 mt-1">
-                      Save ${(discount.discount / 100).toFixed(2)} (you own {discount.ownedKeys.length} keys)
+                      Save ${(discount.discount / 100).toFixed(2)} (you own {discount.ownedKeys.length} key{discount.ownedKeys.length !== 1 ? 's' : ''})
                     </p>
                   )}
                 </div>
@@ -242,5 +244,17 @@ export default function BundlesPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function BundlesPage() {
+  return (
+    <Suspense fallback={
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center">Loading bundles...</div>
+      </div>
+    }>
+      <BundlesContent />
+    </Suspense>
   );
 }
