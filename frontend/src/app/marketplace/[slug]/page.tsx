@@ -56,8 +56,6 @@ function KeyDetailContent() {
   const [selectedVersion, setSelectedVersion] = useState<string>('');
   const [activeView, setActiveView] = useState<ViewType>('skim');
 
-  const slug = params.slug as string;
-
   const fetchKey = useCallback(async () => {
     try {
       setLoading(true);
