@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
@@ -17,7 +17,7 @@ interface Entitlement {
   category?: string;
 }
 
-export default function AccountKeysPage() {
+function AccountKeysContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [entitlements, setEntitlements] = useState<Entitlement[]>([]);
@@ -238,5 +238,17 @@ export default function AccountKeysPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function AccountKeysPage() {
+  return (
+    <Suspense fallback={
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center">Loading your Keys...</div>
+      </div>
+    }>
+      <AccountKeysContent />
+    </Suspense>
   );
 }

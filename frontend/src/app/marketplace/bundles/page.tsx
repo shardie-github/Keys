@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 import { toast } from '@/components/Toast';
@@ -23,7 +23,7 @@ interface BundleDiscount {
   ownedKeys: string[];
 }
 
-export default function BundlesPage() {
+function BundlesContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const bundleType = searchParams.get('type');
@@ -242,5 +242,17 @@ export default function BundlesPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function BundlesPage() {
+  return (
+    <Suspense fallback={
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center">Loading bundles...</div>
+      </div>
+    }>
+      <BundlesContent />
+    </Suspense>
   );
 }
