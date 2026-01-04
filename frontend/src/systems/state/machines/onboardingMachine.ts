@@ -234,12 +234,13 @@ export const onboardingMachine = createMachine(
         return context.retryCount < 3;
       },
     },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     actors: {
       submitProfileData: async () => {
         // This will be provided by the component that uses the machine
         // The actual submission logic is handled by the parent component
         throw new Error('submitProfileData actor must be provided');
       },
-    } as const,
+    } as any,
   }
 );

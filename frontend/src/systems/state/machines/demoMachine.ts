@@ -214,6 +214,7 @@ export const demoMachine = createMachine(
         return context.retryCount < 3;
       },
     },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     actors: {
       submitFormData: async ({ input }: { input: DemoMachineContext }) => {
         // Simulate API call
@@ -226,7 +227,7 @@ export const demoMachine = createMachine(
         
         return input.formData;
       },
-    } as const,
+    } as any,
   }
 );
 

@@ -7,7 +7,7 @@
 
 import { useMachine, useActor } from '@xstate/react';
 import { useMemo } from 'react';
-import type { ActorRef, AnyActorLogic } from 'xstate';
+import type { AnyActorLogic } from 'xstate';
 
 /**
  * Hook for using a state machine
@@ -62,8 +62,8 @@ export function useMachineState(
  * @param actorRef - The actor ref from a parent machine
  * @returns Actor state, send function, and service
  */
-export function useActorState(actorRef: AnyActorLogic | ActorRef<unknown, unknown>) {
-  const [state, send] = useActor(actorRef as AnyActorLogic);
+export function useActorState(actorRef: AnyActorLogic) {
+  const [state, send] = useActor(actorRef);
 
   const value = useMemo(() => {
     const stateValue = state.value;

@@ -50,7 +50,8 @@ export function ProfileOnboarding({ userId, onComplete }: ProfileOnboardingProps
           }
         },
       },
-    } as unknown as Parameters<typeof onboardingMachine.provide>[0]),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any),
     {
       input: {
         userId,
