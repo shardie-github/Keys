@@ -1,0 +1,33 @@
+{
+  "slug": "supabase-rls-lockout-recovery",
+  "title": "Supabase RLS Lockout Recovery Runbook",
+  "description": "Recover from RLS policy lockouts, restore user access, and fix RLS policy misconfigurations",
+  "tool": "operational",
+  "key_type": ["recovery"],
+  "severity_level": "p1",
+  "version": "1.0.0",
+  "runtime_dependency": "assisted",
+  "required_access_level": "admin",
+  "produces_evidence": true,
+  "compliance_relevance": ["SOC2", "GDPR"],
+  "references_jupyter_keys": [],
+  "references_node_keys": [
+    "node-supabase-rls-guard"
+  ],
+  "related_runbooks": [
+    "database-connection-failure",
+    "authentication-failure"
+  ],
+  "outcome": "recovery",
+  "maturity": "operator",
+  "tags": ["supabase", "rls", "recovery", "p1"],
+  "license_spdx": "MIT",
+  "author": {
+    "name": "KEYS Team"
+  },
+  "documentation": {
+    "readme": "README.md",
+    "checklist": "checklist.md",
+    "changelog": "CHANGELOG.md"
+  }
+}

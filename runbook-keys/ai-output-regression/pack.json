@@ -1,0 +1,36 @@
+{
+  "slug": "ai-output-regression",
+  "title": "AI Output Regression Incident Runbook",
+  "description": "Diagnose and resolve AI output quality degradation, model regressions, and performance issues",
+  "tool": "operational",
+  "key_type": ["incident"],
+  "severity_level": "p2",
+  "version": "1.0.0",
+  "runtime_dependency": "assisted",
+  "required_access_level": "write",
+  "produces_evidence": true,
+  "compliance_relevance": [],
+  "references_jupyter_keys": [
+    "jupyter-ai-output-analysis",
+    "jupyter-input-quality-analysis"
+  ],
+  "references_node_keys": [
+    "node-ai-output-validation"
+  ],
+  "related_runbooks": [
+    "service-outage",
+    "api-failure"
+  ],
+  "outcome": "incident-response",
+  "maturity": "operator",
+  "tags": ["ai", "regression", "incident", "p2"],
+  "license_spdx": "MIT",
+  "author": {
+    "name": "KEYS Team"
+  },
+  "documentation": {
+    "readme": "README.md",
+    "checklist": "checklist.md",
+    "changelog": "CHANGELOG.md"
+  }
+}
