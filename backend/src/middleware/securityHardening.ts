@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import helmet from 'helmet';
+import crypto from 'crypto';
 
 /**
  * Enhanced security headers middleware
@@ -78,8 +79,7 @@ export function requestSigningMiddleware() {
         }
 
         // Verify signature against shared secret
-        const crypto = require('crypto');
-        const bodyString = typeof req.body === 'string' 
+        const bodyString = typeof req.body === 'string'  
           ? req.body 
           : JSON.stringify(req.body || {});
         const expectedSignature = crypto

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import rateLimit from 'express-rate-limit';
-import { RateLimitError } from '../types/errors';
+import { RateLimitError } from '../types/errors.js';
 
 /**
  * General API rate limiter

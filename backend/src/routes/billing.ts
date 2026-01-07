@@ -240,12 +240,12 @@ router.post(
 
           if (purchaseType === 'key' && (keySlug || keyId)) {
             // Grant marketplace key entitlement
+            let resolvedKeyId = keyId;
             try {
               const { grantEntitlement, resolveTenantContext } = await import('../lib/marketplace/entitlements.js');
               const tenant = await resolveTenantContext(userId);
 
               // Resolve key_id if slug was provided
-              let resolvedKeyId = keyId;
               if (!resolvedKeyId && keySlug) {
                 const { data: key } = await supabase
                   .from('marketplace_keys')
@@ -291,12 +291,12 @@ router.post(
             }
           } else if (purchaseType === 'bundle' && (bundleSlug || bundleId)) {
             // Grant bundle entitlements
+            let resolvedBundleId = bundleId;
             try {
               const { grantEntitlement, resolveTenantContext } = await import('../lib/marketplace/entitlements.js');
               const tenant = await resolveTenantContext(userId);
 
               // Resolve bundle_id if slug was provided
-              let resolvedBundleId = bundleId;
               if (!resolvedBundleId && bundleSlug) {
                 const { data: bundle } = await supabase
                   .from('marketplace_bundles')
@@ -659,18 +659,19 @@ router.post(
     }
 
     // Mark event as successfully processed
-    await supabase
+    const { error: updateError } = await supabase
       .from('stripe_webhook_events')
       .update({ status: 'processed' })
-      .eq('stripe_event_id', event.id)
-      .catch((err) => {
-        // Log but don't fail if update fails
-        logger.warn('Failed to update webhook event status', {
-          requestId: req.headers['x-request-id'] as string,
-          eventId: event.id,
-          error: err,
-        });
+      .eq('stripe_event_id', event.id);
+      
+    if (updateError) {
+      // Log but don't fail if update fails
+      logger.warn('Failed to update webhook event status', {
+        requestId: req.headers['x-request-id'] as string,
+        eventId: event.id,
+        error: updateError,
       });
+    }
 
     res.json({ received: true });
   })

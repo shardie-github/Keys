@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { StackSelector } from './StackSelector';
 import { VibeTuner } from './VibeTuner';
 import type { UserProfile } from '@/types';
@@ -65,9 +65,9 @@ export function ProfileOnboarding({ userId, onComplete }: ProfileOnboardingProps
   );
 
   // Type-safe access to profile and other context properties
-  const profile = (typeof context.profile === 'object' && context.profile !== null)
+  const profile = useMemo(() => (typeof context.profile === 'object' && context.profile !== null)
     ? context.profile as Partial<UserProfile>
-    : {};
+    : {}, [context.profile]);
   const retryCount = typeof context.retryCount === 'number' ? context.retryCount : 0;
   const error = typeof context.error === 'string' ? context.error : undefined;
   const currentStepIndex = typeof context.currentStep === 'number' ? context.currentStep : 0;
