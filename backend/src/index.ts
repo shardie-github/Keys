@@ -34,7 +34,7 @@ import {
 } from './middleware/security.js';
 import { initSentry } from './integrations/sentry.js';
 import { initRedis } from './cache/redis.js';
-import { logger } from './utils/logger';
+import { logger } from './utils/logger.js';
 import { createServer } from 'http';
 import { WebSocketServer } from './websocket/server.js';
 

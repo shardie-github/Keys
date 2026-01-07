@@ -197,9 +197,10 @@ export class TemplateExportService {
       case 'json':
         return JSON.stringify(exportData, null, 2);
 
-      case 'yaml':
+      case 'yaml': {
         const yaml = await import('js-yaml');
         return yaml.dump(exportData);
+      }
 
       case 'csv':
         return this.exportToCSV(exportData);

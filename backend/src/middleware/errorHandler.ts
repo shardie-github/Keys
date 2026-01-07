@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { AppError, ErrorCode } from '../types/errors';
-import { logger } from '../utils/logger';
+import { AppError, ErrorCode } from '../types/errors.js';
+import { logger } from '../utils/logger.js';
 import { errorTrackingService } from '../services/errorTrackingService.js';
 import type { AuthenticatedRequest } from './auth.js';
 

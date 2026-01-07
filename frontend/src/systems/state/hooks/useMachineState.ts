@@ -7,7 +7,7 @@
 
 import { useMachine, useActor } from '@xstate/react';
 import { useMemo } from 'react';
-import type { ActorRefFrom, AnyStateMachine, EventObject, StateFrom, AnyActorRef } from 'xstate';
+import type { ActorRefFrom, AnyStateMachine, EventObject } from 'xstate';
 
 interface MachineState {
   matches: (state: string) => boolean;

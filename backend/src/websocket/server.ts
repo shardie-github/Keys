@@ -1,6 +1,6 @@
 import { WebSocketServer as WSWebSocketServer, WebSocket } from 'ws';
 import { Server } from 'http';
-import { logger } from '../utils/logger';
+import { logger } from '../utils/logger.js';
 
 interface WebSocketClient extends WebSocket {
   userId?: string;

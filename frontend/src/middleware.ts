@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 
 // Protected routes that require authentication
-const protectedRoutes = ['/dashboard', '/chat', '/profile', '/templates', '/admin'];
+const protectedRoutes = ['/dashboard', '/chat', '/profile', '/templates', '/admin', '/api/billing'];
 
 // Public routes that authenticated users should be redirected away from
 const publicAuthRoutes = ['/signin', '/signup'];
@@ -13,6 +13,12 @@ export async function middleware(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
   });
+
+  // Add Security Headers
+  supabaseResponse.headers.set('X-Frame-Options', 'DENY');
+  supabaseResponse.headers.set('X-Content-Type-Options', 'nosniff');
+  supabaseResponse.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  supabaseResponse.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
