@@ -1,10 +1,23 @@
 import { Request, Response, NextFunction } from 'express';
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+let supabaseClient: ReturnType<typeof createClient> | null = null;
+
+function getSupabaseAdminClient() {
+  const isTestRuntime = process.env.NODE_ENV === 'test' || typeof (import.meta as any)?.vitest !== 'undefined';
+  if (!isTestRuntime && supabaseClient) return supabaseClient;
+
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (isTestRuntime) {
+    return createClient(url || 'http://127.0.0.1:54321', key || 'test-service-role');
+  }
+
+  if (!url || !key) throw new Error('Supabase admin client is not configured');
+  supabaseClient = createClient(url, key);
+  return supabaseClient;
+}
 
 export interface AuthenticatedRequest extends Request {
   userId?: string;
@@ -43,7 +56,7 @@ export async function authMiddleware(
     const {
       data: { user },
       error,
-    } = await supabase.auth.getUser(token);
+    } = await getSupabaseAdminClient().auth.getUser(token);
 
     if (error || !user) {
       res.status(401).json({ 
@@ -92,7 +105,7 @@ export async function optionalAuthMiddleware(
       const token = authHeader.substring(7);
       const {
         data: { user },
-      } = await supabase.auth.getUser(token);
+      } = await getSupabaseAdminClient().auth.getUser(token);
 
       if (user) {
         req.userId = user.id;

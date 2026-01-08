@@ -14,10 +14,20 @@ import { failurePatternService } from '../services/failurePatternService.js';
 import { safetyEnforcementService } from '../services/safetyEnforcementService.js';
 
 const router = Router();
-const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+
+let supabaseClient: ReturnType<typeof createClient> | null = null;
+function getSupabaseAdminClient() {
+  if (supabaseClient) return supabaseClient;
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) {
+    // In non-production environments/tests, allow mocking createClient() without requiring env.
+    supabaseClient = createClient(url || 'http://127.0.0.1:54321', key || 'test-service-role');
+    return supabaseClient;
+  }
+  supabaseClient = createClient(url, key);
+  return supabaseClient;
+}
 
 const orchestrateAgentSchema = z.object({
   assembledPrompt: z.object({
@@ -33,8 +43,8 @@ const orchestrateAgentSchema = z.object({
 router.post(
   '/',
   authMiddleware,
-  entitlementsMiddleware({ checkUsageLimit: true }),
   validateBody(orchestrateAgentSchema),
+  entitlementsMiddleware({ checkUsageLimit: true }),
   asyncHandler(async (req: AuthenticatedRequest, res) => {
     const userId = req.userId!; // Always use authenticated user ID
     const { assembledPrompt, taskIntent, naturalLanguageInput } = req.body;
@@ -138,7 +148,7 @@ router.post(
     }
 
     // Log agent run with safety check results
-    const { data: run } = await supabase
+    const { data: run } = await getSupabaseAdminClient()
       .from('agent_runs')
       .insert({
         user_id: userId,

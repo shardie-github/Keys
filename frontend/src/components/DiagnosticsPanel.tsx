@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useRuntimeUiConfig } from '@/runtime-ui-config/client';
 
 interface DiagnosticsPanelProps {
   className?: string;
@@ -10,6 +11,7 @@ interface DiagnosticsPanelProps {
 export function DiagnosticsPanel({ className = '' }: DiagnosticsPanelProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { user, session } = useAuth();
+  const { config: runtimeConfig, updatedAt } = useRuntimeUiConfig();
   const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001';
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'Not set';
 
@@ -60,7 +62,12 @@ export function DiagnosticsPanel({ className = '' }: DiagnosticsPanelProps) {
             </div>
             <div>
               <span className="text-gray-500 dark:text-gray-400">Feature Flags:</span>
-              <div className="text-gray-900 dark:text-white">None configured</div>
+              <div className="text-gray-900 dark:text-white">
+                {Object.keys(runtimeConfig.features || {}).length} flags
+              </div>
+              <div className="text-gray-500 dark:text-gray-400 mt-1">
+                UI config updated: {updatedAt || 'unknown'}
+              </div>
             </div>
           </div>
         </div>
