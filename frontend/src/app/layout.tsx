@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-import { Providers } from '@/components/Providers';
+import { RootProvider } from '@/components/providers/root-provider';
 import { StructuredData, generateOrganizationSchema, generateSoftwareApplicationSchema } from '@/components/SEO/StructuredData';
 
 const inter = Inter({ subsets: ['latin'], display: 'swap', preload: true });
@@ -126,14 +126,14 @@ export default function RootLayout({
         <StructuredData type="SoftwareApplication" data={generateSoftwareApplicationSchema()} />
       </head>
       <body className={`${inter.className} antialiased`}>
-        <Providers>
+        <RootProvider>
           <div id="skip-to-content" className="sr-only">
             <a href="#main-content" className="skip-link">
               Skip to main content
             </a>
           </div>
           {children}
-        </Providers>
+        </RootProvider>
         <script
           dangerouslySetInnerHTML={{
             __html: `
