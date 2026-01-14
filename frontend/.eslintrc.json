@@ -1,7 +1,39 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript"],
+  "extends": [
+    "next/core-web-vitals",
+    "next/typescript",
+    "plugin:@typescript-eslint/recommended"
+  ],
   "rules": {
-    "@typescript-eslint/no-explicit-any": "warn",
-    "react/no-unescaped-entities": "warn"
-  }
+    "/** RATIONALE: Enforce Type-Safety & Logic Integrity **/": "off",
+    "@typescript-eslint/no-explicit-any": "error",
+    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "react/no-unescaped-entities": "error",
+    "no-console": ["warn", { "allow": ["warn", "error"] }],
+    
+    "/** RATIONALE: Prevent Edge Runtime Violations (Supabase/Prisma) **/": "off",
+    "no-restricted-globals": [
+      "error",
+      {
+        "name": "process",
+        "message": "Accessing 'process' directly is restricted in Edge Runtime. Use environment variables (NEXT_PUBLIC_*) or a server-side utility that handles runtime checks."
+      },
+      {
+        "name": "Buffer",
+        "message": "Buffer is not available in the Edge Runtime. Use Uint8Array or TextEncoder/Decoder instead."
+      }
+    ],
+
+    "/** RATIONALE: Clean UI Patterns **/": "off",
+    "react-hooks/exhaustive-deps": "error"
+  },
+  "overrides": [
+    {
+      "files": ["src/app/api/**", "src/middleware.ts"],
+      "rules": {
+        "/** RATIONALE: Extra strictness for Edge-entry points **/": "off",
+        "@typescript-eslint/no-floating-promises": "error"
+      }
+    }
+  ]
 }
