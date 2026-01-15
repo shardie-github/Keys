@@ -131,18 +131,20 @@ export function HeroSection() {
             >
               <div className="relative">
                 <KeysLogoV2 size={120} variant="icon" animated />
-                <motion.div
-                  className="absolute inset-0 bg-white/20 rounded-full blur-xl"
-                  animate={{
-                    scale: [1, 1.2, 1],
-                    opacity: [0.3, 0.5, 0.3],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: 'easeInOut',
-                  }}
-                />
+                {isHydrated && (
+                  <motion.div
+                    className="absolute inset-0 bg-white/20 rounded-full blur-xl"
+                    animate={{
+                      scale: [1, 1.2, 1],
+                      opacity: [0.3, 0.5, 0.3],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: 'easeInOut',
+                    }}
+                  />
+                )}
               </div>
             </motion.div>
 
