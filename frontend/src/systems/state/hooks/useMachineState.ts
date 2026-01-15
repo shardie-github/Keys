@@ -7,9 +7,9 @@
  * Provides ergonomic access to machine state and actions.
  */
 
-import { useMachine, useActor } from '@xstate/react';
+import { useMachine } from '@xstate/react';
 import { useMemo } from 'react';
-import type { ActorRefFrom, AnyStateMachine, EventObject } from 'xstate';
+import type { AnyStateMachine } from 'xstate';
 
 interface MachineState {
   matches: (state: string) => boolean;
@@ -47,37 +47,6 @@ export function useMachineState<TMachine extends AnyStateMachine>(
       value: machineState.value,
     };
   }, [state, send, service]);
-
-  return value;
-}
-
-/**
- * Hook for using an actor ref
- * 
- * @param actorRef - The actor ref from a parent machine
- * @returns Actor state, send function, and service
- */
-export function useActorState<TEvent extends EventObject = EventObject>(
-  actorRef: ActorRefFrom<AnyStateMachine>
-) {
-  const [state, send] = useActor(actorRef);
-
-  const value = useMemo(() => {
-    const machineState = state as unknown as MachineState;
-    return {
-      state,
-      send,
-      // Convenience getters
-      isIdle: machineState.matches?.('idle') ?? false,
-      isLoading: machineState.matches?.('loading') || machineState.matches?.('pending') || machineState.matches?.('submitting') || false,
-      isError: machineState.matches?.('error') ?? false,
-      isSuccess: machineState.matches?.('success') ?? false,
-      // Context access
-      context: machineState.context,
-      // Current state value
-      value: machineState.value,
-    };
-  }, [state, send]);
 
   return value;
 }

@@ -118,7 +118,7 @@ export default function TemplateCustomizePage() {
               </label>
               <input
                 type="text"
-                value={customVariables[variable.name] || variable.default || ''}
+                value={String(customVariables[variable.name] ?? variable.default ?? '')}
                 onChange={(e) =>
                   setCustomVariables({
                     ...customVariables,
