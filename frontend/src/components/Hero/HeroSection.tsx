@@ -117,7 +117,7 @@ export function HeroSection() {
           <motion.div
             className="relative z-10 text-center space-y-6 sm:space-y-8"
             variants={containerVariants}
-            initial="hidden"
+            initial={isHydrated ? 'hidden' : 'visible'}
             animate="visible"
           >
             {/* Logo */}
