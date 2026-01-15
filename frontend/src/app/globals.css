@@ -143,6 +143,59 @@
   }
 }
 
+/* Typography scale utilities */
+@layer utilities {
+  /* Heading H1 - 48px/56px base, 36px/44px on sm */
+  .text-h1 {
+    @apply text-5xl font-bold leading-tight tracking-tight sm:text-4xl;
+  }
+
+  /* Heading H2 - 36px/44px base, 28px/36px on sm */
+  .text-h2 {
+    @apply text-4xl font-bold leading-tight tracking-tight sm:text-3xl;
+  }
+
+  /* Heading H3 - 24px/32px base, 20px/28px on sm */
+  .text-h3 {
+    @apply text-2xl font-semibold leading-snug tracking-tight sm:text-xl;
+  }
+
+  /* Heading H4 - 20px/28px base */
+  .text-h4 {
+    @apply text-xl font-semibold leading-snug;
+  }
+
+  /* Body text - 16px/24px */
+  .text-body {
+    @apply text-base leading-relaxed;
+  }
+
+  /* Body small - 14px/20px */
+  .text-body-sm {
+    @apply text-sm leading-relaxed;
+  }
+
+  /* Caption - 12px/16px */
+  .text-caption {
+    @apply text-xs leading-relaxed;
+  }
+
+  /* Muted text (secondary color) */
+  .text-muted {
+    @apply text-muted-foreground;
+  }
+
+  /* Optional: Text with soft/muted appearance */
+  .text-muted-strong {
+    @apply text-gray-600 dark:text-gray-400;
+  }
+
+  /* Optional: Text with emphasis (slightly darker than body) */
+  .text-emphasis {
+    @apply font-semibold text-gray-900 dark:text-gray-100;
+  }
+}
+
 /* Custom scrollbar for better UX */
 @layer utilities {
   .scrollbar-hide {
