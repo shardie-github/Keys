@@ -73,44 +73,48 @@ export function HeroSection() {
       >
           {/* Animated Background Pattern */}
           <div className="absolute inset-0 opacity-10">
-            <motion.div
-              className="absolute top-0 left-0 w-72 h-72 bg-white rounded-full blur-3xl"
-              animate={{
-                scale: [1, 1.2, 1],
-                opacity: [0.1, 0.2, 0.1],
-              }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: 'easeInOut',
-              }}
-            />
-            <motion.div
-              className="absolute bottom-0 right-0 w-96 h-96 bg-purple-300 rounded-full blur-3xl"
-              animate={{
-                scale: [1, 1.3, 1],
-                opacity: [0.1, 0.25, 0.1],
-              }}
-              transition={{
-                duration: 5,
-                repeat: Infinity,
-                ease: 'easeInOut',
-                delay: 1,
-              }}
-            />
-            <motion.div
-              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-pink-300 rounded-full blur-3xl"
-              animate={{
-                scale: [1, 1.15, 1],
-                opacity: [0.1, 0.2, 0.1],
-              }}
-              transition={{
-                duration: 3.5,
-                repeat: Infinity,
-                ease: 'easeInOut',
-                delay: 0.5,
-              }}
-            />
+            {isHydrated && (
+              <>
+                <motion.div
+                  className="absolute top-0 left-0 w-72 h-72 bg-white rounded-full blur-3xl"
+                  animate={{
+                    scale: [1, 1.2, 1],
+                    opacity: [0.1, 0.2, 0.1],
+                  }}
+                  transition={{
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                  }}
+                />
+                <motion.div
+                  className="absolute bottom-0 right-0 w-96 h-96 bg-purple-300 rounded-full blur-3xl"
+                  animate={{
+                    scale: [1, 1.3, 1],
+                    opacity: [0.1, 0.25, 0.1],
+                  }}
+                  transition={{
+                    duration: 5,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                    delay: 1,
+                  }}
+                />
+                <motion.div
+                  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-pink-300 rounded-full blur-3xl"
+                  animate={{
+                    scale: [1, 1.15, 1],
+                    opacity: [0.1, 0.2, 0.1],
+                  }}
+                  transition={{
+                    duration: 3.5,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                    delay: 0.5,
+                  }}
+                />
+              </>
+            )}
           </div>
 
           {/* Content */}
