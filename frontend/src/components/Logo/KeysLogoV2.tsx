@@ -141,6 +141,7 @@ export function KeysLogoV2({
 
       {/* Central Mechanical Key-Ring */}
       <motion.g
+        suppressHydrationWarning
         variants={animated ? ringVariants : undefined}
         initial={animated ? 'hidden' : undefined}
         animate={animated ? 'visible' : undefined}
