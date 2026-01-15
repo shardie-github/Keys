@@ -255,9 +255,9 @@ export function KeysLogoV2({
         />
         {/* Code symbol: < > inside */}
         <motion.g
-          variants={animated ? iconVariants : undefined}
-          initial={animated ? 'hidden' : undefined}
-          animate={animated ? 'visible' : undefined}
+          variants={shouldAnimate ? iconVariants : undefined}
+          initial={shouldAnimate ? 'hidden' : undefined}
+          animate={shouldAnimate ? 'visible' : undefined}
         >
           <path
             d="M 64 15 L 68 19 L 64 23"
@@ -346,9 +346,9 @@ export function KeysLogoV2({
         />
         {/* Branch symbol: fork */}
         <motion.g
-          variants={animated ? iconVariants : undefined}
-          initial={animated ? 'hidden' : undefined}
-          animate={animated ? 'visible' : undefined}
+          variants={shouldAnimate ? iconVariants : undefined}
+          initial={shouldAnimate ? 'hidden' : undefined}
+          animate={shouldAnimate ? 'visible' : undefined}
         >
           <circle cx="70" cy="115" r="2" fill="white" />
           <line x1="70" y1="115" x2="68" y2="122" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
@@ -387,9 +387,9 @@ export function KeysLogoV2({
         />
         {/* Payment symbol: dollar sign */}
         <motion.g
-          variants={animated ? iconVariants : undefined}
-          initial={animated ? 'hidden' : undefined}
-          animate={animated ? 'visible' : undefined}
+          variants={shouldAnimate ? iconVariants : undefined}
+          initial={shouldAnimate ? 'hidden' : undefined}
+          animate={shouldAnimate ? 'visible' : undefined}
         >
           <line x1="20" y1="65" x2="20" y2="75" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
           <path
