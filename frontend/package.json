@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "NEXT_IGNORE_INCORRECT_LOCKFILE=1 next dev",
+    "prebuild": "node scripts/ensure-deps.js",
     "build": "NEXT_PRIVATE_LOCAL_SKIP_FONTS=1 NEXT_IGNORE_INCORRECT_LOCKFILE=1 next build",
     "postbuild": "next-sitemap",
     "start": "next start",
