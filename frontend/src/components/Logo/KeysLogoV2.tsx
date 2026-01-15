@@ -229,9 +229,9 @@ export function KeysLogoV2({
       {/* KEY 1 - CURSOR (TOP) - Blue, Code Symbol */}
       <motion.g
         custom={0}
-        variants={animated ? keyVariants : undefined}
-        initial={animated ? 'hidden' : undefined}
-        animate={animated ? 'visible' : undefined}
+        variants={shouldAnimate ? keyVariants : undefined}
+        initial={shouldAnimate ? 'hidden' : undefined}
+        animate={shouldAnimate ? 'visible' : undefined}
       >
         {/* Key shaft */}
         <rect
@@ -281,9 +281,9 @@ export function KeysLogoV2({
       {/* KEY 2 - JUPYTER (RIGHT) - Purple, Graph Symbol */}
       <motion.g
         custom={1}
-        variants={animated ? keyVariants : undefined}
-        initial={animated ? 'hidden' : undefined}
-        animate={animated ? 'visible' : undefined}
+        variants={shouldAnimate ? keyVariants : undefined}
+        initial={shouldAnimate ? 'hidden' : undefined}
+        animate={shouldAnimate ? 'visible' : undefined}
       >
         {/* Key shaft */}
         <rect
@@ -320,9 +320,9 @@ export function KeysLogoV2({
       {/* KEY 3 - GITHUB (BOTTOM) - Gray/Orange, Branch Symbol */}
       <motion.g
         custom={2}
-        variants={animated ? keyVariants : undefined}
-        initial={animated ? 'hidden' : undefined}
-        animate={animated ? 'visible' : undefined}
+        variants={shouldAnimate ? keyVariants : undefined}
+        initial={shouldAnimate ? 'hidden' : undefined}
+        animate={shouldAnimate ? 'visible' : undefined}
       >
         {/* Key shaft */}
         <rect
@@ -361,9 +361,9 @@ export function KeysLogoV2({
       {/* KEY 4 - STRIPE (LEFT) - Indigo, Payment Symbol */}
       <motion.g
         custom={3}
-        variants={animated ? keyVariants : undefined}
-        initial={animated ? 'hidden' : undefined}
-        animate={animated ? 'visible' : undefined}
+        variants={shouldAnimate ? keyVariants : undefined}
+        initial={shouldAnimate ? 'hidden' : undefined}
+        animate={shouldAnimate ? 'visible' : undefined}
       >
         {/* Key shaft */}
         <rect
