@@ -10,9 +10,15 @@ interface PreCheckoutSummaryProps {
 }
 
 export function PreCheckoutSummary({ whatUnlocks }: PreCheckoutSummaryProps) {
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10 }}
+      initial={isHydrated ? { opacity: 0, y: 10 } : { opacity: 1, y: 0 }}
       animate={{ opacity: 1, y: 0 }}
       className="p-6 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800 mb-6"
     >
