@@ -25,6 +25,10 @@
     "db:migrate": "cd backend && npm run migrate",
     "db:reconcile": "echo 'Run migration: backend/supabase/migrations/00000000000000_backend_contract_reconcile.sql in Supabase SQL editor'"
   },
+  "dependencies": {
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
   "devDependencies": {
     "@types/pg": "^8.16.0",
     "concurrently": "^8.2.2",
