@@ -1,12 +1,13 @@
 /**
  * ProgressIndicator
- * 
+ *
  * Displays step-based progress (e.g., "Step 2 of 5")
  * Used in multi-step flows like onboarding.
  */
 
 'use client';
 
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { motionTokens } from '@/systems/motion';
 
