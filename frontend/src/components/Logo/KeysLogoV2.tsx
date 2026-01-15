@@ -150,10 +150,9 @@ export function KeysLogoV2({
 
       {/* Central Mechanical Key-Ring */}
       <motion.g
-        suppressHydrationWarning
-        variants={animated ? ringVariants : undefined}
-        initial={animated ? 'hidden' : undefined}
-        animate={animated ? 'visible' : undefined}
+        variants={shouldAnimate ? ringVariants : undefined}
+        initial={shouldAnimate ? 'hidden' : undefined}
+        animate={shouldAnimate ? 'visible' : undefined}
       >
         {/* Outer ring with geometric precision */}
         <circle
