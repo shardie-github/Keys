@@ -94,7 +94,7 @@ export async function middleware(request: NextRequest) {
         return new NextResponse('Not found', { status: 404 });
       }
 
-      const role = user?.app_metadata?.role;
+      const role = (user?.app_metadata as { role?: string })?.role;
       const isAdmin = role === 'admin' || role === 'superadmin';
       const allowlist = (process.env.ADMIN_USER_IDS || '')
         .split(',')

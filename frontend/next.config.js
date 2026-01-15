@@ -80,7 +80,7 @@ const nextConfig = {
   output: process.env.NEXT_OUTPUT || undefined,
   // Experimental features for performance
   experimental: {
-    optimizeCss: true,
+    optimizeCss: false, // Disabled due to potential build issues
     optimizePackageImports: ['framer-motion', '@supabase/supabase-js'],
   },
 }
