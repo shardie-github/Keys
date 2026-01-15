@@ -124,6 +124,7 @@ export function KeysLogoV2({
       viewBox="0 0 140 140"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      suppressHydrationWarning
       className={cn(
         'w-auto h-auto',
         variant === 'monochrome' && 'grayscale',
