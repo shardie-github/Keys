@@ -5,9 +5,7 @@ import { DEFAULT_RUNTIME_UI_CONFIG, sanitizeRuntimeUiConfig } from '@/runtime-ui
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
-export async function GET(req: Request) {
-  const ifNoneMatch = req.headers.get('if-none-match');
-
+export async function GET() {
   try {
     if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
       const res = NextResponse.json({ config: DEFAULT_RUNTIME_UI_CONFIG, updatedAt: null }, { status: 200 });
@@ -34,13 +32,6 @@ export async function GET(req: Request) {
 
     // Deterministic weak ETag based on config + updatedAt.
     const etag = `W/"ui-config-${Buffer.from(JSON.stringify({ config, updatedAt })).toString('base64url').slice(0, 32)}"`;
-    if (ifNoneMatch && ifNoneMatch === etag) {
-      const res = new NextResponse(null, { status: 304 });
-      res.headers.set('ETag', etag);
-      res.headers.set('Cache-Control', 'public, max-age=30, stale-while-revalidate=300');
-      return res;
-    }
-
     const res = NextResponse.json({ config, updatedAt }, { status: 200 });
     res.headers.set('ETag', etag);
     if (updatedAt) res.headers.set('X-UI-Config-Updated-At', updatedAt);
