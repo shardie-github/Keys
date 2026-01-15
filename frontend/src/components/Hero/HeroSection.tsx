@@ -162,22 +162,28 @@ export function HeroSection() {
               className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight drop-shadow-lg"
             >
               You Already Have{' '}
-              <motion.span
-                className="bg-gradient-to-r from-yellow-200 via-pink-200 to-purple-200 bg-clip-text text-transparent inline-block"
-                animate={{
-                  backgroundPosition: ['0%', '100%', '0%'],
-                }}
-                transition={{
-                  duration: 5,
-                  repeat: Infinity,
-                  ease: 'linear',
-                }}
-                style={{
-                  backgroundSize: '200%',
-                }}
-              >
-                The Tools
-              </motion.span>
+              {isHydrated ? (
+                <motion.span
+                  className="bg-gradient-to-r from-yellow-200 via-pink-200 to-purple-200 bg-clip-text text-transparent inline-block"
+                  animate={{
+                    backgroundPosition: ['0%', '100%', '0%'],
+                  }}
+                  transition={{
+                    duration: 5,
+                    repeat: Infinity,
+                    ease: 'linear',
+                  }}
+                  style={{
+                    backgroundSize: '200%',
+                  }}
+                >
+                  The Tools
+                </motion.span>
+              ) : (
+                <span className="bg-gradient-to-r from-yellow-200 via-pink-200 to-purple-200 bg-clip-text text-transparent inline-block" style={{ backgroundSize: '200%' }}>
+                  The Tools
+                </span>
+              )}
             </motion.h1>
 
             {/* Subheading */}
