@@ -1,7 +1,7 @@
 {
-  "name": "Cursor Venture Companion",
-  "short_name": "Venture Companion",
-  "description": "AI cofounder for the entire product lifecycle",
+  "name": "KEYS - The Keyring to Modern Tools",
+  "short_name": "KEYS",
+  "description": "Structured assets that unlock practical capability in your favorite tools",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
