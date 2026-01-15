@@ -319,9 +319,9 @@ export function KeysLogoV2({
       {/* KEY 3 - GITHUB (BOTTOM) - Gray/Orange, Branch Symbol */}
       <motion.g
         custom={2}
-        variants={shouldAnimate ? keyVariants : undefined}
-        initial={shouldAnimate ? 'hidden' : undefined}
-        animate={shouldAnimate ? 'visible' : undefined}
+        variants={keyVariants}
+        initial={isHydrated ? 'hidden' : 'visible'}
+        animate="visible"
       >
         {/* Key shaft */}
         <rect
