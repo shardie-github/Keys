@@ -120,7 +120,7 @@ export function HeroSection() {
               className="flex justify-center mb-4"
             >
               <div className="relative">
-                <KeysLogo size={120} animated={true} />
+                <KeysLogoV2 size={120} variant="icon" animated />
                 <motion.div
                   className="absolute inset-0 bg-white/20 rounded-full blur-xl"
                   animate={{
