@@ -228,9 +228,9 @@ export function KeysLogoV2({
       {/* KEY 1 - CURSOR (TOP) - Blue, Code Symbol */}
       <motion.g
         custom={0}
-        variants={shouldAnimate ? keyVariants : undefined}
-        initial={shouldAnimate ? 'hidden' : undefined}
-        animate={shouldAnimate ? 'visible' : undefined}
+        variants={keyVariants}
+        initial={isHydrated ? 'hidden' : 'visible'}
+        animate="visible"
       >
         {/* Key shaft */}
         <rect
