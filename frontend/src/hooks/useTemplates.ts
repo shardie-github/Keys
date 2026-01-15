@@ -15,6 +15,9 @@ import type {
   HistoryEntry,
   Analytics,
   SearchFilters,
+  TemplateVariables,
+  TemplateInputFilter,
+  TemplateVariableDefinition,
 } from '@/services/templateService';
 
 export function useTemplates(filters: SearchFilters = {}) {
@@ -81,8 +84,7 @@ export function useTemplateCustomization(templateId: string | null) {
   const [error, setError] = useState<Error | null>(null);
 
   const saveCustomization = useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async (customVariables: Record<string, any>, customInstructions?: string) => {
+    async (customVariables: TemplateVariables, customInstructions?: string) => {
       if (!templateId) return;
 
       try {
@@ -104,8 +106,7 @@ export function useTemplateCustomization(templateId: string | null) {
 
   const updateCustomization = useCallback(
     async (updates: {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      customVariables?: Record<string, any>;
+      customVariables?: TemplateVariables;
       customInstructions?: string;
       enabled?: boolean;
     }) => {
@@ -158,8 +159,7 @@ export function useTemplateCustomization(templateId: string | null) {
 export function useTemplateValidation(templateId: string | null) {
   const [validation, setValidation] = useState<ValidationResult | null>(null);
   const [loading, setLoading] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [availableVariables, setAvailableVariables] = useState<any[]>([]);
+  const [availableVariables, setAvailableVariables] = useState<TemplateVariableDefinition[]>([]);
 
   const loadVariables = useCallback(async () => {
     if (!templateId) return;
@@ -179,8 +179,7 @@ export function useTemplateValidation(templateId: string | null) {
   }, [templateId, loadVariables]);
 
   const validate = useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async (customVariables: Record<string, any>, customInstructions?: string) => {
+    async (customVariables: TemplateVariables, customInstructions?: string) => {
       if (!templateId) return null;
 
       try {
@@ -213,11 +212,9 @@ export function useTemplateTesting(templateId: string | null) {
 
   const test = useCallback(
     async (
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      customVariables: Record<string, any>,
+      customVariables: TemplateVariables,
       customInstructions?: string,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      inputFilter?: any,
+      inputFilter?: TemplateInputFilter,
       taskDescription?: string
     ) => {
       if (!templateId) return;

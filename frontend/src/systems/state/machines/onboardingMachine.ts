@@ -4,7 +4,7 @@
  * Manages the multi-step onboarding flow with validation, async submission, and error handling.
  */
 
-import { createMachine, assign } from 'xstate';
+import { createMachine, assign, fromPromise } from 'xstate';
 import type { UserProfile } from '@/types';
 
 /**
@@ -235,13 +235,11 @@ export const onboardingMachine = createMachine(
       },
     },
     actors: {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      submitProfileData: async (): Promise<any> => {
+      submitProfileData: fromPromise(async () => {
         // This will be provided by the component that uses the machine
         // The actual submission logic is handled by the parent component
         throw new Error('submitProfileData actor must be provided');
-      },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } as any,
+      }),
+    },
   }
 );

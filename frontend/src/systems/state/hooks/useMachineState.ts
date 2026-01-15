@@ -7,9 +7,10 @@
  * Provides ergonomic access to machine state and actions.
  */
 
-import { useMachine, useActor } from '@xstate/react';
+import { useMachine } from '@xstate/react';
 import { useMemo } from 'react';
-import type { ActorRefFrom, AnyStateMachine, EventObject } from 'xstate';
+import { useSelector } from '@xstate/react';
+import type { AnyActorRef, AnyStateMachine, EventObject } from 'xstate';
 
 interface MachineState {
   matches: (state: string) => boolean;
@@ -51,34 +52,38 @@ export function useMachineState<TMachine extends AnyStateMachine>(
   return value;
 }
 
+type ActorRefLike = Pick<AnyActorRef, 'subscribe' | 'getSnapshot' | 'send'>;
+
 /**
- * Hook for using an actor ref
- * 
- * @param actorRef - The actor ref from a parent machine
- * @returns Actor state, send function, and service
+ * Hook for reading an actor ref's snapshot (XState v5).
+ *
+ * This is intentionally lightweight: it exposes the snapshot + a send wrapper,
+ * plus a few convenience booleans when the snapshot supports `matches()`.
  */
-export function useActorState<TEvent extends EventObject = EventObject>(
-  actorRef: ActorRefFrom<AnyStateMachine> | { send: (event: TEvent) => void; getSnapshot: () => MachineState }
+export function useActorState<TActor extends ActorRefLike, TEvent extends EventObject = EventObject>(
+  actorRef: TActor
 ) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [state, send] = useActor(actorRef as any);
+  const snapshot = useSelector(actorRef, (s) => s);
 
   const value = useMemo(() => {
-    const machineState = state as unknown as MachineState;
+    const machineState = snapshot as unknown as MachineState;
     return {
-      state,
-      send,
-      // Convenience getters
+      state: snapshot,
+      send: (event: TEvent) => actorRef.send(event),
+      service: actorRef,
+      // Convenience getters (when supported)
       isIdle: machineState.matches?.('idle') ?? false,
-      isLoading: machineState.matches?.('loading') || machineState.matches?.('pending') || machineState.matches?.('submitting') || false,
+      isLoading:
+        machineState.matches?.('loading') ||
+        machineState.matches?.('pending') ||
+        machineState.matches?.('submitting') ||
+        false,
       isError: machineState.matches?.('error') ?? false,
       isSuccess: machineState.matches?.('success') ?? false,
-      // Context access
-      context: machineState.context,
-      // Current state value
+      context: machineState.context ?? {},
       value: machineState.value,
     };
-  }, [state, send]);
+  }, [snapshot, actorRef]);
 
   return value;
 }

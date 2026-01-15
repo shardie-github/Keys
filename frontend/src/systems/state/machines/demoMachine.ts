@@ -5,7 +5,7 @@
  * This machine handles a simple multi-step form with validation and async submission.
  */
 
-import { createMachine, assign, ActorRefFrom } from 'xstate';
+import { createMachine, assign, ActorRefFrom, fromPromise } from 'xstate';
 import { BaseMachineContext } from '../types';
 
 /**
@@ -215,20 +215,18 @@ export const demoMachine = createMachine(
       },
     },
     actors: {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      submitFormData: async ({ input }: { input: DemoMachineContext }): Promise<any> => {
+      submitFormData: fromPromise(async ({ input }: { input: DemoMachineContext }) => {
         // Simulate API call
         await new Promise((resolve) => setTimeout(resolve, 1500));
-        
+
         // Simulate occasional failure
         if (Math.random() > 0.7) {
           throw new Error('Network error. Please try again.');
         }
-        
+
         return input.formData;
-      },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } as any,
+      }),
+    },
   }
 );
 

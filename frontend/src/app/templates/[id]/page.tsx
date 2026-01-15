@@ -14,7 +14,7 @@ import {
   useTemplateTesting,
   useTemplateHistory,
 } from '@/hooks/useTemplates';
-import type { TemplatePreview } from '@/services/templateService';
+import type { TemplatePreview, TemplateVariables } from '@/services/templateService';
 import { TemplateEditor } from '@/components/TemplateManager/TemplateEditor';
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
@@ -127,8 +127,7 @@ function TestTemplateView({
   testResult: { success: boolean; renderedPrompt?: string; validationResult?: { errors: Array<{ message: string }> }; metadata?: { variablesUsed: string[]; promptLength: number; conditionalsEvaluated: number } } | null;
   onTest: (vars: Record<string, unknown>, instructions?: string) => Promise<unknown>;
 }) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [customVariables, setCustomVariables] = useState<Record<string, any>>({});
+  const [customVariables, setCustomVariables] = useState<TemplateVariables>({});
   const [customInstructions, setCustomInstructions] = useState('');
   const [testing, setTesting] = useState(false);
 
@@ -155,7 +154,10 @@ function TestTemplateView({
             value={JSON.stringify(customVariables, null, 2)}
             onChange={(e) => {
               try {
-                setCustomVariables(JSON.parse(e.target.value));
+                const parsed = JSON.parse(e.target.value) as unknown;
+                if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+                  setCustomVariables(parsed as TemplateVariables);
+                }
               } catch {
                 // Invalid JSON, ignore
               }

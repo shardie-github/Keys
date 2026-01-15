@@ -1,6 +1,8 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 
+type SupabaseServerClient = ReturnType<typeof createServerClient>;
+
 export function createClient() {
   const cookieStore = cookies();
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -10,14 +12,14 @@ export function createClient() {
     // Server-safe disabled client: no network calls, preserves build behavior.
     const disabledError = new Error('Supabase is not configured (missing NEXT_PUBLIC_SUPABASE_URL/NEXT_PUBLIC_SUPABASE_ANON_KEY)');
     const noopSub = { unsubscribe: () => {} };
-    return {
+    const disabledClient = {
       auth: {
         getUser: async () => ({ data: { user: null }, error: disabledError }),
         getSession: async () => ({ data: { session: null }, error: disabledError }),
         onAuthStateChange: () => ({ data: { subscription: noopSub } }),
       },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } as any;
+    };
+    return disabledClient as unknown as SupabaseServerClient;
   }
 
   return createServerClient(

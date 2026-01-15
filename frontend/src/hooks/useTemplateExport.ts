@@ -30,8 +30,7 @@ export function useTemplateExport() {
 
   const importCustomizations = useCallback(
     async (
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      exportData: any,
+      exportData: unknown,
       options: { overwriteExisting?: boolean; skipErrors?: boolean } = {}
     ) => {
       try {
@@ -57,7 +56,9 @@ export function useTemplateExport() {
         const blob =
           format === 'json'
             ? new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
-            : new Blob([data], { type: format === 'csv' ? 'text/csv' : 'text/yaml' });
+            : new Blob([typeof data === 'string' ? data : JSON.stringify(data)], {
+                type: format === 'csv' ? 'text/csv' : 'text/yaml',
+              });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;

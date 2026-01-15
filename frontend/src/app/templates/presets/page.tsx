@@ -8,6 +8,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { toast } from '@/components/Toast';
+import type { TemplateVariables } from '@/services/templateService';
 
 interface Preset {
   id: string;
@@ -15,8 +16,7 @@ interface Preset {
   description?: string;
   category: string;
   template_ids: string[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  custom_variables: Record<string, any>;
+  custom_variables: TemplateVariables;
   custom_instructions?: string;
   is_system_preset: boolean;
   usage_count: number;
