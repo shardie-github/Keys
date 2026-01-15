@@ -8,6 +8,8 @@ import { staggerContainerVariants, scaleVariants } from '@/systems/motion/varian
 import { getDemoKeys, DEMO_DISCOVERY_RECOMMENDATIONS } from '@/services/demoData';
 import { SituationKeyCard } from '@/components/Marketplace/SituationKeyCard';
 import { getKeySituation, groupKeysBySituation, situationGroupLabels } from '@/utils/keySituations';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 interface Key {
   id: string;
@@ -76,14 +78,12 @@ export default function MarketplacePage() {
         // Fall through to demo data
       }
 
-      // Fallback to demo data for non-authenticated users or API failures
       const demoKeys = getDemoKeys({
         key_type: keyTypeFilter || undefined,
         category: categoryFilter || undefined,
         search: searchQuery || undefined,
       });
       
-      // Convert demo keys to Key format
       const convertedKeys: Key[] = demoKeys.map(demoKey => ({
         ...demoKey,
         created_at: new Date().toISOString(),
@@ -93,7 +93,6 @@ export default function MarketplacePage() {
       setKeys(convertedKeys);
       setError(null);
     } catch {
-      // Even if demo data fails, show empty state gracefully
       setKeys([]);
       setError(null);
     } finally {
@@ -131,10 +130,8 @@ export default function MarketplacePage() {
         }
       }
 
-      // Always show demo recommendations for showcase (even if authenticated but no API)
       setRecommendations(DEMO_DISCOVERY_RECOMMENDATIONS);
     } catch {
-      // Fallback to demo recommendations on error
       setRecommendations(DEMO_DISCOVERY_RECOMMENDATIONS);
     }
   }, [isAuthenticated]);
@@ -173,7 +170,6 @@ export default function MarketplacePage() {
         }),
       });
     } catch (err) {
-      // Silently fail
       console.error('Failed to track discovery click:', err);
     }
   };
@@ -192,9 +188,9 @@ export default function MarketplacePage() {
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-            className="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full mb-4"
+            className="inline-block w-8 h-8 border-4 border-primary border-t-transparent rounded-full mb-4"
           />
-          <p className="text-gray-600 dark:text-gray-400">Loading marketplace...</p>
+          <p className="text-muted-foreground">Loading marketplace...</p>
         </motion.div>
       </div>
     );
@@ -209,10 +205,10 @@ export default function MarketplacePage() {
           className="text-center max-w-md mx-auto"
         >
           <div className="mb-4 text-6xl" aria-hidden="true">⚠️</div>
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+          <h2 className="text-xl font-semibold text-foreground mb-2">
             Unable to load marketplace
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">
+          <p className="text-muted-foreground mb-6">
             {error}
           </p>
           <motion.button
@@ -222,7 +218,7 @@ export default function MarketplacePage() {
               setError(null);
               fetchKeys();
             }}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
           >
             Try Again
           </motion.button>
@@ -232,18 +228,18 @@ export default function MarketplacePage() {
   }
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-blue-600 focus:text-white focus:rounded">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded">
         Skip to main content
       </a>
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="mb-6 sm:mb-8"
+        className="mb-12 sm:mb-16"
       >
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">KEYS Marketplace</h1>
-        <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 mb-4 sm:mb-6 max-w-3xl">
+        <h1 className="text-h1 font-bold mb-4">KEYS Marketplace</h1>
+        <p className="text-body text-muted-foreground mb-8 max-w-3xl">
           Discover and unlock practical capability in Cursor, Jupyter, Node.js, and more. 
           Each key unlocks a specific workflow, component, or runbook you can integrate into your projects.
         </p>
@@ -251,7 +247,7 @@ export default function MarketplacePage() {
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg"
+            className="mb-8 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg"
           >
             <p className="text-sm text-blue-800 dark:text-blue-200">
               <strong>Demo Mode:</strong> You&apos;re viewing sample Keys.{' '}
@@ -263,7 +259,6 @@ export default function MarketplacePage() {
           </motion.div>
         )}
 
-        {/* Discovery Recommendations */}
         <AnimatePresence>
           {recommendations.length > 0 && (
             <motion.div
@@ -271,9 +266,9 @@ export default function MarketplacePage() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
-              className="mb-8 p-4 sm:p-6 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg"
+              className="mb-12 p-6 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg"
             >
-              <h2 className="text-lg sm:text-xl font-semibold mb-4">Recommended for You</h2>
+              <h2 className="text-h3 font-bold mb-4">Recommended for You</h2>
               <motion.div
                 variants={staggerContainerVariants}
                 initial="hidden"
@@ -304,10 +299,10 @@ export default function MarketplacePage() {
                           {rec.confidence}
                         </motion.span>
                       </div>
-                      <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-2 line-clamp-2">
+                      <p className="text-xs sm:text-sm text-muted-foreground mb-2 line-clamp-2">
                         {rec.description || 'No description available'}
                       </p>
-                      <p className="text-xs text-blue-600 dark:text-blue-400 italic">{rec.reason}</p>
+                      <p className="text-xs text-primary italic">{rec.reason}</p>
                     </Link>
                   </motion.div>
                 ))}
@@ -316,36 +311,34 @@ export default function MarketplacePage() {
           )}
         </AnimatePresence>
 
-        {/* Filters */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 mb-6"
+          className="flex flex-col sm:flex-row flex-wrap gap-4 mb-8"
         >
           <label htmlFor="search-keys" className="sr-only">
             Search keys
           </label>
-          <motion.input
-            id="search-keys"
-            type="text"
-            placeholder="Search keys..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            aria-label="Search keys"
-            whileFocus={{ scale: 1.02 }}
-            className="px-4 py-2 border rounded-lg flex-1 min-w-full sm:min-w-[200px] dark:bg-slate-800 dark:border-slate-700 dark:text-white"
-          />
+          <motion.div className="flex-1 min-w-full sm:min-w-[200px]" whileFocus={{ scale: 1.02 }}>
+            <Input
+              id="search-keys"
+              type="text"
+              placeholder="Search keys..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              aria-label="Search keys"
+            />
+          </motion.div>
           <label htmlFor="key-type-filter" className="sr-only">
             Filter by key type
           </label>
-          <motion.select
+          <select
             id="key-type-filter"
             value={keyTypeFilter}
             onChange={(e) => setKeyTypeFilter(e.target.value)}
             aria-label="Filter by key type"
-            whileFocus={{ scale: 1.02 }}
-            className="px-4 py-2 border rounded-lg dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+            className="px-4 py-2 border rounded-lg bg-background text-foreground dark:bg-slate-800 dark:border-slate-700"
           >
             <option value="">All Types</option>
             {keyTypes.map((type) => (
@@ -353,19 +346,18 @@ export default function MarketplacePage() {
                 {type.charAt(0).toUpperCase() + type.slice(1)}
               </option>
             ))}
-          </motion.select>
+          </select>
           {categories.length > 0 && (
             <>
               <label htmlFor="category-filter" className="sr-only">
                 Filter by category
               </label>
-              <motion.select
+              <select
                 id="category-filter"
                 value={categoryFilter}
                 onChange={(e) => setCategoryFilter(e.target.value)}
                 aria-label="Filter by category"
-                whileFocus={{ scale: 1.02 }}
-                className="px-4 py-2 border rounded-lg dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                className="px-4 py-2 border rounded-lg bg-background text-foreground dark:bg-slate-800 dark:border-slate-700"
               >
                 <option value="">All Categories</option>
                 {categories.map((cat) => (
@@ -373,13 +365,12 @@ export default function MarketplacePage() {
                     {cat}
                   </option>
                 ))}
-              </motion.select>
+              </select>
             </>
           )}
         </motion.div>
       </motion.div>
 
-      {/* Keys Grid - Grouped by Situation */}
       <main id="main-content">
         <AnimatePresence mode="wait">
           {keys.length === 0 && !loading ? (
@@ -391,10 +382,10 @@ export default function MarketplacePage() {
               className="text-center py-12"
             >
               <div className="mb-4 text-6xl" aria-hidden="true">🔍</div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+              <h3 className="text-lg font-semibold text-foreground mb-2">
                 No keys found
               </h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-4">
+              <p className="text-muted-foreground mb-4">
                 Try adjusting your filters or{' '}
                 <button
                   onClick={() => {
@@ -402,18 +393,15 @@ export default function MarketplacePage() {
                     setCategoryFilter('');
                     setSearchQuery('');
                   }}
-                  className="text-blue-600 dark:text-blue-400 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
+                  className="text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-primary rounded"
                 >
                   clear all filters
                 </button>
               </p>
               {keys.some(k => k.isDemo) && (
-                <Link
-                  href="/signup"
-                  className="inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                >
-                  Sign up for full access
-                </Link>
+                <Button asChild>
+                  <Link href="/signup">Sign up for full access</Link>
+                </Button>
               )}
             </motion.div>
           ) : keys.length > 0 ? (
@@ -422,7 +410,7 @@ export default function MarketplacePage() {
               variants={staggerContainerVariants}
               initial="hidden"
               animate="visible"
-              className="space-y-8 sm:space-y-12"
+              className="space-y-12 sm:space-y-16"
             >
               {Object.entries(groupKeysBySituation(keys)).map(([group, groupKeys]) => {
                 if (groupKeys.length === 0) return null;
@@ -432,18 +420,18 @@ export default function MarketplacePage() {
                     key={group}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="space-y-4 sm:space-y-6"
+                    className="space-y-6"
                   >
-                    <div className="flex items-center gap-3 mb-4">
-                      <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-gray-100">
+                    <div className="flex items-center gap-4 mb-6">
+                      <h2 className="text-h2 font-bold text-foreground flex-shrink-0">
                         {situationGroupLabels[group] || situationGroupLabels['other']}
                       </h2>
-                      <div className="flex-1 h-px bg-gray-200 dark:bg-slate-700" />
-                      <span className="text-sm text-gray-500 dark:text-gray-400">
+                      <div className="flex-1 h-px bg-border" />
+                      <span className="text-sm text-muted-foreground flex-shrink-0">
                         {groupKeys.length} {groupKeys.length === 1 ? 'Key' : 'Keys'}
                       </span>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                       {groupKeys.map((key, index) => {
                         const situation = getKeySituation(key.slug);
                         return (
@@ -455,7 +443,7 @@ export default function MarketplacePage() {
                             description={key.description}
                             whenYouNeedThis={situation.whenYouNeedThis}
                             whatThisPrevents={situation.whatThisPrevents}
-                            hasAccess={false} // TODO: Get from API
+                            hasAccess={false}
                             keyType={key.key_type}
                             category={key.category}
                             index={index}
@@ -471,16 +459,15 @@ export default function MarketplacePage() {
         </AnimatePresence>
       </main>
 
-      {/* Bundles Section */}
       <motion.section
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ delay: 0.2 }}
-        className="mt-8 sm:mt-12"
+        className="mt-16 sm:mt-24"
       >
-        <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Bundles</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        <h2 className="text-h2 font-bold mb-8">Bundles</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {[
             { type: 'starter', title: 'Starter Bundle', desc: 'Essential keys for getting started', href: '/marketplace/bundles?type=starter' },
             { type: 'operator', title: 'Operator Bundle', desc: 'Runbooks and operational keys', href: '/marketplace/bundles?type=operator' },
@@ -496,17 +483,17 @@ export default function MarketplacePage() {
             >
               <Link
                 href={bundle.href}
-                className={`block border rounded-lg p-4 sm:p-6 hover:shadow-lg transition-all duration-200 ${
-                  bundle.featured ? 'bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20' : 'dark:bg-slate-800 dark:border-slate-700'
+                className={`block border rounded-lg p-6 hover:shadow-lg transition-all duration-200 ${
+                  bundle.featured ? 'bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border-primary/30' : 'bg-card border-border dark:bg-slate-800 dark:border-slate-700'
                 }`}
               >
-                <h3 className="text-lg sm:text-xl font-semibold mb-2">{bundle.title}</h3>
-                <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">
+                <h3 className="text-lg font-bold text-foreground mb-2">{bundle.title}</h3>
+                <p className="text-muted-foreground text-sm mb-4">
                   {bundle.desc}
                 </p>
                 <motion.div
                   whileHover={{ x: 4 }}
-                  className="text-base sm:text-lg font-bold text-blue-600 dark:text-blue-400"
+                  className="text-base font-bold text-primary"
                 >
                   View {bundle.type === 'pro' ? 'Tier' : 'Bundle'} →
                 </motion.div>
