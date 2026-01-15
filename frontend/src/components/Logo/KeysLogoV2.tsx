@@ -67,7 +67,15 @@ export function KeysLogoV2({
   className = '',
   variant = 'icon',
 }: KeysLogoV2Props) {
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
   const sizeValue = typeof size === 'number' ? size : sizeMap[size as LogoSize];
+  // Only show animations after hydration is complete to avoid hydration mismatches
+  const shouldAnimate = animated && isHydrated;
 
   // Animation variants for the "Key Unlock" pattern
   const containerVariants = {
