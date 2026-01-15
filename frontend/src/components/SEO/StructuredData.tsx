@@ -1,3 +1,5 @@
+import { resolveSiteUrl } from '@/utils/site-url';
+
 interface StructuredDataProps {
   type: 'Organization' | 'SoftwareApplication' | 'WebSite' | 'BreadcrumbList' | 'FAQPage';
   data: Record<string, unknown>;
@@ -21,12 +23,13 @@ export function StructuredData({ type, data }: StructuredDataProps) {
 }
 
 export function generateOrganizationSchema() {
+  const siteUrl = resolveSiteUrl();
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: 'Keys',
-    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://keys.dev',
-    logo: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://keys.dev'}/icon-512.png`,
+    url: siteUrl,
+    logo: `${siteUrl.replace(/\/$/, '')}/icon-512.png`,
     description: 'Your day-to-day AI co-founder that works alongside Cursor. Operational automation, business process intelligence, and institutional memory.',
     sameAs: [
       'https://twitter.com/cursorventure',
@@ -41,6 +44,7 @@ export function generateOrganizationSchema() {
 }
 
 export function generateSoftwareApplicationSchema() {
+  const siteUrl = resolveSiteUrl();
   return {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
@@ -61,7 +65,7 @@ export function generateSoftwareApplicationSchema() {
       worstRating: '1',
     },
     description: 'Your day-to-day AI co-founder that works alongside Cursor. Operational automation, business process intelligence, and institutional memory.',
-    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://keys.dev',
+    url: siteUrl,
   };
 }
 

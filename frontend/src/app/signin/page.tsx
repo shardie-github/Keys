@@ -9,8 +9,9 @@ import { LoadingSpinner } from '@/components/Loading';
 import { PageWrapper } from '@/components/PageWrapper';
 import { ErrorToast } from '@/components/Feedback';
 
-// Force dynamic rendering
-export const dynamic = 'force-dynamic';
+const isStaticExport = process.env.NEXT_OUTPUT === 'export';
+// Force dynamic rendering (unless exporting static assets)
+export const dynamic = isStaticExport ? 'force-static' : 'force-dynamic';
 
 function SignInContent() {
   const router = useRouter();
