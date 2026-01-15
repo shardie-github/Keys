@@ -65,12 +65,12 @@ export function HeroSection() {
       {/* Hero Image/Visual Section */}
       <div className="relative mb-8 sm:mb-12 rounded-2xl overflow-hidden">
         {/* Gradient Background with Animated Elements */}
-        <motion.div
-          className="relative bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 p-8 sm:p-12 lg:p-16 rounded-2xl shadow-2xl"
-          variants={gradientVariants}
-          initial="hidden"
-          animate="visible"
-        >
+      <motion.div
+        className="relative bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 p-8 sm:p-12 lg:p-16 rounded-2xl shadow-2xl"
+        variants={gradientVariants}
+        initial={isHydrated ? 'hidden' : 'visible'}
+        animate="visible"
+      >
           {/* Animated Background Pattern */}
           <div className="absolute inset-0 opacity-10">
             <motion.div
