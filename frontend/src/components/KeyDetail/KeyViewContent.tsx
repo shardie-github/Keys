@@ -18,6 +18,12 @@ interface KeyViewContentProps {
 }
 
 export function KeyViewContent({ view, keyData }: KeyViewContentProps) {
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
   const SkimView = () => (
     <div className="space-y-6">
       <div className="p-6 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
