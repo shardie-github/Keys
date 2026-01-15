@@ -192,19 +192,25 @@ export function HeroSection() {
               className="text-xl sm:text-2xl md:text-3xl text-white/95 max-w-3xl mx-auto leading-relaxed font-semibold drop-shadow-md"
             >
               Here are{' '}
-              <motion.span
-                className="text-yellow-200 font-bold inline-block"
-                animate={{
-                  scale: [1, 1.05, 1],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                }}
-              >
-                the keys to unlock them
-              </motion.span>
+              {isHydrated ? (
+                <motion.span
+                  className="text-yellow-200 font-bold inline-block"
+                  animate={{
+                    scale: [1, 1.05, 1],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                  }}
+                >
+                  the keys to unlock them
+                </motion.span>
+              ) : (
+                <span className="text-yellow-200 font-bold inline-block">
+                  the keys to unlock them
+                </span>
+              )}
             </motion.p>
 
             {/* Value Proposition */}
