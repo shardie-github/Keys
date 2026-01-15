@@ -8,11 +8,11 @@
 'use client';
 
 import { motion, HTMLMotionProps } from 'framer-motion';
-import { forwardRef } from 'react';
+import { forwardRef, type ReactNode } from 'react';
 import { fadeVariants, slideVariants } from '../variants';
 
 export interface RevealProps extends Omit<HTMLMotionProps<'div'>, 'children'> {
-  children: React.ReactNode;
+  children: ReactNode;
   direction?: 'up' | 'down' | 'left' | 'right' | 'fade';
   delay?: number;
   duration?: number;

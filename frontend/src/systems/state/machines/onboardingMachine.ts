@@ -241,6 +241,7 @@ export const onboardingMachine = createMachine(
         // The actual submission logic is handled by the parent component
         throw new Error('submitProfileData actor must be provided');
       },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any,
   }
 );

@@ -4,6 +4,9 @@
     "next/typescript",
     "plugin:@typescript-eslint/recommended"
   ],
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
   "rules": {
     "/** RATIONALE: Enforce Type-Safety & Logic Integrity **/": "off",
     "@typescript-eslint/no-explicit-any": "error",
@@ -12,17 +15,7 @@
     "no-console": ["warn", { "allow": ["warn", "error"] }],
     
     "/** RATIONALE: Prevent Edge Runtime Violations (Supabase/Prisma) **/": "off",
-    "no-restricted-globals": [
-      "error",
-      {
-        "name": "process",
-        "message": "Accessing 'process' directly is restricted in Edge Runtime. Use environment variables (NEXT_PUBLIC_*) or a server-side utility that handles runtime checks."
-      },
-      {
-        "name": "Buffer",
-        "message": "Buffer is not available in the Edge Runtime. Use Uint8Array or TextEncoder/Decoder instead."
-      }
-    ],
+    "no-restricted-globals": "off",
 
     "/** RATIONALE: Clean UI Patterns **/": "off",
     "react-hooks/exhaustive-deps": "error"

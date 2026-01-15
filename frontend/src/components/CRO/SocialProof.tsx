@@ -1,5 +1,7 @@
 'use client';
 
+import type { ReactNode } from 'react';
+
 interface Testimonial {
   name: string;
   role: string;
@@ -11,7 +13,7 @@ interface Testimonial {
 
 interface SocialProofProps {
   testimonials?: Testimonial[];
-  stats?: Array<{ label: string; value: string; icon?: React.ReactNode }>;
+  stats?: Array<{ label: string; value: string; icon?: ReactNode }>;
   showLiveActivity?: boolean;
 }
 

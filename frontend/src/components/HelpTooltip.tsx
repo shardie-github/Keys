@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, type ReactNode } from 'react';
 
 interface HelpTooltipProps {
-  content: string | React.ReactNode;
+  content: string | ReactNode;
   title?: string;
   position?: 'top' | 'bottom' | 'left' | 'right';
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
 }
 

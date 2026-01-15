@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import type { ReactNode } from 'react';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { RootProvider } from '@/components/providers/root-provider';
@@ -109,7 +110,7 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <html lang="en" className="scroll-smooth">

@@ -1,9 +1,11 @@
 'use client';
 
+import type { ReactNode } from 'react';
+
 interface EmptyStateProps {
   title: string;
   description: string;
-  icon?: React.ReactNode;
+  icon?: ReactNode;
   action?: {
     label: string;
     onClick: () => void;

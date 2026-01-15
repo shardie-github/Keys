@@ -6,7 +6,7 @@
 
 'use client';
 
-import React from 'react';
+import React, { type ReactNode } from 'react';
 import { AnimatedButton, AnimatedCard } from '@/systems/motion';
 import { Reveal } from '@/systems/motion';
 
@@ -16,7 +16,7 @@ interface ErrorBoundaryState {
 }
 
 interface ErrorBoundaryProps {
-  children: React.ReactNode;
+  children: ReactNode;
   fallback?: React.ComponentType<{ error: Error; resetError: () => void }>;
 }
 

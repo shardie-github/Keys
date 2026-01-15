@@ -10,7 +10,7 @@ export function createClient() {
     const disabledError = new Error('Supabase is not configured (missing NEXT_PUBLIC_SUPABASE_URL/NEXT_PUBLIC_SUPABASE_ANON_KEY)');
 
     const disabledQueryResult = Promise.resolve({ data: null, error: disabledError });
-    const disabledQuery: any = {
+    const disabledQuery: unknown = {
       select: () => disabledQuery,
       insert: () => disabledQuery,
       update: () => disabledQuery,
@@ -27,7 +27,7 @@ export function createClient() {
     };
 
     const noopSub = { unsubscribe: () => {} };
-    const disabledClient: any = {
+    const disabledClient = {
       auth: {
         getSession: async () => ({ data: { session: null }, error: disabledError }),
         getUser: async () => ({ data: { user: null }, error: disabledError }),
@@ -40,7 +40,7 @@ export function createClient() {
       from: () => disabledQuery,
       channel: () => ({ on: () => ({ subscribe: () => ({}) }), subscribe: () => ({}) }),
       removeChannel: () => {},
-    };
+    } as unknown as ReturnType<typeof createBrowserClient>;
 
     return disabledClient;
   }

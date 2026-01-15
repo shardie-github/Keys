@@ -8,11 +8,11 @@
 'use client';
 
 import { motion, HTMLMotionProps } from 'framer-motion';
-import { forwardRef } from 'react';
+import { forwardRef, type ReactNode } from 'react';
 import { motionTokens } from '../tokens';
 
 export interface AnimatedButtonProps extends Omit<HTMLMotionProps<'button'>, 'children'> {
-  children: React.ReactNode;
+  children: ReactNode;
   variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
   size?: 'sm' | 'md' | 'lg';
   isLoading?: boolean;

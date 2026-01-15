@@ -7,9 +7,10 @@
 'use client';
 
 import { PageTransition } from '@/systems/motion';
+import type { ReactNode } from 'react';
 
 export interface PageWrapperProps {
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
 }
 

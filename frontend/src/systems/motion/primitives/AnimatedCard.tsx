@@ -7,12 +7,12 @@
 'use client';
 
 import { motion, HTMLMotionProps } from 'framer-motion';
-import { forwardRef } from 'react';
+import { forwardRef, type ReactNode } from 'react';
 import { motionTokens } from '../tokens';
 import { scaleVariants } from '../variants';
 
 export interface AnimatedCardProps extends Omit<HTMLMotionProps<'div'>, 'children'> {
-  children: React.ReactNode;
+  children: ReactNode;
   variant?: 'default' | 'elevated' | 'outlined';
   hoverable?: boolean;
 }

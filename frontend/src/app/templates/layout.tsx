@@ -8,11 +8,12 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import type { ReactNode } from 'react';
 
 export default function TemplatesLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   const pathname = usePathname();
 

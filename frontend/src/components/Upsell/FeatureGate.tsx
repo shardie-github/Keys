@@ -1,11 +1,12 @@
 'use client';
 
 import Link from 'next/link';
+import type { ReactNode } from 'react';
 
 interface FeatureGateProps {
   featureName: string;
   isPremium?: boolean;
-  children: React.ReactNode;
+  children: ReactNode;
   upgradeMessage?: string;
   showUpgradeButton?: boolean;
 }

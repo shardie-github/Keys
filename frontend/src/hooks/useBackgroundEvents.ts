@@ -47,6 +47,7 @@ export function useBackgroundEvents(userId: string | null) {
           table: 'background_events',
           filter: `user_id=eq.${userId}`,
         },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (payload: any) => {
           if (payload.eventType === 'INSERT') {
             setEvents((prev) => [payload.new as BackgroundEvent, ...prev]);

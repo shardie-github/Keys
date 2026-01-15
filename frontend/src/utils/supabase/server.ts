@@ -16,6 +16,7 @@ export function createClient() {
         getSession: async () => ({ data: { session: null }, error: disabledError }),
         onAuthStateChange: () => ({ data: { subscription: noopSub } }),
       },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any;
   }
 

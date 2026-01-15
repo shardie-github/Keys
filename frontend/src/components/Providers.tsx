@@ -6,7 +6,7 @@
 
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, type ReactNode } from 'react';
 import ErrorBoundary from './ErrorBoundary';
 import { ToastContainer } from './Toast';
 import { AuthProvider } from '@/contexts/AuthContext';
@@ -16,7 +16,7 @@ import { useAnalytics } from '@/hooks/useAnalytics';
 import { KeyboardShortcutsHelp } from './KeyboardShortcuts';
 import { useKeyboardShortcuts, defaultShortcuts } from '@/hooks/useKeyboardShortcuts';
 
-function AnalyticsProvider({ children }: { children: React.ReactNode }) {
+function AnalyticsProvider({ children }: { children: ReactNode }) {
   const { trackPageView } = useAnalytics();
 
   useEffect(() => {
@@ -35,12 +35,12 @@ function AnalyticsProvider({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
-function KeyboardShortcutsProvider({ children }: { children: React.ReactNode }) {
+function KeyboardShortcutsProvider({ children }: { children: ReactNode }) {
   useKeyboardShortcuts(defaultShortcuts, true);
   return <>{children}</>;
 }
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export function Providers({ children }: { children: ReactNode }) {
   return (
     <ErrorBoundary>
       <AuthProvider>

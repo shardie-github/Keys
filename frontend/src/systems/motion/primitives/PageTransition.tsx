@@ -8,11 +8,11 @@
 'use client';
 
 import { motion, HTMLMotionProps } from 'framer-motion';
-import { forwardRef } from 'react';
+import { forwardRef, type ReactNode } from 'react';
 import { pageTransitionVariants } from '../variants';
 
 export interface PageTransitionProps extends Omit<HTMLMotionProps<'div'>, 'children'> {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export const PageTransition = forwardRef<HTMLDivElement, PageTransitionProps>(
