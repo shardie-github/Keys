@@ -1,11 +1,12 @@
 /**
  * LoadingSpinner
- * 
+ *
  * Accessible loading spinner with motion.
  */
 
 'use client';
 
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 
 export interface LoadingSpinnerProps {
