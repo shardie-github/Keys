@@ -280,9 +280,9 @@ export function KeysLogoV2({
       {/* KEY 2 - JUPYTER (RIGHT) - Purple, Graph Symbol */}
       <motion.g
         custom={1}
-        variants={shouldAnimate ? keyVariants : undefined}
-        initial={shouldAnimate ? 'hidden' : undefined}
-        animate={shouldAnimate ? 'visible' : undefined}
+        variants={keyVariants}
+        initial={isHydrated ? 'hidden' : 'visible'}
+        animate="visible"
       >
         {/* Key shaft */}
         <rect
