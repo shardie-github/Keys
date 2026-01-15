@@ -536,12 +536,163 @@ All pages must be tested in both light and dark modes:
 
 ---
 
+## 13. Logo & Branding
+
+### KeysLogoV2 Component
+
+The new KEYS logo features a **technical key-ring aesthetic** with integrated tool symbols representing the core integrations (Cursor, Jupyter, GitHub, Stripe). The design emphasizes precision and engineering with a central mechanical ring and four cardinal-positioned keys.
+
+#### Design Concept
+
+- **Central Element**: Mechanical key-ring with crosshatch pattern and engineering notches
+- **Four Tool Keys**: Positioned at 12, 3, 6, 9 o'clock with integrated symbols
+  - **Cursor Key** (Top): Blue, code brackets `< >` symbol
+  - **Jupyter Key** (Right): Purple, ascending bar graph symbol
+  - **GitHub Key** (Bottom): Gray/Orange, fork/branch symbol
+  - **Stripe Key** (Left): Indigo, dollar sign payment symbol
+
+#### Component Usage
+
+```tsx
+import { KeysLogoV2 } from '@/components/Logo';
+
+// Icon variant (compact, recommended for headers/footers)
+<KeysLogoV2 size="lg" variant="icon" animated />
+
+// Full variant (stacked logo + "KEYS" text)
+<KeysLogoV2 size="xl" variant="full" />
+
+// Text lockup (horizontal, for marketing)
+<KeysLogoV2 variant="text-lockup" size="md" />
+
+// Monochrome (for grayscale contexts)
+<KeysLogoV2 variant="monochrome" />
+
+// Static (non-animated, for icons/favicons)
+<KeysLogoV2 size="lg" animated={false} />
+```
+
+#### Props
+
+- **`size`** (`'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | number`): Logo size
+  - `'xs'`: 32px (icons, small headers)
+  - `'sm'`: 48px (small components)
+  - `'md'`: 64px (default, standard usage)
+  - `'lg'`: 80px (hero sections, featured)
+  - `'xl'`: 120px (large hero, full logos)
+  - `'2xl'`: 160px (hero backgrounds, large displays)
+  - `number`: Custom pixel size (e.g., `size={100}`)
+
+- **`variant`** (`'icon' | 'full' | 'text-lockup' | 'monochrome'`): Logo style
+  - `'icon'`: Key-ring + 4 keys only (recommended default)
+  - `'full'`: Icon + "KEYS" text stacked vertically
+  - `'text-lockup'`: Icon + "KEYS" text side-by-side (horizontal)
+  - `'monochrome'`: Grayscale version for accessibility contexts
+
+- **`animated`** (`boolean`, default: `true`): Enable "Key Unlock" animation
+  - Ring appears first (0ms)
+  - Keys swing in from cardinal directions (100-400ms, staggered)
+  - Tool icons fade in (700ms)
+  - Total duration: ~0.8s
+
+- **`className`** (`string`): Tailwind classes to add (text colors override via `currentColor`)
+
+#### Animation Pattern
+
+The logo uses the **"Key Unlock"** animation:
+
+```tsx
+// Ring appears
+// ↓ Keys swing in (staggered: 0.1s, 0.2s, 0.3s, 0.4s)
+// ↓ Tool icons fade in (700ms)
+// Total: ~0.8 seconds
+```
+
+This creates a cinematic "unlocking" effect that reinforces the core metaphor.
+
+#### Color Behavior
+
+The component supports theme-aware colors:
+
+- **Light Mode**: High-contrast slate-900 ring, tool colors at full saturation
+- **Dark Mode**: Light slate-100 ring, tool colors adjusted for visibility
+- Uses `currentColor` for ring and `currentColor` + inline styles for tools
+
+All colors maintain WCAG AA contrast compliance in both modes.
+
+#### Size Guidelines
+
+| Context | Recommended Size | Variant |
+|---------|------------------|---------|
+| Page Icon/Favicon | `'xs'` (32px) | `'icon'`, `animated={false}` |
+| Navigation Bar | `'sm'` (48px) | `'icon'`, `animated={false}` |
+| Header/Section | `'lg'` (80px) | `'icon'`, `animated={true}` |
+| Hero Section | `'xl'` (120px) | `'icon'`, `animated={true}` |
+| Full Logo Display | `'xl'` - `'2xl'` (120-160px) | `'full'`, `animated={true}` |
+| Marketing (horizontal) | `'md'` - `'lg'` (64-80px) | `'text-lockup'` |
+| Grayscale Contexts | Any | `'monochrome'` |
+
+#### Examples
+
+**Hero Section (with animation):**
+```tsx
+import { KeysLogoV2 } from '@/components/Logo';
+
+export function Hero() {
+  return (
+    <section className="text-center py-12 sm:py-16">
+      <KeysLogoV2 size="xl" variant="icon" animated className="mb-8" />
+      <h1 className="text-h1">You Already Have The Tools</h1>
+      <p className="text-body text-muted-foreground">Here are the keys to unlock them</p>
+    </section>
+  );
+}
+```
+
+**Navigation Header (static):**
+```tsx
+<header className="flex items-center justify-between py-4">
+  <KeysLogoV2 size="sm" variant="icon" animated={false} />
+  <nav>Navigation</nav>
+</header>
+```
+
+**Footer with Text Lockup:**
+```tsx
+<footer className="bg-slate-900 text-white py-8">
+  <div className="flex items-center gap-4">
+    <KeysLogoV2 variant="text-lockup" size="sm" animated={false} />
+  </div>
+  <p className="text-muted-foreground">© 2025 KEYS. All rights reserved.</p>
+</footer>
+```
+
+#### Implementation Notes
+
+- The logo is fully responsive and scales smoothly across all device sizes
+- Animations respect `prefers-reduced-motion` for accessibility
+- SVG is optimized for performance with efficient path syntax
+- Component uses CVA (Class Variance Authority) for variant management
+- All tool colors are accessible and WCAG AA compliant
+- Dark mode support via Tailwind's `.dark` class
+
+#### Integration Points
+
+- **Hero Sections**: Use animated `'icon'` variant for visual impact
+- **Navigation**: Use static `'sm'` variant to avoid motion distraction
+- **Footer**: Use `'text-lockup'` or `'full'` variant for brand reinforcement
+- **Meta Tags**: Use `'/icon-512.png'` static asset (auto-generated from component)
+- **Favicons**: Generated from `'xs'` size variant with `animated={false}`
+
+---
+
 ## Support & Updates
 
 For questions or design system improvements:
 1. Check existing components in `frontend/src/components/ui/`
 2. Review `frontend/src/app/globals.css` for tokens
 3. Consult `tailwind.config.js` for Tailwind extensions
-4. Open an issue for new feature requests
+4. See `frontend/src/components/Logo/KeysLogoV2.tsx` for logo implementation details
+5. Open an issue for new feature requests
 
 Last Updated: 2025-01-15
