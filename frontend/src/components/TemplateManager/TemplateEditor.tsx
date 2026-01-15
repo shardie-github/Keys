@@ -15,6 +15,7 @@ import {
 } from '@/hooks/useTemplates';
 import { toast } from '@/components/Toast';
 import { useRouter } from 'next/navigation';
+import type { TemplateVariables } from '@/services/templateService';
 
 export function TemplateEditor({ templateId }: { templateId: string }) {
   const router = useRouter();
@@ -25,8 +26,7 @@ export function TemplateEditor({ templateId }: { templateId: string }) {
   const { saveCustomization, updateCustomization, deleteCustomization } =
     useTemplateCustomization(templateId);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [customVariables, setCustomVariables] = useState<Record<string, any>>({});
+  const [customVariables, setCustomVariables] = useState<TemplateVariables>({});
   const [customInstructions, setCustomInstructions] = useState('');
   const [saving, setSaving] = useState(false);
   const [testing, setTesting] = useState(false);
@@ -101,30 +101,28 @@ export function TemplateEditor({ templateId }: { templateId: string }) {
       <div className="variables-section">
         <h3>Custom Variables</h3>
         {availableVariables.map((variable) => {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const v = variable as any;
           return (
-            <div key={v.name} className="variable-input">
+            <div key={variable.name} className="variable-input">
               <label>
-                {v.name}
-                {v.required && <span className="required">*</span>}
+                {variable.name}
+                {variable.required && <span className="required">*</span>}
               </label>
               <input
                 type="text"
-                value={customVariables[v.name] || v.default || ''}
+                value={String(customVariables[variable.name] ?? variable.default ?? '')}
                 onChange={(e) =>
                   setCustomVariables({
                     ...customVariables,
-                    [v.name]: e.target.value,
+                    [variable.name]: e.target.value,
                   })
                 }
               />
-              {v.description && (
-                <p className="variable-description">{v.description}</p>
+              {variable.description && (
+                <p className="variable-description">{variable.description}</p>
               )}
-              {v.examples && (
+              {variable.examples && (
                 <p className="variable-examples">
-                  Examples: {v.examples.join(', ')}
+                  Examples: {variable.examples.join(', ')}
                 </p>
               )}
             </div>

@@ -30,8 +30,7 @@ export function useTemplateExport() {
 
   const importCustomizations = useCallback(
     async (
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      exportData: any,
+      exportData: unknown,
       options: { overwriteExisting?: boolean; skipErrors?: boolean } = {}
     ) => {
       try {

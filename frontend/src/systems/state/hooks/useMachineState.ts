@@ -58,10 +58,9 @@ export function useMachineState<TMachine extends AnyStateMachine>(
  * @returns Actor state, send function, and service
  */
 export function useActorState<TEvent extends EventObject = EventObject>(
-  actorRef: ActorRefFrom<AnyStateMachine> | { send: (event: TEvent) => void; getSnapshot: () => MachineState }
+  actorRef: ActorRefFrom<AnyStateMachine>
 ) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [state, send] = useActor(actorRef as any);
+  const [state, send] = useActor(actorRef);
 
   const value = useMemo(() => {
     const machineState = state as unknown as MachineState;

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/services/supabaseClient';
 import type { BackgroundEvent } from '@/types';
+import type { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 
 export function useBackgroundEvents(userId: string | null) {
   const [events, setEvents] = useState<BackgroundEvent[]>([]);
@@ -47,14 +48,11 @@ export function useBackgroundEvents(userId: string | null) {
           table: 'background_events',
           filter: `user_id=eq.${userId}`,
         },
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (payload: any) => {
-          if (payload.eventType === 'INSERT') {
-            setEvents((prev) => [payload.new as BackgroundEvent, ...prev]);
-          } else if (payload.eventType === 'UPDATE') {
-            setEvents((prev) =>
-              prev.map((e) => (e.id === payload.new.id ? (payload.new as BackgroundEvent) : e))
-            );
+        (payload: RealtimePostgresChangesPayload<BackgroundEvent>) => {
+          if (payload.eventType === 'INSERT' && payload.new) {
+            setEvents((prev) => [payload.new, ...prev]);
+          } else if (payload.eventType === 'UPDATE' && payload.new) {
+            setEvents((prev) => prev.map((e) => (e.id === payload.new.id ? payload.new : e)));
           }
         }
       )

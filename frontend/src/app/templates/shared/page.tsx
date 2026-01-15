@@ -9,6 +9,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { toast } from '@/components/Toast';
 import Link from 'next/link';
+import type { TemplateVariables } from '@/services/templateService';
 
 interface SharedTemplate {
   id: string;
@@ -19,8 +20,7 @@ interface SharedTemplate {
   is_public: boolean;
   usage_count: number;
   rating_average?: number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  custom_variables: Record<string, any>;
+  custom_variables: TemplateVariables;
   custom_instructions?: string;
   created_at: string;
 }
