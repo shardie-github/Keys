@@ -181,7 +181,7 @@ export function DiscoveryFlow({ onComplete, initialRecommendations = [] }: Disco
         <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
           <motion.div
             className="h-full bg-blue-600 dark:bg-blue-500"
-            initial={{ width: 0 }}
+            initial={isHydrated ? { width: 0 } : { width: `${((currentStep + 1) / steps.length) * 100}%` }}
             animate={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
             transition={{ duration: 0.3 }}
           />
