@@ -57,12 +57,17 @@ const RISK_TOLERANCE_OPTIONS = [
 ];
 
 export function DiscoveryFlow({ onComplete, initialRecommendations = [] }: DiscoveryFlowProps) {
+  const [isHydrated, setIsHydrated] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [situation, setSituation] = useState<string>('');
   const [role, setRole] = useState<string>('');
   const [selectedTools, setSelectedTools] = useState<string[]>([]);
   const [riskTolerance, setRiskTolerance] = useState<string>('');
   const [recommendations, setRecommendations] = useState<DiscoveryRecommendation[]>(initialRecommendations);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   const steps: DiscoveryStep[] = [
     {
