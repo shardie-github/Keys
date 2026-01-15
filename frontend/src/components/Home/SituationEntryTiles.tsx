@@ -57,8 +57,13 @@ const situations: SituationTile[] = [
 ];
 
 export function SituationEntryTiles() {
+  const [isHydrated, setIsHydrated] = useState(false);
   const shouldReduceMotion = useReducedMotion();
-  
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
   return (
     <section className="max-w-5xl mx-auto mb-16 sm:mb-24" aria-labelledby="situation-heading">
       <h2 id="situation-heading" className="sr-only">
