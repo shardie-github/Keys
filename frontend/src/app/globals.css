@@ -203,6 +203,45 @@
   .text-emphasis {
     @apply font-semibold text-gray-900 dark:text-gray-100;
   }
+
+  /* Container utilities - standard page layouts */
+  .container-wide {
+    @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .container-form {
+    @apply max-w-2xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .container-narrow {
+    @apply max-w-3xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Page padding standards */
+  .page-padding {
+    @apply py-12 sm:py-16 lg:py-20;
+  }
+
+  .page-padding-sm {
+    @apply py-8 sm:py-12;
+  }
+
+  .section-spacing {
+    @apply mb-8 sm:mb-12 lg:mb-16;
+  }
+
+  /* Spacing scale helpers */
+  .gap-standard {
+    @apply gap-6 sm:gap-8;
+  }
+
+  .gap-compact {
+    @apply gap-4 sm:gap-6;
+  }
+
+  .gap-loose {
+    @apply gap-8 sm:gap-10;
+  }
 }
 
 /* Custom scrollbar for better UX */
