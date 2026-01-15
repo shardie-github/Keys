@@ -60,7 +60,7 @@ export function SituationKeyCard({
           <div className="ml-4 flex-shrink-0" aria-label={hasAccess ? 'Key unlocked' : 'Key locked'}>
             {hasAccess ? (
               <motion.div
-                initial={{ scale: 0 }}
+                initial={isHydrated ? { scale: 0 } : { scale: 1 }}
                 animate={{ scale: 1 }}
                 className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center"
               >
@@ -68,7 +68,7 @@ export function SituationKeyCard({
               </motion.div>
             ) : (
               <motion.div
-                initial={{ scale: 0 }}
+                initial={isHydrated ? { scale: 0 } : { scale: 1 }}
                 animate={{ scale: 1 }}
                 className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center"
               >
