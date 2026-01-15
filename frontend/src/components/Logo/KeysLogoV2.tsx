@@ -254,9 +254,9 @@ export function KeysLogoV2({
         />
         {/* Code symbol: < > inside */}
         <motion.g
-          variants={shouldAnimate ? iconVariants : undefined}
-          initial={shouldAnimate ? 'hidden' : undefined}
-          animate={shouldAnimate ? 'visible' : undefined}
+          variants={iconVariants}
+          initial={isHydrated ? 'hidden' : 'visible'}
+          animate="visible"
         >
           <path
             d="M 64 15 L 68 19 L 64 23"
