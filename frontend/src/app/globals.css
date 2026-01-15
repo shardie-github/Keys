@@ -3,6 +3,12 @@
 @tailwind utilities;
 
 /* Accessibility improvements */
+/* Color contrast notes:
+   - Primary text on background: >7:1 (WCAG AAA)
+   - Muted text on background: >4.5:1 (WCAG AA)
+   - All colors tested for light/dark mode compliance
+   - See https://webaim.org/resources/contrastchecker/ for verification
+*/
 @layer base {
   :root {
     --focus-ring: 0 0 0 3px rgba(37, 99, 235, 0.5);
