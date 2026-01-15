@@ -81,7 +81,7 @@ const nextConfig = {
   // Experimental features for performance
   experimental: {
     optimizeCss: false, // Disabled due to potential build issues
-    optimizePackageImports: ['framer-motion', '@supabase/supabase-js'],
+    // optimizePackageImports: ['framer-motion', '@supabase/supabase-js'],
   },
 }
 
