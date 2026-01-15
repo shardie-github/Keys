@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { KeysLogo } from '@/components/Logo';
+import { KeysLogoV2 } from '@/components/Logo';
 import { FeatureAvailabilityBadge } from '@/components/Features/FeatureAvailabilityBadge';
 
 export function HeroSection() {
