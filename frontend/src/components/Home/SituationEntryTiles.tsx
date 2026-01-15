@@ -76,7 +76,7 @@ export function SituationEntryTiles() {
           return (
             <motion.div
               key={situation.id}
-              initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 20 }}
+              initial={shouldReduceMotion ? { opacity: 1 } : isHydrated ? { opacity: 0, y: 20 } : { opacity: 1, y: 0 }}
               animate={{ opacity: 1, y: 0 }}
               transition={shouldReduceMotion ? { duration: 0 } : { delay: index * 0.1, duration: 0.5 }}
             >
