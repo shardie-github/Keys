@@ -8,6 +8,9 @@ import { AnimatedButton } from '@/systems/motion';
 import { LoadingSpinner } from '@/components/Loading';
 import { PageWrapper } from '@/components/PageWrapper';
 import { ErrorToast, SuccessToast } from '@/components/Feedback';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Alert } from '@/components/ui/alert';
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -21,7 +24,6 @@ export default function SignUpPage() {
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    // If already authenticated, redirect
     if (user && !authLoading) {
       router.push('/dashboard');
     }
@@ -32,14 +34,12 @@ export default function SignUpPage() {
     setLoading(true);
     setError(null);
 
-    // Validate passwords match
     if (password !== confirmPassword) {
       setError('Passwords do not match');
       setLoading(false);
       return;
     }
 
-    // Validate password strength
     if (password.length < 8) {
       setError('Password must be at least 8 characters long');
       setLoading(false);
@@ -54,7 +54,6 @@ export default function SignUpPage() {
     } else {
       setSuccess(true);
       setLoading(false);
-      // Redirect to onboarding after a moment
       setTimeout(() => {
         router.push('/onboarding');
       }, 2000);
@@ -71,96 +70,98 @@ export default function SignUpPage() {
 
   return (
     <PageWrapper className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/30 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
-            Create your account
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
+      <div className="max-w-md w-full">
+        <div className="mb-8 sm:mb-12">
+          <h1 className="text-h2 font-bold text-center mb-2">Create your account</h1>
+          <p className="text-center text-body text-muted-foreground">
             Or{' '}
             <Link
               href="/signin"
-              className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300"
+              className="font-semibold text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-slate-900 rounded px-1"
             >
               sign in to your existing account
             </Link>
           </p>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <ErrorToast
-            message={error || ''}
-            isVisible={!!error}
-            onDismiss={() => setError(null)}
-          />
-          <div className="rounded-md shadow-sm space-y-4">
-            <div>
-              <label htmlFor="email-address" className="sr-only">
-                Email address
-              </label>
-              <input
-                id="email-address"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white dark:bg-slate-800"
-                placeholder="Email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="sr-only">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="new-password"
-                required
-                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white dark:bg-slate-800"
-                placeholder="Password (min. 8 characters)"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-            <div>
-              <label htmlFor="confirm-password" className="sr-only">
-                Confirm Password
-              </label>
-              <input
-                id="confirm-password"
-                name="confirm-password"
-                type="password"
-                autoComplete="new-password"
-                required
-                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white dark:bg-slate-800"
-                placeholder="Confirm password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              />
-            </div>
+
+        <form className="space-y-6" onSubmit={handleSubmit}>
+          {error && (
+            <Alert variant="destructive">
+              <p className="text-sm">{error}</p>
+            </Alert>
+          )}
+
+          <div className="space-y-2">
+            <Label htmlFor="email">Email Address</Label>
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              autoComplete="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
           </div>
 
-          <div>
-            <AnimatedButton
-              type="submit"
-              variant="primary"
-              fullWidth
-              isLoading={loading}
-              isDisabled={loading}
-            >
-              {loading ? 'Creating account...' : 'Create account'}
-            </AnimatedButton>
+          <div className="space-y-2">
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              name="password"
+              type="password"
+              autoComplete="new-password"
+              placeholder="At least 8 characters"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <p className="text-xs text-muted-foreground">Must be at least 8 characters</p>
           </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="confirm-password">Confirm Password</Label>
+            <Input
+              id="confirm-password"
+              name="confirm-password"
+              type="password"
+              autoComplete="new-password"
+              placeholder="Confirm your password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          <AnimatedButton
+            type="submit"
+            variant="primary"
+            className="w-full h-12"
+            isLoading={loading}
+            isDisabled={loading}
+          >
+            {loading ? 'Creating account...' : 'Create account'}
+          </AnimatedButton>
+
+          <p className="text-center text-xs text-muted-foreground">
+            By creating an account, you agree to our{' '}
+            <Link href="#" className="hover:text-foreground hover:underline">
+              Terms of Service
+            </Link>
+            {' '}and{' '}
+            <Link href="#" className="hover:text-foreground hover:underline">
+              Privacy Policy
+            </Link>
+          </p>
         </form>
+
+        <SuccessToast
+          message="Account created successfully! Redirecting..."
+          isVisible={success}
+          onDismiss={() => setSuccess(false)}
+        />
       </div>
-      <SuccessToast
-        message="Account created successfully! Redirecting..."
-        isVisible={success}
-        onDismiss={() => setSuccess(false)}
-      />
     </PageWrapper>
   );
 }
