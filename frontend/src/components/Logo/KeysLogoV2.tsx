@@ -307,9 +307,9 @@ export function KeysLogoV2({
         />
         {/* Graph/analytics symbol: ascending bars */}
         <motion.g
-          variants={animated ? iconVariants : undefined}
-          initial={animated ? 'hidden' : undefined}
-          animate={animated ? 'visible' : undefined}
+          variants={shouldAnimate ? iconVariants : undefined}
+          initial={shouldAnimate ? 'hidden' : undefined}
+          animate={shouldAnimate ? 'visible' : undefined}
         >
           <rect x="114" y="72" width="2.5" height="4" fill="white" />
           <rect x="119" y="70" width="2.5" height="6" fill="white" />
