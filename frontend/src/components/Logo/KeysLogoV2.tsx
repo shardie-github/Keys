@@ -386,9 +386,9 @@ export function KeysLogoV2({
         />
         {/* Payment symbol: dollar sign */}
         <motion.g
-          variants={shouldAnimate ? iconVariants : undefined}
-          initial={shouldAnimate ? 'hidden' : undefined}
-          animate={shouldAnimate ? 'visible' : undefined}
+          variants={iconVariants}
+          initial={isHydrated ? 'hidden' : 'visible'}
+          animate="visible"
         >
           <line x1="20" y1="65" x2="20" y2="75" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
           <path
