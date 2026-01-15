@@ -360,9 +360,9 @@ export function KeysLogoV2({
       {/* KEY 4 - STRIPE (LEFT) - Indigo, Payment Symbol */}
       <motion.g
         custom={3}
-        variants={shouldAnimate ? keyVariants : undefined}
-        initial={shouldAnimate ? 'hidden' : undefined}
-        animate={shouldAnimate ? 'visible' : undefined}
+        variants={keyVariants}
+        initial={isHydrated ? 'hidden' : 'visible'}
+        animate="visible"
       >
         {/* Key shaft */}
         <rect
