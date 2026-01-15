@@ -10,7 +10,6 @@ import { PageWrapper } from '@/components/PageWrapper';
 import { ErrorToast, SuccessToast } from '@/components/Feedback';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Alert } from '@/components/ui/alert';
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -86,9 +85,9 @@ export default function SignUpPage() {
 
         <form className="space-y-6" onSubmit={handleSubmit}>
           {error && (
-            <Alert variant="destructive">
-              <p className="text-sm">{error}</p>
-            </Alert>
+            <div className="rounded-md bg-destructive/10 p-3 border border-destructive/30">
+              <p className="text-sm text-destructive">{error}</p>
+            </div>
           )}
 
           <div className="space-y-2">
