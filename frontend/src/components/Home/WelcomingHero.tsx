@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { KeysLogo } from '@/components/Logo';
+import { KeysLogoV2 } from '@/components/Logo';
 
 export function WelcomingHero() {
   return (
@@ -12,7 +12,7 @@ export function WelcomingHero() {
         transition={{ duration: 0.6 }}
         className="mb-8 sm:mb-12"
       >
-        <KeysLogo size={80} animated={false} />
+        <KeysLogoV2 size="lg" variant="icon" animated />
       </motion.div>
 
       <motion.h1
