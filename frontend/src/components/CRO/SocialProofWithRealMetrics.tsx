@@ -11,13 +11,22 @@ interface SystemMetrics {
 
 export function SocialProofWithRealMetrics() {
   const [metrics, setMetrics] = useState<SystemMetrics | null>(null);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // Mark as mounted on client to prevent hydration mismatch
+    setMounted(true);
+
     // Fetch system metrics through frontend API proxy
     const fetchMetrics = async () => {
       try {
         // Use frontend API proxy instead of calling backend directly
-        const response = await fetch('/api/metrics');
+        const response = await fetch('/api/metrics', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
 
         if (response.ok) {
           const data = await response.json();
@@ -26,14 +35,10 @@ export function SocialProofWithRealMetrics() {
             totalPrompts: data.usage?.totalPrompts || 0,
             totalTemplates: data.usage?.totalTemplates || 0,
           });
-        } else {
-          // If API fails, use defaults (metrics will show "—")
-          setMetrics(null);
         }
       } catch (error) {
         console.error('Failed to fetch metrics:', error);
-        // Fallback to showing nothing or cached values
-        setMetrics(null);
+        // Keep metrics as null, component will show "—"
       }
     };
 
@@ -47,7 +52,8 @@ export function SocialProofWithRealMetrics() {
     return num.toString();
   };
 
-  const stats = metrics
+  // Always show placeholder values until mounted to match server rendering
+  const stats = mounted && metrics
     ? [
         {
           label: 'Active Users',
@@ -63,7 +69,7 @@ export function SocialProofWithRealMetrics() {
         },
         {
           label: 'Avg. Time Saved',
-          value: '15hrs/week', // This would come from analytics
+          value: '15hrs/week',
         },
       ]
     : [
