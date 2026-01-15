@@ -13,13 +13,11 @@ export function SocialProofWithRealMetrics() {
   const [metrics, setMetrics] = useState<SystemMetrics | null>(null);
 
   useEffect(() => {
-    // Fetch system metrics (public endpoint or cached)
+    // Fetch system metrics through frontend API proxy
     const fetchMetrics = async () => {
       try {
-        // Try to fetch from API (this would be a public endpoint)
-        // For now, we'll use a simple approach - could be cached/static
-        const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001';
-        const response = await fetch(`${API_BASE_URL}/metrics/public`);
+        // Use frontend API proxy instead of calling backend directly
+        const response = await fetch('/api/metrics');
 
         if (response.ok) {
           const data = await response.json();
@@ -35,6 +33,7 @@ export function SocialProofWithRealMetrics() {
       } catch (error) {
         console.error('Failed to fetch metrics:', error);
         // Fallback to showing nothing or cached values
+        setMetrics(null);
       }
     };
 
