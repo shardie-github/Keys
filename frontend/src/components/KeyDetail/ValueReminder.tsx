@@ -11,9 +11,15 @@ interface ValueReminderProps {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function ValueReminder({ keyTitle: _keyTitle, lastUsed: _lastUsed, version }: ValueReminderProps) {
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
   return (
     <motion.div
-      initial={{ opacity: 0 }}
+      initial={isHydrated ? { opacity: 0 } : { opacity: 1 }}
       animate={{ opacity: 1 }}
       className="mt-6 pt-6 border-t border-gray-200 dark:border-slate-700"
     >
