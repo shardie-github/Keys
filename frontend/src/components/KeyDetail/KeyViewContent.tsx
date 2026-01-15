@@ -174,7 +174,7 @@ export function KeyViewContent({ view, keyData }: KeyViewContentProps) {
   return (
     <motion.div
       key={view}
-      initial={{ opacity: 0, y: 10 }}
+      initial={isHydrated ? { opacity: 0, y: 10 } : { opacity: 1, y: 0 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
       role="tabpanel"
