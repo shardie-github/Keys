@@ -8,8 +8,9 @@ import { useAuth } from '@/contexts/AuthContext';
 import { ThemeSwitcher } from '@/components/ThemeSwitcher';
 import { toast } from '@/components/Toast';
 
-// Force dynamic rendering since this page uses Supabase
-export const dynamic = 'force-dynamic';
+const isStaticExport = process.env.NEXT_OUTPUT === 'export';
+// Force dynamic rendering since this page uses Supabase (unless exporting static assets)
+export const dynamic = isStaticExport ? 'force-static' : 'force-dynamic';
 
 function ChatPageContent() {
   const router = useRouter();

@@ -14,8 +14,9 @@ import { PageWrapper } from '@/components/PageWrapper';
 import { LoadingSpinner } from '@/components/Loading';
 import { Reveal, AnimatedCard } from '@/systems/motion';
 
-// Force dynamic rendering since this page uses Supabase
-export const dynamic = 'force-dynamic';
+const isStaticExport = process.env.NEXT_OUTPUT === 'export';
+// Force dynamic rendering since this page uses Supabase (unless exporting static assets)
+export const dynamic = isStaticExport ? 'force-static' : 'force-dynamic';
 
 // Note: Metadata export doesn't work with 'use client', but we'll handle SEO via layout
 export default function DashboardPage() {

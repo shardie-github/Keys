@@ -4,8 +4,10 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { RootProvider } from '@/components/providers/root-provider';
 import { StructuredData, generateOrganizationSchema, generateSoftwareApplicationSchema } from '@/components/SEO/StructuredData';
+import { resolveSiteUrl } from '@/utils/site-url';
 
 const inter = Inter({ subsets: ['latin'], display: 'swap', preload: true });
+const siteUrl = resolveSiteUrl();
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -19,7 +21,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://keys.dev'),
+  metadataBase: new URL(siteUrl),
   title: {
     default: 'KEYS - The Keyring to Modern Tools',
     template: '%s | KEYS',
@@ -116,7 +118,7 @@ export default function RootLayout({
     <html lang="en" className="scroll-smooth">
       <head>
         <link rel="manifest" href="/manifest.json" />
-        <link rel="canonical" href={process.env.NEXT_PUBLIC_SITE_URL || 'https://keys.dev'} />
+        <link rel="canonical" href={siteUrl} />
         <meta name="theme-color" content="#2563eb" media="(prefers-color-scheme: light)" />
         <meta name="theme-color" content="#1e40af" media="(prefers-color-scheme: dark)" />
         <meta name="apple-mobile-web-app-capable" content="yes" />

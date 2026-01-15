@@ -6,8 +6,9 @@ import { ProfileOnboarding } from '@/components/ProfileSettings/ProfileOnboardin
 import { profileService } from '@/services/profileService';
 import { useAuth } from '@/contexts/AuthContext';
 
-// Force dynamic rendering since this page uses Supabase
-export const dynamic = 'force-dynamic';
+const isStaticExport = process.env.NEXT_OUTPUT === 'export';
+// Force dynamic rendering since this page uses Supabase (unless exporting static assets)
+export const dynamic = isStaticExport ? 'force-static' : 'force-dynamic';
 
 export default function ProfilePage() {
   const router = useRouter();
