@@ -24,18 +24,18 @@ export function generateOrganizationSchema() {
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'Keys',
+    name: 'KEYS',
     url: process.env.NEXT_PUBLIC_SITE_URL || 'https://keys.dev',
     logo: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://keys.dev'}/icon-512.png`,
-    description: 'Your day-to-day AI co-founder that works alongside Cursor. Operational automation, business process intelligence, and institutional memory.',
+    description: 'KEYS is a marketplace of structured assets (notebooks, prompts, workflows) that unlock practical capability in Cursor, Jupyter, GitHub, Stripe, and more—without competing with them.',
     sameAs: [
       'https://twitter.com/cursorventure',
-      'https://github.com/cursor-venture-companion',
+      'https://github.com/keys-dev',
     ],
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'Customer Support',
-      email: 'support@cursor-venture-companion.com',
+      email: 'support@keys.dev',
     },
   };
 }
