@@ -44,7 +44,7 @@ export function generateSoftwareApplicationSchema() {
   return {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
-    name: 'Keys',
+    name: 'KEYS',
     applicationCategory: 'BusinessApplication',
     operatingSystem: 'Web',
     offers: {
@@ -60,7 +60,7 @@ export function generateSoftwareApplicationSchema() {
       bestRating: '5',
       worstRating: '1',
     },
-    description: 'Your day-to-day AI co-founder that works alongside Cursor. Operational automation, business process intelligence, and institutional memory.',
+    description: 'A marketplace of structured assets (notebooks, prompts, workflows) that unlock practical capability in Cursor, Jupyter, GitHub, Stripe, and more.',
     url: process.env.NEXT_PUBLIC_SITE_URL || 'https://keys.dev',
   };
 }
