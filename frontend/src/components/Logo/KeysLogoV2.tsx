@@ -345,9 +345,9 @@ export function KeysLogoV2({
         />
         {/* Branch symbol: fork */}
         <motion.g
-          variants={shouldAnimate ? iconVariants : undefined}
-          initial={shouldAnimate ? 'hidden' : undefined}
-          animate={shouldAnimate ? 'visible' : undefined}
+          variants={iconVariants}
+          initial={isHydrated ? 'hidden' : 'visible'}
+          animate="visible"
         >
           <circle cx="70" cy="115" r="2" fill="white" />
           <line x1="70" y1="115" x2="68" y2="122" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
