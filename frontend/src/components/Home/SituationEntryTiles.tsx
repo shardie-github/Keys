@@ -59,11 +59,11 @@ export function SituationEntryTiles() {
   const shouldReduceMotion = useReducedMotion();
   
   return (
-    <section className="max-w-5xl mx-auto mb-12 sm:mb-16" aria-labelledby="situation-heading">
+    <section className="max-w-5xl mx-auto mb-16 sm:mb-24" aria-labelledby="situation-heading">
       <h2 id="situation-heading" className="sr-only">
         Choose your situation
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
         {situations.map((situation, index) => {
           const href = `${situation.route}?${new URLSearchParams(situation.filters).toString()}`;
           
@@ -72,30 +72,37 @@ export function SituationEntryTiles() {
               key={situation.id}
               initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={shouldReduceMotion ? { duration: 0 } : { delay: index * 0.1, duration: 0.4 }}
+              transition={shouldReduceMotion ? { duration: 0 } : { delay: index * 0.1, duration: 0.5 }}
             >
-              <Link href={href} className="block h-full group">
-                <Card className={`h-full transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border-2 hover:border-primary/50 bg-gradient-to-br ${situation.gradient}`}>
-                  <CardHeader className="pb-3">
+              <Link 
+                href={href} 
+                className="block h-full group focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-slate-900 rounded-lg"
+              >
+                <Card className={`h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-2 focus-within:ring-2 focus-within:ring-primary border border-border bg-gradient-to-br ${situation.gradient}`}>
+                  <CardHeader className="pb-4">
                     <div className="flex items-start gap-4">
-                      <div className="text-4xl sm:text-5xl flex-shrink-0 transform group-hover:scale-110 transition-transform duration-300" aria-hidden="true">
+                      <div className="text-5xl sm:text-6xl flex-shrink-0 transform group-hover:scale-110 transition-transform duration-300" aria-hidden="true">
                         {situation.icon}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <CardTitle className="text-lg sm:text-xl mb-2 group-hover:text-primary transition-colors">
+                        <CardTitle className="text-lg sm:text-xl group-hover:text-primary transition-colors">
                           {situation.situation}
                         </CardTitle>
                       </div>
                     </div>
                   </CardHeader>
-                  <CardContent>
-                    <CardDescription className="text-sm sm:text-base leading-relaxed mb-4">
+                  <CardContent className="space-y-4">
+                    <CardDescription className="text-sm sm:text-base leading-relaxed text-muted-foreground">
                       {situation.description}
                     </CardDescription>
                     <Button 
-                      variant="ghost" 
+                      variant="outline" 
                       size="sm" 
-                      className="w-full sm:w-auto group-hover:text-primary group-hover:bg-primary/10 transition-all duration-300"
+                      className="w-full sm:w-auto group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-all duration-300"
+                      onClick={(e) => {
+                        // Let the link handle navigation
+                        e.preventDefault();
+                      }}
                     >
                       Explore Keys
                       <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
