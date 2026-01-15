@@ -24,6 +24,12 @@ export function ProgressIndicator({
   showLabels = true,
   className = '',
 }: ProgressIndicatorProps) {
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
   const progress = (currentStep / totalSteps) * 100;
 
   return (
@@ -37,7 +43,7 @@ export function ProgressIndicator({
       <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
         <motion.div
           className="h-full bg-gradient-to-r from-blue-600 to-purple-600 rounded-full"
-          initial={{ width: 0 }}
+          initial={isHydrated ? { width: 0 } : { width: `${progress}%` }}
           animate={{ width: `${progress}%` }}
           transition={{
             duration: motionTokens.duration.normal / 1000,
