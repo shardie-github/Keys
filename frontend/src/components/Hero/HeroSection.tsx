@@ -1,11 +1,17 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { KeysLogoV2 } from '@/components/Logo';
 import { FeatureAvailabilityBadge } from '@/components/Features/FeatureAvailabilityBadge';
 
 export function HeroSection() {
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
