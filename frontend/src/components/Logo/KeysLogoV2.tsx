@@ -149,9 +149,9 @@ export function KeysLogoV2({
 
       {/* Central Mechanical Key-Ring */}
       <motion.g
-        variants={shouldAnimate ? ringVariants : undefined}
-        initial={shouldAnimate ? 'hidden' : undefined}
-        animate={shouldAnimate ? 'visible' : undefined}
+        variants={ringVariants}
+        initial={isHydrated ? 'hidden' : 'visible'}
+        animate="visible"
       >
         {/* Outer ring with geometric precision */}
         <circle
