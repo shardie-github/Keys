@@ -1,6 +1,6 @@
 /**
  * AnimatedButton
- * 
+ *
  * A button component with motion feedback that reflects state changes.
  * Motion is driven by props, not internal state.
  */
@@ -8,7 +8,7 @@
 'use client';
 
 import { motion, HTMLMotionProps } from 'framer-motion';
-import { forwardRef } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 import { motionTokens } from '../tokens';
 
 export interface AnimatedButtonProps extends Omit<HTMLMotionProps<'button'>, 'children'> {
