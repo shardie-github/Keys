@@ -30,10 +30,16 @@ export const Reveal = forwardRef<HTMLDivElement, RevealProps>(
     },
     ref
   ) => {
-    const variants = direction === 'fade' 
-      ? fadeVariants 
+    const [isHydrated, setIsHydrated] = useState(false);
+
+    useEffect(() => {
+      setIsHydrated(true);
+    }, []);
+
+    const variants = direction === 'fade'
+      ? fadeVariants
       : slideVariants[direction === 'up' ? 'up' : direction === 'down' ? 'down' : direction === 'left' ? 'left' : 'right'];
-    
+
     const customTransition = delay > 0 || duration !== undefined
       ? {
           delay: delay / 1000,
@@ -46,7 +52,7 @@ export const Reveal = forwardRef<HTMLDivElement, RevealProps>(
         ref={ref}
         className={className}
         variants={variants}
-        initial="hidden"
+        initial={isHydrated ? 'hidden' : 'visible'}
         animate="visible"
         transition={customTransition}
         {...props}
