@@ -72,15 +72,19 @@ export const AnimatedButton = forwardRef<HTMLButtonElement, AnimatedButtonProps>
       >
         {isLoading ? (
           <span className="flex items-center gap-2">
-            <motion.span
-              animate={{ rotate: 360 }}
-              transition={{
-                duration: 1,
-                repeat: Infinity,
-                ease: 'linear',
-              }}
-              className="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full"
-            />
+            {isHydrated ? (
+              <motion.span
+                animate={{ rotate: 360 }}
+                transition={{
+                  duration: 1,
+                  repeat: Infinity,
+                  ease: 'linear',
+                }}
+                className="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full"
+              />
+            ) : (
+              <span className="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full" />
+            )}
             {children}
           </span>
         ) : (
