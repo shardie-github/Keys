@@ -1,13 +1,13 @@
 /**
  * AnimatedCard
- * 
+ *
  * A card component with entrance animations and hover feedback.
  */
 
 'use client';
 
 import { motion, HTMLMotionProps } from 'framer-motion';
-import { forwardRef } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 import { motionTokens } from '../tokens';
 import { scaleVariants } from '../variants';
 
