@@ -30,24 +30,33 @@ export const AnimatedCard = forwardRef<HTMLDivElement, AnimatedCardProps>(
     },
     ref
   ) => {
+    const [isHydrated, setIsHydrated] = useState(false);
+
+    useEffect(() => {
+      setIsHydrated(true);
+    }, []);
+
     const baseClasses = 'rounded-lg transition-colors';
-    
+
     const variantClasses = {
       default: 'bg-white dark:bg-slate-800',
       elevated: 'bg-white dark:bg-slate-800 shadow-lg',
       outlined: 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700',
     };
-    
+
     const combinedClasses = `${baseClasses} ${variantClasses[variant]} ${className}`.trim();
+
+    // Use server-side friendly initial state unless hydrated
+    const resolvedInitial = isHydrated && initial === 'hidden' ? 'hidden' : 'visible';
 
     return (
       <motion.div
         ref={ref}
         className={combinedClasses}
         variants={scaleVariants}
-        initial={initial}
+        initial={resolvedInitial}
         animate={animate}
-        whileHover={hoverable ? { 
+        whileHover={hoverable ? {
           y: -4,
           transition: motionTokens.spring.gentle,
         } : undefined}
