@@ -1,6 +1,6 @@
 /**
  * Reveal
- * 
+ *
  * Wrapper component for entrance animations.
  * Use this to animate elements as they enter the viewport or mount.
  */
@@ -8,7 +8,7 @@
 'use client';
 
 import { motion, HTMLMotionProps } from 'framer-motion';
-import { forwardRef } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 import { fadeVariants, slideVariants } from '../variants';
 
 export interface RevealProps extends Omit<HTMLMotionProps<'div'>, 'children'> {
