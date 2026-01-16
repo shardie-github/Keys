@@ -24,12 +24,18 @@ export const PageTransition = forwardRef<HTMLDivElement, PageTransitionProps>(
     },
     ref
   ) => {
+    const [isHydrated, setIsHydrated] = useState(false);
+
+    useEffect(() => {
+      setIsHydrated(true);
+    }, []);
+
     return (
       <motion.div
         ref={ref}
         className={className}
         variants={pageTransitionVariants}
-        initial="initial"
+        initial={isHydrated ? 'initial' : 'animate'}
         animate="animate"
         exit="exit"
         {...props}
