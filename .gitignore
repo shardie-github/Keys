@@ -1,5 +1,6 @@
 # Dependencies
 /node_modules
+**/node_modules/
 /.pnp
 .pnp.js
 
@@ -49,3 +50,8 @@ next-env.d.ts
 # Logs
 logs/
 *.log
+
+# Notebook outputs
+outputs/**
+!outputs/smoke_report.json
+!outputs/smoke_report.md
