@@ -17,6 +17,7 @@
     "lint": "npm run lint:frontend && npm run lint:backend",
     "lint:frontend": "cd frontend && npm run lint",
     "lint:backend": "cd backend && npm run lint",
+    "format:check": "npx prettier --check \"ENV_VARS.md\" \"outputs/smoke_report.md\" \"outputs/smoke_report.json\"",
     "type-check": "npm run type-check:frontend && npm run type-check:backend",
     "type-check:frontend": "cd frontend && npm run type-check",
     "type-check:backend": "cd backend && npm run type-check",
