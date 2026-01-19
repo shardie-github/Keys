@@ -1,0 +1,6 @@
+{
+  "name": "node-typescript",
+  "version": "1.0.0",
+  "entry": "keys/adapters/node-typescript/adapter.py",
+  "description": "Node.js + TypeScript adapter"
+}
