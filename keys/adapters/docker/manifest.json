@@ -1,0 +1,6 @@
+{
+  "name": "docker",
+  "version": "1.0.0",
+  "entry": "keys/adapters/docker/adapter.py",
+  "description": "Docker adapter"
+}

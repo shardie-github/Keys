@@ -1,0 +1,44 @@
+{
+  "profiles": {
+    "default": {
+      "output_dir": "outputs",
+      "network_policy": "allow",
+      "allowed_adapters": ["python", "node-typescript", "github", "docker"],
+      "logging": {"level": "info", "redact_secrets": true},
+      "runner": {"timeout_seconds": 300, "retries": 0},
+      "toolchains": {"python": "python3", "node": "node"}
+    },
+    "offline": {
+      "output_dir": "outputs",
+      "network_policy": "deny",
+      "allowed_adapters": ["python", "node-typescript"],
+      "logging": {"level": "warning", "redact_secrets": true},
+      "runner": {"timeout_seconds": 300, "retries": 0},
+      "toolchains": {"python": "python3", "node": "node"}
+    },
+    "ci": {
+      "output_dir": "outputs",
+      "network_policy": "allow",
+      "allowed_adapters": ["python", "node-typescript", "github"],
+      "logging": {"level": "info", "redact_secrets": true},
+      "runner": {"timeout_seconds": 600, "retries": 1},
+      "toolchains": {"python": "python3", "node": "node"}
+    },
+    "termux": {
+      "output_dir": "outputs",
+      "network_policy": "deny",
+      "allowed_adapters": ["python"],
+      "logging": {"level": "warning", "redact_secrets": true},
+      "runner": {"timeout_seconds": 300, "retries": 0},
+      "toolchains": {"python": "python", "node": "node"}
+    },
+    "enterprise": {
+      "output_dir": "outputs",
+      "network_policy": "allow",
+      "allowed_adapters": ["python", "node-typescript", "github", "docker"],
+      "logging": {"level": "info", "redact_secrets": true},
+      "runner": {"timeout_seconds": 600, "retries": 1},
+      "toolchains": {"python": "python3", "node": "node"}
+    }
+  }
+}

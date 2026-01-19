@@ -137,3 +137,103 @@
 
 ### Notebook smoke report status
 - ✅ 3/3 notebooks executed successfully with `KEYS_NOTEBOOK_DRY_RUN=1` data. Report saved at `outputs/smoke_report.json` and `outputs/smoke_report.md`.
+
+---
+
+## Iteration 3
+
+### Summary
+- Added canonical Keys gate scripts to the root package scripts for doctor/check/smoke/audit consistency.
+
+### Files changed
+- package.json
+- .pr/AGENT_PR_NOTES.md
+
+### Commands run + results
+- `npm run keys:doctor` (exit 0)
+  - Last 30 lines:
+    - `npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.`
+    - `> keys@1.0.0 type-check:backend`
+    - `> cd backend && npm run type-check`
+    - `npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.`
+    - `> hardonia-ai-companion-backend@1.0.0 type-check`
+    - `> tsc --noEmit`
+
+### Why this is correct
+- The new scripts standardize gate execution without changing existing lint/test/type-check behavior.
+
+### Next steps
+- Run `npm run keys:check` and `npm run keys:audit` to capture full gate status once audit warnings are addressed.
+
+---
+
+## Iteration 4
+
+### Summary
+- Implemented Keys Core catalog schema, catalog, config profiles, adapters, and CLI for list/info/search/run/verify/smoke/doctor/init/export.
+- Added embedding documentation, catalog overview, and Keys CLI environment variables.
+
+### Files changed
+- .env.example
+- CATALOG.md
+- ENV_VARS.md
+- docs/EMBEDDING.md
+- keys/catalog.json
+- keys/catalog.schema.json
+- keys/keys.config.json
+- keys/adapters/docker/adapter.py
+- keys/adapters/docker/manifest.json
+- keys/adapters/github/adapter.py
+- keys/adapters/github/manifest.json
+- keys/adapters/node-typescript/adapter.py
+- keys/adapters/node-typescript/manifest.json
+- keys/adapters/python/adapter.py
+- keys/adapters/python/manifest.json
+- package.json
+- scripts/keys_cli.py
+- .pr/AGENT_PR_NOTES.md
+
+### Commands run + results
+- `python scripts/keys_cli.py list` (exit 0)
+  - Last 30 lines:
+    - `notebook.eda-workflow\tnotebook\tEDA Workflow Notebook`
+    - `runbook.ai-output-regression\trunbook\tAI Output Regression Runbook`
+    - `template.catalog\ttemplate\tCatalog Template`
+- `python scripts/keys_cli.py info notebook.eda-workflow` (exit 0)
+  - Last 30 lines:
+    - `{"id": "notebook.eda-workflow",` (truncated JSON output)
+- `python scripts/keys_cli.py doctor` (exit 0)
+  - Last 30 lines:
+    - `"name": "python",`
+    - `"available": true,`
+    - `"version": "3.10.19"`
+    - `Keys report JSON: /workspace/Keys/outputs/reports/20260119T042214Z/keys_report.json`
+    - `Keys report MD: /workspace/Keys/outputs/reports/20260119T042214Z/keys_report.md`
+
+### Why this is correct
+- The catalog schema, config profiles, and adapters define a minimal stack-agnostic control plane, and the CLI routes common workflows through safe, profile-aware runners.
+
+### Next steps
+- Wire Keys CLI gates into CI and expand catalog coverage for additional packs/adapters.
+
+---
+
+## Iteration 5
+
+### Summary
+- Removed generated Python cache artifacts from tracking and added Python cache ignores to .gitignore.
+
+### Files changed
+- .gitignore
+- .pr/AGENT_PR_NOTES.md
+
+### Commands run + results
+- `git status -sb` (exit 0)
+  - Last 30 lines:
+    - `## work`
+
+### Why this is correct
+- Cache files should never be versioned; ignoring them keeps the repo clean and reproducible.
+
+### Next steps
+- Run Keys CLI commands as needed for further verification.

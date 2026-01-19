@@ -1,0 +1,107 @@
+{
+  "version": "1.0.0",
+  "entries": [
+    {
+      "id": "notebook.eda-workflow",
+      "title": "EDA Workflow Notebook",
+      "description": "Exploratory data analysis workflow using the bundled sample notebook.",
+      "path": "keys-assets/jupyter-keys/jupyter-eda-workflows/notebooks/eda_workflow.ipynb",
+      "type": "notebook",
+      "category": "data-science",
+      "tags": ["eda", "jupyter", "python"],
+      "difficulty": "beginner",
+      "runtime_estimate": "5-10 minutes",
+      "inputs": [
+        {
+          "name": "dataset_path",
+          "type": "string",
+          "description": "Optional path to a CSV dataset when not using dry-run data."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "notebook_output",
+          "type": "ipynb",
+          "description": "Executed notebook output with generated plots and tables."
+        }
+      ],
+      "artifacts": ["outputs/notebook.eda-workflow/<timestamp>/eda_workflow.ipynb"],
+      "requires_network": false,
+      "requires_secrets": [],
+      "supported_stacks": ["python"],
+      "adapters": ["python"],
+      "last_verified": "2025-03-08T00:00:00Z",
+      "verification_command": "python scripts/keys_cli.py run notebook.eda-workflow --profile default",
+      "license_class": "free",
+      "stability": "beta"
+    },
+    {
+      "id": "runbook.ai-output-regression",
+      "title": "AI Output Regression Runbook",
+      "description": "Incident response runbook for detecting and addressing AI output regressions.",
+      "path": "runbook-keys/ai-output-regression",
+      "type": "runbook",
+      "category": "operations",
+      "tags": ["runbook", "incident", "ai"],
+      "difficulty": "intermediate",
+      "runtime_estimate": "20-30 minutes",
+      "inputs": [
+        {
+          "name": "incident_id",
+          "type": "string",
+          "description": "Incident identifier used in internal tracking."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "regression_report",
+          "type": "markdown",
+          "description": "Completed regression checklist and notes."
+        }
+      ],
+      "artifacts": ["outputs/runbook.ai-output-regression/<timestamp>/runbook_validation.json"],
+      "requires_network": false,
+      "requires_secrets": [],
+      "supported_stacks": ["docs"],
+      "adapters": ["github"],
+      "last_verified": "2025-03-08T00:00:00Z",
+      "verification_command": "python scripts/keys_cli.py run runbook.ai-output-regression --profile default",
+      "license_class": "free",
+      "stability": "stable"
+    },
+    {
+      "id": "template.catalog",
+      "title": "Catalog Template",
+      "description": "Base catalog JSON template for authoring new Keys packs.",
+      "path": "templates/catalog.json",
+      "type": "template",
+      "category": "platform",
+      "tags": ["catalog", "template", "metadata"],
+      "difficulty": "beginner",
+      "runtime_estimate": "5 minutes",
+      "inputs": [
+        {
+          "name": "template_path",
+          "type": "string",
+          "description": "Destination path for the catalog template copy."
+        }
+      ],
+      "outputs": [
+        {
+          "name": "catalog_template",
+          "type": "json",
+          "description": "Catalog JSON template ready to customize."
+        }
+      ],
+      "artifacts": ["outputs/template.catalog/<timestamp>/catalog.json"],
+      "requires_network": false,
+      "requires_secrets": [],
+      "supported_stacks": ["json"],
+      "adapters": ["python"],
+      "last_verified": "2025-03-08T00:00:00Z",
+      "verification_command": "python scripts/keys_cli.py run template.catalog --profile default",
+      "license_class": "free",
+      "stability": "beta"
+    }
+  ]
+}

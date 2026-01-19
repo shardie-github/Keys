@@ -9,6 +9,13 @@ This document maps environment variables to the components that consume them. Va
 | `KEYS_NOTEBOOK_DRY_RUN`  | `scripts/run_notebooks_smoke.py`, EDA notebook | Enables sample data generation for notebook smoke runs. | No (defaults to `1` in smoke runner) |
 | `NOTEBOOK_SMOKE_TIMEOUT` | `scripts/run_notebooks_smoke.py`               | Per-cell timeout (seconds) for notebook execution.      | No                                   |
 
+## Keys CLI
+
+| Variable          | Used by              | Description                                   | Required |
+| ----------------- | -------------------- | --------------------------------------------- | -------- |
+| `KEYS_PROFILE`    | `scripts/keys_cli.py` | Selects the Keys configuration profile.       | No       |
+| `KEYS_OUTPUT_DIR` | `scripts/keys_cli.py` | Overrides the default output directory root.  | No       |
+
 ## Frontend (Next.js)
 
 | Variable                         | Used by                       | Description                                         | Required          |

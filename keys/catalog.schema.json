@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "keys/catalog.schema.json",
+  "title": "Keys Catalog",
+  "type": "object",
+  "required": ["version", "entries"],
+  "properties": {
+    "version": {"type": "string"},
+    "entries": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/entry"}
+    }
+  },
+  "$defs": {
+    "entry": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "description",
+        "path",
+        "type",
+        "category",
+        "tags",
+        "difficulty",
+        "runtime_estimate",
+        "inputs",
+        "outputs",
+        "artifacts",
+        "requires_network",
+        "requires_secrets",
+        "supported_stacks",
+        "adapters",
+        "last_verified",
+        "verification_command",
+        "license_class",
+        "stability"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9._-]+$"},
+        "title": {"type": "string"},
+        "description": {"type": "string"},
+        "path": {"type": "string"},
+        "type": {
+          "type": "string",
+          "enum": ["notebook", "runbook", "template", "workflow"]
+        },
+        "category": {"type": "string"},
+        "tags": {"type": "array", "items": {"type": "string"}},
+        "difficulty": {"type": "string", "enum": ["beginner", "intermediate", "advanced"]},
+        "runtime_estimate": {"type": "string"},
+        "inputs": {"type": "array", "items": {"$ref": "#/$defs/io"}},
+        "outputs": {"type": "array", "items": {"$ref": "#/$defs/io"}},
+        "artifacts": {"type": "array", "items": {"type": "string"}},
+        "requires_network": {"type": "boolean"},
+        "requires_secrets": {"type": "array", "items": {"type": "string"}},
+        "supported_stacks": {"type": "array", "items": {"type": "string"}},
+        "adapters": {"type": "array", "items": {"type": "string"}},
+        "last_verified": {"type": "string", "format": "date-time"},
+        "verification_command": {"type": "string"},
+        "license_class": {"type": "string", "enum": ["free", "premium", "internal"]},
+        "stability": {"type": "string", "enum": ["alpha", "beta", "stable"]}
+      }
+    },
+    "io": {
+      "type": "object",
+      "required": ["name", "type", "description"],
+      "properties": {
+        "name": {"type": "string"},
+        "type": {"type": "string"},
+        "description": {"type": "string"}
+      }
+    }
+  }
+}

@@ -24,7 +24,12 @@
     "db:verify": "tsx scripts/db-verify.ts",
     "db:smoke": "tsx scripts/db-smoke.ts",
     "db:migrate": "cd backend && npm run migrate",
-    "db:reconcile": "echo 'Run migration: backend/supabase/migrations/00000000000000_backend_contract_reconcile.sql in Supabase SQL editor'"
+    "db:reconcile": "echo 'Run migration: backend/supabase/migrations/00000000000000_backend_contract_reconcile.sql in Supabase SQL editor'",
+    "keys": "python scripts/keys_cli.py",
+    "keys:doctor": "npm run lint && npm run type-check",
+    "keys:check": "npm run lint && npm run type-check && npm --workspace backend run test && npm --workspace frontend run test",
+    "keys:smoke": "python scripts/run_notebooks_smoke.py --timeout 300",
+    "keys:audit": "detect-secrets scan --baseline .secrets.baseline && npm --workspace backend audit --audit-level=high && npm --workspace frontend audit --audit-level=high"
   },
   "dependencies": {
     "react": "18.2.0",
