@@ -178,6 +178,180 @@ CREATE TABLE IF NOT EXISTS background_events (
   user_actioned BOOLEAN DEFAULT false
 );
 
+-- ----------------------------------------------------------------------------
+-- Keys Catalog Entries Table
+-- ----------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS keys_catalog_entries (
+  id TEXT PRIMARY KEY,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  
+  -- Core Catalog Metadata
+  title TEXT NOT NULL,
+  description TEXT,
+  path TEXT NOT NULL,
+  entry_type TEXT NOT NULL, -- 'runbook', 'notebook', 'template', 'adapter'
+  category TEXT,
+  tags TEXT[] DEFAULT ARRAY[]::TEXT[],
+  difficulty TEXT,
+  runtime_estimate TEXT,
+  
+  -- Inputs/Outputs & Runtime
+  inputs JSONB DEFAULT '[]'::jsonb,
+  outputs JSONB DEFAULT '[]'::jsonb,
+  artifacts JSONB DEFAULT '[]'::jsonb,
+  requires_network BOOLEAN DEFAULT false,
+  requires_secrets TEXT[] DEFAULT ARRAY[]::TEXT[],
+  supported_stacks TEXT[] DEFAULT ARRAY[]::TEXT[],
+  adapters TEXT[] DEFAULT ARRAY[]::TEXT[],
+  
+  -- Verification & Governance
+  last_verified_at TIMESTAMPTZ,
+  verification_command TEXT,
+  license_class TEXT,
+  stability TEXT,
+  is_public BOOLEAN DEFAULT true,
+  governance_status TEXT DEFAULT 'active',
+  owner_team TEXT,
+  ranking_score FLOAT DEFAULT 0,
+  
+  -- Additional Metadata
+  metadata JSONB DEFAULT '{}'::jsonb,
+  CHECK (entry_type IN ('runbook', 'notebook', 'template', 'adapter')),
+  CHECK (governance_status IN ('active', 'deprecated', 'archived'))
+);
+
+-- ----------------------------------------------------------------------------
+-- Keys Runs Table
+-- ----------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS keys_runs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id TEXT NOT NULL,
+  catalog_entry_id TEXT REFERENCES keys_catalog_entries(id) ON DELETE SET NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  started_at TIMESTAMPTZ,
+  finished_at TIMESTAMPTZ,
+  
+  -- Run Metadata
+  status TEXT NOT NULL DEFAULT 'queued', -- 'queued', 'running', 'success', 'failed', 'canceled'
+  trigger TEXT,
+  trigger_payload JSONB,
+  inputs JSONB DEFAULT '{}'::jsonb,
+  outputs JSONB DEFAULT '{}'::jsonb,
+  artifacts JSONB DEFAULT '[]'::jsonb,
+  report_path TEXT,
+  report_summary TEXT,
+  error_message TEXT,
+  duration_ms INT,
+  is_dry_run BOOLEAN DEFAULT false,
+  adapter_snapshot JSONB DEFAULT '{}'::jsonb,
+  environment_snapshot JSONB DEFAULT '{}'::jsonb,
+  CHECK (status IN ('queued', 'running', 'success', 'failed', 'canceled'))
+);
+
+-- ----------------------------------------------------------------------------
+-- Keys Run Events Table
+-- ----------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS keys_run_events (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  run_id UUID NOT NULL REFERENCES keys_runs(id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  event_type TEXT NOT NULL,
+  message TEXT,
+  payload JSONB DEFAULT '{}'::jsonb
+);
+
+-- ----------------------------------------------------------------------------
+-- Keys Run Evidence Table
+-- ----------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS keys_run_evidence (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  run_id UUID NOT NULL REFERENCES keys_runs(id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  evidence_type TEXT NOT NULL,
+  artifact_path TEXT NOT NULL,
+  artifact_checksum TEXT,
+  artifact_metadata JSONB DEFAULT '{}'::jsonb,
+  is_public BOOLEAN DEFAULT false
+);
+
+-- ----------------------------------------------------------------------------
+-- Keys Verification History Table
+-- ----------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS keys_verification_history (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  catalog_entry_id TEXT NOT NULL REFERENCES keys_catalog_entries(id) ON DELETE CASCADE,
+  run_id UUID REFERENCES keys_runs(id) ON DELETE SET NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  verified_at TIMESTAMPTZ DEFAULT NOW(),
+  
+  -- Verification Result
+  status TEXT NOT NULL, -- 'success', 'failed', 'warning'
+  summary TEXT,
+  failure_reason TEXT,
+  evidence_links JSONB DEFAULT '[]'::jsonb,
+  is_public BOOLEAN DEFAULT true,
+  CHECK (status IN ('success', 'failed', 'warning'))
+);
+
+-- ----------------------------------------------------------------------------
+-- Keys Trust Signals Table
+-- ----------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS keys_trust_signals (
+  catalog_entry_id TEXT PRIMARY KEY REFERENCES keys_catalog_entries(id) ON DELETE CASCADE,
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  verification_status TEXT, -- 'verified', 'stale', 'failed'
+  last_verified_at TIMESTAMPTZ,
+  last_success_at TIMESTAMPTZ,
+  last_failure_at TIMESTAMPTZ,
+  consecutive_failures INT DEFAULT 0,
+  evidence_count INT DEFAULT 0,
+  freshness_window_days INT DEFAULT 30,
+  metadata JSONB DEFAULT '{}'::jsonb,
+  CHECK (verification_status IS NULL OR verification_status IN ('verified', 'stale', 'failed'))
+);
+
+-- ----------------------------------------------------------------------------
+-- Keys Onboarding States Table
+-- ----------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS keys_onboarding_states (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  
+  -- Onboarding State
+  persona TEXT,
+  status TEXT NOT NULL DEFAULT 'in_progress', -- 'in_progress', 'completed', 'abandoned'
+  current_step TEXT,
+  step_index INT DEFAULT 0,
+  total_steps INT DEFAULT 0,
+  completion_ratio FLOAT DEFAULT 0,
+  metadata JSONB DEFAULT '{}'::jsonb,
+  CHECK (status IN ('in_progress', 'completed', 'abandoned'))
+);
+
+-- ----------------------------------------------------------------------------
+-- Keys Runbook Progress Table
+-- ----------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS keys_runbook_progress (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id TEXT NOT NULL,
+  runbook_id TEXT NOT NULL,
+  run_id UUID REFERENCES keys_runs(id) ON DELETE SET NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  
+  -- Progress Tracking
+  status TEXT NOT NULL DEFAULT 'in_progress', -- 'in_progress', 'blocked', 'completed'
+  current_step TEXT,
+  step_index INT DEFAULT 0,
+  total_steps INT DEFAULT 0,
+  notes TEXT,
+  metadata JSONB DEFAULT '{}'::jsonb,
+  CHECK (status IN ('in_progress', 'blocked', 'completed'))
+);
+
 -- ============================================================================
 -- SECTION 3: TEMPLATE SYSTEM TABLES
 -- ============================================================================
@@ -387,6 +561,56 @@ CREATE INDEX IF NOT EXISTS idx_background_events_timestamp ON background_events(
 CREATE INDEX IF NOT EXISTS idx_background_events_user_unprocessed ON background_events(user_id, suggestion_generated, created_at DESC) 
   WHERE suggestion_generated = false;
 
+-- Keys catalog indexes
+CREATE INDEX IF NOT EXISTS idx_keys_catalog_entries_type ON keys_catalog_entries(entry_type);
+CREATE INDEX IF NOT EXISTS idx_keys_catalog_entries_category ON keys_catalog_entries(category);
+CREATE INDEX IF NOT EXISTS idx_keys_catalog_entries_tags ON keys_catalog_entries USING GIN(tags);
+CREATE INDEX IF NOT EXISTS idx_keys_catalog_entries_adapters ON keys_catalog_entries USING GIN(adapters);
+CREATE INDEX IF NOT EXISTS idx_keys_catalog_entries_supported_stacks ON keys_catalog_entries USING GIN(supported_stacks);
+CREATE INDEX IF NOT EXISTS idx_keys_catalog_entries_requires_network ON keys_catalog_entries(requires_network);
+CREATE INDEX IF NOT EXISTS idx_keys_catalog_entries_public ON keys_catalog_entries(is_public);
+CREATE INDEX IF NOT EXISTS idx_keys_catalog_entries_governance ON keys_catalog_entries(governance_status);
+CREATE INDEX IF NOT EXISTS idx_keys_catalog_entries_verified_at ON keys_catalog_entries(last_verified_at DESC NULLS LAST);
+
+-- Keys runs indexes
+CREATE INDEX IF NOT EXISTS idx_keys_runs_user_id ON keys_runs(user_id);
+CREATE INDEX IF NOT EXISTS idx_keys_runs_catalog_entry ON keys_runs(catalog_entry_id);
+CREATE INDEX IF NOT EXISTS idx_keys_runs_status ON keys_runs(status);
+CREATE INDEX IF NOT EXISTS idx_keys_runs_created_at ON keys_runs(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_keys_runs_user_status ON keys_runs(user_id, status);
+CREATE INDEX IF NOT EXISTS idx_keys_runs_entry_status ON keys_runs(catalog_entry_id, status);
+
+-- Keys run events indexes
+CREATE INDEX IF NOT EXISTS idx_keys_run_events_run_id ON keys_run_events(run_id);
+CREATE INDEX IF NOT EXISTS idx_keys_run_events_type ON keys_run_events(event_type);
+CREATE INDEX IF NOT EXISTS idx_keys_run_events_created ON keys_run_events(created_at DESC);
+
+-- Keys run evidence indexes
+CREATE INDEX IF NOT EXISTS idx_keys_run_evidence_run_id ON keys_run_evidence(run_id);
+CREATE INDEX IF NOT EXISTS idx_keys_run_evidence_public ON keys_run_evidence(is_public);
+CREATE INDEX IF NOT EXISTS idx_keys_run_evidence_type ON keys_run_evidence(evidence_type);
+
+-- Keys verification history indexes
+CREATE INDEX IF NOT EXISTS idx_keys_verification_entry ON keys_verification_history(catalog_entry_id);
+CREATE INDEX IF NOT EXISTS idx_keys_verification_status ON keys_verification_history(status);
+CREATE INDEX IF NOT EXISTS idx_keys_verification_verified_at ON keys_verification_history(verified_at DESC);
+CREATE INDEX IF NOT EXISTS idx_keys_verification_public ON keys_verification_history(is_public);
+
+-- Keys trust signals indexes
+CREATE INDEX IF NOT EXISTS idx_keys_trust_signals_status ON keys_trust_signals(verification_status);
+CREATE INDEX IF NOT EXISTS idx_keys_trust_signals_verified_at ON keys_trust_signals(last_verified_at DESC NULLS LAST);
+
+-- Keys onboarding indexes
+CREATE INDEX IF NOT EXISTS idx_keys_onboarding_user_id ON keys_onboarding_states(user_id);
+CREATE INDEX IF NOT EXISTS idx_keys_onboarding_status ON keys_onboarding_states(status);
+CREATE INDEX IF NOT EXISTS idx_keys_onboarding_updated ON keys_onboarding_states(updated_at DESC);
+
+-- Keys runbook progress indexes
+CREATE INDEX IF NOT EXISTS idx_keys_runbook_progress_user_id ON keys_runbook_progress(user_id);
+CREATE INDEX IF NOT EXISTS idx_keys_runbook_progress_runbook ON keys_runbook_progress(runbook_id);
+CREATE INDEX IF NOT EXISTS idx_keys_runbook_progress_status ON keys_runbook_progress(status);
+CREATE INDEX IF NOT EXISTS idx_keys_runbook_progress_updated ON keys_runbook_progress(updated_at DESC);
+
 -- Template customization indexes
 CREATE INDEX IF NOT EXISTS idx_user_template_customizations_user_id 
   ON user_template_customizations(user_id);
@@ -478,6 +702,30 @@ CREATE TRIGGER update_user_profiles_updated_at
 -- Trigger for vibe_configs updated_at
 CREATE TRIGGER update_vibe_configs_updated_at
   BEFORE UPDATE ON vibe_configs
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+-- Trigger for keys_catalog_entries updated_at
+CREATE TRIGGER update_keys_catalog_entries_updated_at
+  BEFORE UPDATE ON keys_catalog_entries
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+-- Trigger for keys_onboarding_states updated_at
+CREATE TRIGGER update_keys_onboarding_states_updated_at
+  BEFORE UPDATE ON keys_onboarding_states
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+-- Trigger for keys_runbook_progress updated_at
+CREATE TRIGGER update_keys_runbook_progress_updated_at
+  BEFORE UPDATE ON keys_runbook_progress
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+-- Trigger for keys_trust_signals updated_at
+CREATE TRIGGER update_keys_trust_signals_updated_at
+  BEFORE UPDATE ON keys_trust_signals
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at_column();
 
