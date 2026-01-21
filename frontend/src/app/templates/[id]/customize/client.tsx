@@ -9,11 +9,13 @@
 import { useParams, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { useTemplatePreview, useTemplateCustomization, useTemplateValidation, useTemplateTesting } from '@/hooks/useTemplates';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function TemplateCustomizeClient({ id }: { id?: string }) {
   const params = useParams();
   const router = useRouter();
   const templateId = (id ?? (params.id as string)) as string;
+  const { user, loading: authLoading } = useAuth();
 
   const { preview, refetch: refetchPreview } = useTemplatePreview(templateId);
   const { saveCustomization, updateCustomization, deleteCustomization } = useTemplateCustomization(templateId);
@@ -31,6 +33,12 @@ export default function TemplateCustomizeClient({ id }: { id?: string }) {
       setCustomInstructions(preview.customInstructions || '');
     }
   }, [preview]);
+
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push(`/signin?returnUrl=/templates/${templateId}/customize`);
+    }
+  }, [authLoading, router, templateId, user]);
 
   const handleValidate = async () => {
     await validate(customVariables, customInstructions);
@@ -82,6 +90,10 @@ export default function TemplateCustomizeClient({ id }: { id?: string }) {
       setError(err instanceof Error ? err.message : 'Failed to delete customization');
     }
   };
+
+  if (authLoading || !user) {
+    return <div className="loading">Redirecting to sign in...</div>;
+  }
 
   if (!preview) {
     return <div className="loading">Loading template...</div>;
@@ -191,4 +203,3 @@ export default function TemplateCustomizeClient({ id }: { id?: string }) {
     </div>
   );
 }
-

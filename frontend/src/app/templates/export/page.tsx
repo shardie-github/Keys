@@ -9,8 +9,11 @@
 import { useState } from 'react';
 import { useTemplateExport } from '@/hooks/useTemplateExport';
 import { toast } from '@/components/Toast';
+import { useAuth } from '@/contexts/AuthContext';
+import Link from 'next/link';
 
 export default function ExportTemplatesPage() {
+  const { user, loading: authLoading } = useAuth();
   const { downloadExport, importCustomizations, loading } = useTemplateExport();
   const [importFile, setImportFile] = useState<File | null>(null);
   const [importing, setImporting] = useState(false);
@@ -55,6 +58,20 @@ export default function ExportTemplatesPage() {
       setImporting(false);
     }
   };
+
+  if (!authLoading && !user) {
+    return (
+      <div className="export-templates-page">
+        <div className="page-header">
+          <h1>Export/Import Templates</h1>
+          <p>Sign in to export or import customizations.</p>
+        </div>
+        <Link href="/signin?returnUrl=/templates/export" className="btn-primary">
+          Sign in to continue
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="export-templates-page">

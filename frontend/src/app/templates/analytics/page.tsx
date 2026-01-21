@@ -8,6 +8,8 @@
 
 import { useState, useEffect } from 'react';
 import { templateService } from '@/services/templateService';
+import { useAuth } from '@/contexts/AuthContext';
+import Link from 'next/link';
 
 interface AnalyticsStats {
   total_uses: number;
@@ -17,12 +19,18 @@ interface AnalyticsStats {
 }
 
 export default function TemplateAnalyticsPage() {
+  const { user, loading: authLoading } = useAuth();
+  const isAuthenticated = !!user;
   const [stats, setStats] = useState<AnalyticsStats | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!isAuthenticated) {
+      setLoading(false);
+      return;
+    }
     loadStats();
-  }, []);
+  }, [isAuthenticated]);
 
   const loadStats = async () => {
     try {
@@ -35,8 +43,20 @@ export default function TemplateAnalyticsPage() {
     }
   };
 
-  if (loading) {
+  if (authLoading || loading) {
     return <div className="loading">Loading analytics...</div>;
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="template-analytics-page">
+        <h1>Template Analytics</h1>
+        <p>Sign in to view analytics and usage metrics.</p>
+        <Link href="/signin?returnUrl=/templates/analytics" className="btn-primary">
+          Sign in to continue
+        </Link>
+      </div>
+    );
   }
 
   if (!stats) {

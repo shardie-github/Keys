@@ -254,7 +254,7 @@ export default function PricingPage() {
               </h3>
               <p className="text-gray-600 dark:text-gray-400 mb-4">
                 Pro and Pro+ plans include security, compliance, and quality guarantees. Enterprise plans add SLA guarantees. See our{' '}
-                <Link href="/docs/TERMS_OF_SERVICE.md" className="text-blue-600 dark:text-blue-400 hover:underline">
+                <Link href="/terms" className="text-blue-600 dark:text-blue-400 hover:underline">
                   Terms of Service
                 </Link>
                 {' '}for details.

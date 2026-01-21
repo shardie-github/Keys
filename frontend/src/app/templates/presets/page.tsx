@@ -9,6 +9,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { toast } from '@/components/Toast';
 import type { TemplateVariables } from '@/services/templateService';
+import { useAuth } from '@/contexts/AuthContext';
+import Link from 'next/link';
 
 interface Preset {
   id: string;
@@ -23,6 +25,8 @@ interface Preset {
 }
 
 export default function TemplatePresetsPage() {
+  const { user, loading: authLoading } = useAuth();
+  const isAuthenticated = !!user;
   const [presets, setPresets] = useState<Preset[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -31,6 +35,10 @@ export default function TemplatePresetsPage() {
 
   const loadPresets = useCallback(async () => {
     try {
+      if (!isAuthenticated) {
+        setPresets([]);
+        return;
+      }
       setLoading(true);
       setError(null);
       
@@ -58,11 +66,15 @@ export default function TemplatePresetsPage() {
     } finally {
       setLoading(false);
     }
-  }, [categoryFilter]);
+  }, [categoryFilter, isAuthenticated]);
 
   useEffect(() => {
+    if (!isAuthenticated) {
+      setLoading(false);
+      return;
+    }
     loadPresets();
-  }, [loadPresets]);
+  }, [isAuthenticated, loadPresets]);
 
   const handleApply = async (presetId: string) => {
     try {
@@ -95,8 +107,22 @@ export default function TemplatePresetsPage() {
 
   const categories = Array.from(new Set(presets.map(p => p.category))).filter(Boolean);
 
-  if (loading) {
+  if (authLoading || loading) {
     return <div className="loading">Loading presets...</div>;
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="template-presets-page">
+        <div className="page-header">
+          <h1>Template Presets</h1>
+          <p>Sign in to apply and manage presets.</p>
+        </div>
+        <Link href="/signin?returnUrl=/templates/presets" className="btn-primary">
+          Sign in to continue
+        </Link>
+      </div>
+    );
   }
 
   return (

@@ -7,15 +7,17 @@
  */
 
 import { useParams, useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTemplatePreview } from '@/hooks/useTemplates';
 import { useTemplateSharing } from '@/hooks/useTemplateSharing';
 import { toast } from '@/components/Toast';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function ShareTemplateClient({ id }: { id?: string }) {
   const params = useParams();
   const router = useRouter();
   const templateId = (id ?? (params.id as string)) as string;
+  const { user, loading: authLoading } = useAuth();
 
   const { preview } = useTemplatePreview(templateId);
   const { shareTemplate, loading } = useTemplateSharing();
@@ -47,6 +49,16 @@ export default function ShareTemplateClient({ id }: { id?: string }) {
       toast.error('Failed to share template');
     }
   };
+
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push(`/signin?returnUrl=/templates/${templateId}/share`);
+    }
+  }, [authLoading, router, templateId, user]);
+
+  if (authLoading || !user) {
+    return <div className="loading">Redirecting to sign in...</div>;
+  }
 
   if (!preview) {
     return <div className="loading">Loading template...</div>;
@@ -140,4 +152,3 @@ export default function ShareTemplateClient({ id }: { id?: string }) {
     </div>
   );
 }
-

@@ -21,17 +21,20 @@ import Link from 'next/link';
 import { toast } from '@/components/Toast';
 import { TemplateComparison } from '@/components/TemplateManager/TemplateComparison';
 import { templateService } from '@/services/templateService';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function TemplateDetailClient({ id }: { id?: string }) {
   const params = useParams();
   const templateId = (id ?? (params.id as string)) as string;
 
-  const { preview, loading: previewLoading } = useTemplatePreview(templateId);
+  const { preview, publicTemplate, loading: previewLoading } = useTemplatePreview(templateId);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { saveCustomization, updateCustomization, deleteCustomization } = useTemplateCustomization(templateId);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { validation, availableVariables, validate } = useTemplateValidation(templateId);
   const { testResult, test } = useTemplateTesting(templateId);
+  const { user, loading: authLoading } = useAuth();
+  const isAuthenticated = !!user;
 
   const [activeTab, setActiveTab] = useState<'preview' | 'customize' | 'test' | 'history' | 'compare'>('preview');
   const [comparison, setComparison] = useState<{
@@ -43,8 +46,62 @@ export default function TemplateDetailClient({ id }: { id?: string }) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loadingComparison, setLoadingComparison] = useState(false);
 
-  if (previewLoading) {
+  if (previewLoading || authLoading) {
     return <div className="loading">Loading template...</div>;
+  }
+
+  if (!isAuthenticated) {
+    if (!publicTemplate) {
+      return (
+        <div className="template-detail-page">
+          <div className="error">Template details are unavailable.</div>
+          <Link href="/signin?returnUrl=/templates" className="btn-primary">
+            Sign in to access templates
+          </Link>
+        </div>
+      );
+    }
+
+    return (
+      <div className="template-detail-page">
+        <div className="page-header">
+          <h1>{publicTemplate.name}</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-2">
+            {publicTemplate.description}
+          </p>
+        </div>
+
+        <div className="template-meta">
+          <div className="template-tags">
+            {publicTemplate.tags.map((tag) => (
+              <span key={tag} className="tag">
+                {tag}
+              </span>
+            ))}
+          </div>
+          <div className="template-tags">
+            {publicTemplate.stack.map((item) => (
+              <span key={item} className="tag">
+                {item}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="preview-tab mt-6">
+          <div className="prompt-section">
+            <h2>Template Summary</h2>
+            <p className="text-gray-700 dark:text-gray-300">
+              Sign in to view the full prompt, customize variables, and run validation tests.
+            </p>
+          </div>
+        </div>
+
+        <Link href={`/signin?returnUrl=/templates/${templateId}`} className="btn-primary mt-4 inline-block">
+          Sign in to customize
+        </Link>
+      </div>
+    );
   }
 
   if (!preview) {
@@ -367,4 +424,3 @@ function TemplateHistoryView({ templateId }: { templateId: string }) {
     </div>
   );
 }
-
