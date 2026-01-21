@@ -30,16 +30,17 @@ export type OnboardingMachineEvent =
   | { type: 'SUBMIT_SUCCESS' }
   | { type: 'SUBMIT_ERROR'; error?: string }
   | { type: 'RETRY' }
-  | { type: 'RESET' };
+  | { type: 'RESET' }
+  | { type: 'SKIP' };
 
 /**
  * Onboarding state machine
  * 
  * States:
  * - welcome: Initial welcome screen
+ * - limitations: What we cannot do
  * - role: Role and vertical selection
  * - stack: Tech stack selection
- * - vibe: Vibe tuning
  * - brand: Brand and context (optional)
  * - complete: Completion screen
  * - submitting: Async profile creation
@@ -65,9 +66,37 @@ export const onboardingMachine = createMachine(
       welcome: {
         on: {
           NEXT: {
-            target: 'role',
+            target: 'limitations',
             actions: assign({
               currentStep: () => 1,
+            }),
+          },
+          SKIP: {
+            target: 'complete',
+            actions: assign({
+              currentStep: () => 5,
+            }),
+          },
+        },
+      },
+      limitations: {
+        on: {
+          NEXT: {
+            target: 'role',
+            actions: assign({
+              currentStep: () => 2,
+            }),
+          },
+          PREV: {
+            target: 'welcome',
+            actions: assign({
+              currentStep: () => 0,
+            }),
+          },
+          SKIP: {
+            target: 'complete',
+            actions: assign({
+              currentStep: () => 5,
             }),
           },
         },
@@ -76,9 +105,20 @@ export const onboardingMachine = createMachine(
         on: {
           NEXT: {
             target: 'stack',
-            guard: 'isRoleValid',
             actions: assign({
-              currentStep: () => 2,
+              currentStep: () => 3,
+            }),
+          },
+          PREV: {
+            target: 'limitations',
+            actions: assign({
+              currentStep: () => 1,
+            }),
+          },
+          SKIP: {
+            target: 'complete',
+            actions: assign({
+              currentStep: () => 5,
             }),
           },
           UPDATE_PROFILE: {
@@ -94,39 +134,21 @@ export const onboardingMachine = createMachine(
       stack: {
         on: {
           NEXT: {
-            target: 'vibe',
-            actions: assign({
-              currentStep: () => 3,
-            }),
-          },
-          PREV: {
-            target: 'role',
-            actions: assign({
-              currentStep: () => 1,
-            }),
-          },
-          UPDATE_PROFILE: {
-            actions: assign({
-              profile: ({ context, event }) => ({
-                ...context.profile,
-                ...event.updates,
-              }),
-            }),
-          },
-        },
-      },
-      vibe: {
-        on: {
-          NEXT: {
             target: 'brand',
             actions: assign({
               currentStep: () => 4,
             }),
           },
           PREV: {
-            target: 'stack',
+            target: 'role',
             actions: assign({
               currentStep: () => 2,
+            }),
+          },
+          SKIP: {
+            target: 'complete',
+            actions: assign({
+              currentStep: () => 5,
             }),
           },
           UPDATE_PROFILE: {
@@ -148,9 +170,15 @@ export const onboardingMachine = createMachine(
             }),
           },
           PREV: {
-            target: 'vibe',
+            target: 'stack',
             actions: assign({
               currentStep: () => 3,
+            }),
+          },
+          SKIP: {
+            target: 'complete',
+            actions: assign({
+              currentStep: () => 5,
             }),
           },
           UPDATE_PROFILE: {
@@ -221,14 +249,8 @@ export const onboardingMachine = createMachine(
   },
   {
     guards: {
-      isRoleValid: ({ context }) => {
-        return Boolean(context.profile.role);
-      },
       isProfileValid: ({ context }) => {
-        return Boolean(
-          context.profile.role &&
-          context.profile.user_id
-        );
+        return Boolean(context.profile.user_id);
       },
       canRetry: ({ context }) => {
         return context.retryCount < 3;
