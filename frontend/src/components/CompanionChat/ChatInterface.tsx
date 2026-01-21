@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import Link from 'next/link';
 import { InputPanel } from './InputPanel';
 import { SuggestionCard } from '../OutputPanel/SuggestionCard';
 import { ReadOnlyBanner } from '@/components/Security/ReadOnlyBanner';
@@ -158,6 +159,18 @@ export function ChatInterface({ userId, initialVibeConfig }: ChatInterfaceProps)
                   </button>
                 ))}
               </div>
+            </div>
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+              <Link
+                href="/templates"
+                className="inline-flex items-center gap-2 px-4 py-2 text-sm sm:text-base font-semibold text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors"
+              >
+                <span aria-hidden="true">📚</span>
+                Browse Templates (Advanced)
+              </Link>
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+                Optional: jump into ready-made patterns when you need them.
+              </p>
             </div>
           </div>
         )}

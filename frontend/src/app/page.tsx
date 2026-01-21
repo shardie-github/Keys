@@ -191,12 +191,6 @@ export default function Home() {
               Settings
             </Link>
             <Link
-              href="/templates"
-              className="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg transition-colors"
-            >
-              Templates
-            </Link>
-            <Link
               href="/pricing"
               className="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg transition-colors"
             >
@@ -214,6 +208,19 @@ export default function Home() {
             >
               Features
             </Link>
+            <details className="group">
+              <summary className="list-none cursor-pointer px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg transition-colors">
+                Advanced
+              </summary>
+              <div className="mt-2 flex justify-center">
+                <Link
+                  href="/templates"
+                  className="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg transition-colors"
+                >
+                  Templates
+                </Link>
+              </div>
+            </details>
             <Link
               href="/docs/TERMS_OF_SERVICE.md"
               className="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg transition-colors"

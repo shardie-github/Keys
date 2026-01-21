@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { StackSelector } from './StackSelector';
 import { VibeTuner } from './VibeTuner';
 import type { UserProfile } from '@/types';
@@ -19,14 +19,15 @@ interface ProfileOnboardingProps {
 
 const STEPS = [
   'welcome',
+  'limitations',
   'role',
   'stack',
-  'vibe',
   'brand',
   'complete',
 ] as const;
 
 export function ProfileOnboarding({ userId, onComplete }: ProfileOnboardingProps) {
+  const [showAdvanced, setShowAdvanced] = useState(false);
   const { send, context, isLoading, isError, isSuccess } = useMachineState(
     onboardingMachine.provide({
       actors: {
@@ -105,12 +106,52 @@ export function ProfileOnboarding({ userId, onComplete }: ProfileOnboardingProps
               <p className="text-slate-600 dark:text-slate-400 mb-6">
                 Your day-to-day AI co-founder for operational automation. Works alongside Cursor to automate business operations and build institutional memory.
               </p>
-              <AnimatedButton
-                variant="primary"
-                onClick={() => send({ type: 'NEXT' } as OnboardingMachineEvent)}
-              >
-                Get Started
-              </AnimatedButton>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <AnimatedButton
+                  variant="primary"
+                  onClick={() => send({ type: 'NEXT' } as OnboardingMachineEvent)}
+                >
+                  Get Started
+                </AnimatedButton>
+                <AnimatedButton
+                  variant="ghost"
+                  onClick={() => send({ type: 'SKIP' } as OnboardingMachineEvent)}
+                >
+                  Skip for now
+                </AnimatedButton>
+              </div>
+            </div>
+          </Reveal>
+        );
+
+      case 'limitations':
+        return (
+          <Reveal direction="fade">
+            <div>
+              <h2 className="text-2xl font-bold mb-4 text-slate-900 dark:text-slate-50">
+                What we don&apos;t do
+              </h2>
+              <p className="text-slate-600 dark:text-slate-400 mb-6">
+                Keys is read-only and designed to keep your codebase and systems safe. Here are the hard limits:
+              </p>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-slate-700 dark:text-slate-300">
+                {[
+                  'Write or modify code files',
+                  'Access or change your repositories',
+                  'Execute commands or scripts',
+                  'Read your local filesystem',
+                  'Call external APIs beyond LLM providers',
+                  'Share your data with third parties',
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-2">
+                    <span className="text-red-500 mt-0.5" aria-hidden="true">✗</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-6 text-xs text-slate-500 dark:text-slate-400">
+                We only use your profile preferences and chat input to generate outputs with your chosen LLM provider.
+              </p>
             </div>
           </Reveal>
         );
@@ -157,6 +198,14 @@ export function ProfileOnboarding({ userId, onComplete }: ProfileOnboardingProps
                   <option value="other">Other</option>
                 </select>
               </div>
+              <div className="mt-6">
+                <AnimatedButton
+                  variant="ghost"
+                  onClick={() => send({ type: 'SKIP' } as OnboardingMachineEvent)}
+                >
+                  Skip for now
+                </AnimatedButton>
+              </div>
             </div>
           </Reveal>
         );
@@ -172,34 +221,6 @@ export function ProfileOnboarding({ userId, onComplete }: ProfileOnboardingProps
                 stack={(profile.stack || {}) as Record<string, boolean>}
                 onChange={(stack) => updateProfile({ stack: stack as UserProfile['stack'] })}
               />
-            </div>
-          </Reveal>
-        );
-
-      case 'vibe':
-        return (
-          <Reveal direction="left">
-            <div>
-              <h2 className="text-xl font-bold mb-4 text-slate-900 dark:text-slate-50">
-                Tune your vibe
-              </h2>
-              <VibeTuner
-                playfulness={50}
-                revenueFocus={60}
-                investorPerspective={40}
-                onChange={(vibe) => {
-                  updateProfile({
-                    tone: vibe.playfulness > 70 ? 'playful' : vibe.playfulness < 30 ? 'serious' : 'balanced',
-                    kpi_focus: vibe.revenueFocus > 70 ? 'revenue' : 'growth',
-                    perspective: vibe.investorPerspective > 70 ? 'cfo' : 'founder',
-                  });
-                }}
-              />
-              <div className="mt-6">
-                <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">
-                  You can save this configuration as a preset later in your profile settings.
-                </p>
-              </div>
             </div>
           </Reveal>
         );
@@ -236,6 +257,38 @@ export function ProfileOnboarding({ userId, onComplete }: ProfileOnboardingProps
                     placeholder="E.g., '$2M ARR SaaS, 5 person team, building developer tools'"
                   />
                 </div>
+              </div>
+              <div className="mt-8 border-t border-slate-200 dark:border-slate-700 pt-4">
+                <button
+                  type="button"
+                  className="text-sm font-semibold text-blue-600 dark:text-blue-400 hover:underline"
+                  onClick={() => setShowAdvanced((prev) => !prev)}
+                  aria-expanded={showAdvanced}
+                >
+                  {showAdvanced ? 'Hide advanced' : 'Show advanced'}
+                </button>
+                {showAdvanced && (
+                  <div className="mt-4 rounded-lg border border-slate-200 dark:border-slate-700 p-4">
+                    <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">
+                      Advanced vibe tuning
+                    </h3>
+                    <VibeTuner
+                      playfulness={50}
+                      revenueFocus={60}
+                      investorPerspective={40}
+                      onChange={(vibe) => {
+                        updateProfile({
+                          tone: vibe.playfulness > 70 ? 'playful' : vibe.playfulness < 30 ? 'serious' : 'balanced',
+                          kpi_focus: vibe.revenueFocus > 70 ? 'revenue' : 'growth',
+                          perspective: vibe.investorPerspective > 70 ? 'cfo' : 'founder',
+                        });
+                      }}
+                    />
+                    <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">
+                      You can revisit these settings anytime in your profile.
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </Reveal>
