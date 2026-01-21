@@ -48,39 +48,29 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-          cache-dependency-path: backend/package-lock.json
-      
-      - name: Cache node modules
-        uses: actions/cache@v4
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
         with:
-          path: backend/node_modules
-          key: ${{ runner.os }}-backend-node-${{ hashFiles('backend/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-backend-node-
+          version: 10.13.1
       
       - name: Install dependencies
-        run: |
-          cd backend
-          npm ci --prefer-offline --no-audit
+        run: pnpm install --frozen-lockfile
       
       - name: Lint
-        run: |
-          cd backend
-          npm run lint
-        continue-on-error: true
+        run: pnpm --filter backend lint
       
       - name: Type check
-        run: |
-          cd backend
-          npm run type-check
+        run: pnpm --filter backend type-check
       
       - name: Verify database contract
         run: |
           cd backend
           npm install -g tsx
           cd ..
-          npm run db:verify || echo "Database verification failed - check logs"
+          pnpm run db:verify || echo "Database verification failed - check logs"
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
@@ -89,9 +79,7 @@ jobs:
         continue-on-error: true
       
       - name: Run tests
-        run: |
-          cd backend
-          npm test -- --coverage --reporter=verbose
+        run: pnpm --filter backend test -- --coverage --reporter=verbose
         env:
           NODE_ENV: test
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
@@ -99,9 +87,7 @@ jobs:
           REDIS_URL: redis://localhost:6379
       
       - name: Check coverage thresholds
-        run: |
-          cd backend
-          npm test -- --coverage --reporter=json --outputFile=coverage.json || true
+        run: pnpm --filter backend test -- --coverage --reporter=json --outputFile=coverage.json || true
       
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
@@ -132,55 +118,43 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-          cache-dependency-path: frontend/package-lock.json
-      
-      - name: Cache node modules
-        uses: actions/cache@v4
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
         with:
-          path: frontend/node_modules
-          key: ${{ runner.os }}-frontend-node-${{ hashFiles('frontend/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-frontend-node-
+          version: 10.13.1
       
       - name: Cache Next.js build
         uses: actions/cache@v4
         with:
           path: |
             frontend/.next/cache
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('frontend/package-lock.json') }}-${{ hashFiles('frontend/**/*.js', 'frontend/**/*.jsx', 'frontend/**/*.ts', 'frontend/**/*.tsx') }}
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('frontend/**/*.js', 'frontend/**/*.jsx', 'frontend/**/*.ts', 'frontend/**/*.tsx') }}
           restore-keys: |
-            ${{ runner.os }}-nextjs-${{ hashFiles('frontend/package-lock.json') }}-
+            ${{ runner.os }}-nextjs-${{ hashFiles('pnpm-lock.yaml') }}-
       
       - name: Install dependencies
-        run: |
-          cd frontend
-          npm ci --prefer-offline --no-audit
+        run: pnpm install --frozen-lockfile
       
       - name: Structural Lint & Edge Check
         run: |
-          cd frontend
           # Rationale: Ensures no Node.js primitives leak into Edge Runtime
-          npm run lint 
-        continue-on-error: true
+          pnpm --filter frontend lint
       
       - name: Type check
-        run: |
-          cd frontend
-          npm run type-check
+        run: pnpm --filter frontend type-check
       
       - name: Run tests
-        run: |
-          cd frontend
-          npm test -- --coverage --reporter=verbose
+        run: pnpm --filter frontend test -- --coverage --reporter=verbose
         env:
           NODE_ENV: test
       
       - name: Run E2E tests
         run: |
-          cd frontend
-          npx playwright install --with-deps
-          npm run test:e2e
+          pnpm --filter frontend exec playwright install --with-deps
+          pnpm --filter frontend run test:e2e
         env:
           NODE_ENV: test
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
@@ -188,9 +162,7 @@ jobs:
         continue-on-error: true
       
       - name: Production Build (Resilient Mode)
-        run: |
-          cd frontend
-          npm run build
+        run: pnpm --filter frontend build
         env:
           # Rationale: Standardizes environment to avoid build warnings
           NODE_ENV: production
