@@ -10,6 +10,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { toast } from '@/components/Toast';
 import Link from 'next/link';
 import type { TemplateVariables } from '@/services/templateService';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface SharedTemplate {
   id: string;
@@ -26,6 +27,8 @@ interface SharedTemplate {
 }
 
 export default function SharedTemplatesPage() {
+  const { user, loading: authLoading } = useAuth();
+  const isAuthenticated = !!user;
   const [sharedTemplates, setSharedTemplates] = useState<SharedTemplate[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -33,6 +36,10 @@ export default function SharedTemplatesPage() {
 
   const loadSharedTemplates = useCallback(async () => {
     try {
+      if (!isAuthenticated) {
+        setSharedTemplates([]);
+        return;
+      }
       setLoading(true);
       setError(null);
       
@@ -67,11 +74,29 @@ export default function SharedTemplatesPage() {
     } finally {
       setLoading(false);
     }
-  }, [filter]);
+  }, [filter, isAuthenticated]);
 
   useEffect(() => {
+    if (!isAuthenticated) {
+      setLoading(false);
+      return;
+    }
     loadSharedTemplates();
-  }, [loadSharedTemplates]);
+  }, [isAuthenticated, loadSharedTemplates]);
+
+  if (!authLoading && !isAuthenticated) {
+    return (
+      <div className="shared-templates-page">
+        <div className="page-header">
+          <h1>Shared Templates</h1>
+          <p>Sign in to browse and clone shared templates.</p>
+        </div>
+        <Link href="/signin?returnUrl=/templates/shared" className="btn-primary">
+          Sign in to continue
+        </Link>
+      </div>
+    );
+  }
 
   const handleClone = async (sharedId: string) => {
     try {

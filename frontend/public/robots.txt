@@ -2,17 +2,50 @@
 User-agent: *
 Allow: /
 
-# Disallow admin and API routes
+# Disallow private app and internal routes
 Disallow: /admin/
 Disallow: /api/
 Disallow: /__review/
+Disallow: /account/
+Disallow: /chat
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /templates/shared
+Disallow: /templates/presets
+Disallow: /templates/analytics
+Disallow: /templates/export
+Disallow: /templates/*/customize
+Disallow: /templates/*/share
+Disallow: /onboarding
+Disallow: /playground
+Disallow: /dev/
+Disallow: /extension-auth
 
-# Allow important pages
+# Allow public pages
 Allow: /
-Allow: /chat
-Allow: /dashboard
-Allow: /profile
+Allow: /about
+Allow: /blog
+Allow: /changelog
+Allow: /compare
+Allow: /contact
+Allow: /discover
+Allow: /docs
+Allow: /examples
+Allow: /features
+Allow: /faq
+Allow: /for-developers
+Allow: /for-founders
+Allow: /integrations
+Allow: /marketplace
+Allow: /pricing
+Allow: /privacy
+Allow: /roadmap
+Allow: /security
+Allow: /status
+Allow: /support
 Allow: /templates
+Allow: /terms
+Allow: /venture-strategy
 
 # Sitemap location
 Sitemap: https://keys.dev/sitemap.xml

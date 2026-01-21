@@ -222,7 +222,7 @@ export default function Home() {
               </div>
             </details>
             <Link
-              href="/docs/TERMS_OF_SERVICE.md"
+              href="/terms"
               className="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg transition-colors"
             >
               Terms

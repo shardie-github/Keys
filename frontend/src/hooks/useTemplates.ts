@@ -6,6 +6,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { templateService } from '@/services/templateService';
+import { fetchPublicTemplate, fetchPublicTemplates, type PublicTemplate } from '@/services/publicTemplateService';
 import type {
   Template,
   TemplatePreview,
@@ -32,6 +33,16 @@ export function useTemplates(filters: SearchFilters = {}) {
       const data = await templateService.searchTemplates(filters);
       setTemplates(data);
     } catch (err) {
+      const fallback = await fetchPublicTemplates({
+        query: filters.query,
+        milestone: filters.milestone,
+        tags: filters.tags,
+        stack: filters.stack,
+        priority: filters.priority,
+        security_level: filters.security_level,
+        optimization_level: filters.optimization_level,
+      });
+      setTemplates(fallback as Template[]);
       setError(err instanceof Error ? err : new Error('Failed to load templates'));
     } finally {
       setLoading(false);
@@ -52,6 +63,7 @@ export function useTemplates(filters: SearchFilters = {}) {
 
 export function useTemplatePreview(templateId: string | null) {
   const [preview, setPreview] = useState<TemplatePreview | null>(null);
+  const [publicTemplate, setPublicTemplate] = useState<PublicTemplate | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
@@ -63,7 +75,11 @@ export function useTemplatePreview(templateId: string | null) {
       setError(null);
       const data = await templateService.getTemplatePreview(templateId);
       setPreview(data);
+      setPublicTemplate(null);
     } catch (err) {
+      const fallback = await fetchPublicTemplate(templateId);
+      setPublicTemplate(fallback);
+      setPreview(null);
       setError(err instanceof Error ? err : new Error('Failed to load template preview'));
     } finally {
       setLoading(false);
@@ -72,6 +88,7 @@ export function useTemplatePreview(templateId: string | null) {
 
   return {
     preview,
+    publicTemplate,
     loading,
     error,
     refetch: loadPreview,
@@ -339,6 +356,7 @@ export function useRecommendedTemplates(options: {
   limit?: number;
   basedOnUsage?: boolean;
   basedOnStack?: boolean;
+  enabled?: boolean;
 } = {}) {
   const [templates, setTemplates] = useState<Template[]>([]);
   const [loading, setLoading] = useState(true);
@@ -346,6 +364,11 @@ export function useRecommendedTemplates(options: {
 
   const loadRecommended = useCallback(async () => {
     try {
+      if (options.enabled === false) {
+        setTemplates([]);
+        setLoading(false);
+        return;
+      }
       setLoading(true);
       setError(null);
       const data = await templateService.getRecommendedTemplates(options);

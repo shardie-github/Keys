@@ -11,11 +11,14 @@ import { useTemplates, useRecommendedTemplates } from '@/hooks/useTemplates';
 import { TemplateBrowser } from '@/components/TemplateManager/TemplateBrowser';
 import Link from 'next/link';
 import { toast } from '@/components/Toast';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function TemplatesPage() {
   const [selectedMilestone, setSelectedMilestone] = useState<string>('');
   const [searchQuery, setSearchQuery] = useState('');
   const [view, setView] = useState<'browse' | 'recommended' | 'customized'>('browse');
+  const { user, loading: authLoading } = useAuth();
+  const isAuthenticated = !!user;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { templates, loading: templatesLoading } = useTemplates({
@@ -27,6 +30,7 @@ export default function TemplatesPage() {
     limit: 10,
     basedOnUsage: true,
     basedOnStack: true,
+    enabled: isAuthenticated,
   });
 
   const milestones = [
@@ -50,26 +54,59 @@ export default function TemplatesPage() {
           Template Manager
         </h1>
         <nav className="header-actions flex flex-wrap gap-2 sm:gap-3 mt-4" aria-label="Template navigation">
-          <Link 
-            href="/templates/shared" 
-            className="px-4 py-2 text-sm font-medium bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+          <Link
+            href="/templates/shared"
+            className={`px-4 py-2 text-sm font-medium border rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+              isAuthenticated
+                ? 'bg-white dark:bg-slate-800 border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700'
+                : 'bg-gray-100 dark:bg-slate-800/40 border-gray-200 dark:border-slate-700 text-gray-400 cursor-not-allowed pointer-events-none'
+            }`}
+            aria-disabled={!isAuthenticated}
+            tabIndex={isAuthenticated ? 0 : -1}
           >
             Shared Templates
           </Link>
-          <Link 
-            href="/templates/presets" 
-            className="px-4 py-2 text-sm font-medium bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+          <Link
+            href="/templates/presets"
+            className={`px-4 py-2 text-sm font-medium border rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+              isAuthenticated
+                ? 'bg-white dark:bg-slate-800 border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700'
+                : 'bg-gray-100 dark:bg-slate-800/40 border-gray-200 dark:border-slate-700 text-gray-400 cursor-not-allowed pointer-events-none'
+            }`}
+            aria-disabled={!isAuthenticated}
+            tabIndex={isAuthenticated ? 0 : -1}
           >
             Presets
           </Link>
-          <Link 
-            href="/templates/analytics" 
-            className="px-4 py-2 text-sm font-medium bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+          <Link
+            href="/templates/analytics"
+            className={`px-4 py-2 text-sm font-medium border rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+              isAuthenticated
+                ? 'bg-white dark:bg-slate-800 border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700'
+                : 'bg-gray-100 dark:bg-slate-800/40 border-gray-200 dark:border-slate-700 text-gray-400 cursor-not-allowed pointer-events-none'
+            }`}
+            aria-disabled={!isAuthenticated}
+            tabIndex={isAuthenticated ? 0 : -1}
           >
             Analytics
           </Link>
         </nav>
       </header>
+
+      {!authLoading && !isAuthenticated && (
+        <div className="mb-6 rounded-xl border border-blue-200 dark:border-blue-900 bg-blue-50/80 dark:bg-blue-900/20 p-4 text-sm text-blue-700 dark:text-blue-200">
+          <p className="font-medium">Browse the catalog publicly.</p>
+          <p className="mt-1">
+            Sign in to unlock recommendations, saved customizations, and sharing tools.
+          </p>
+          <Link
+            href="/signin?returnUrl=/templates"
+            className="mt-3 inline-flex items-center font-semibold text-blue-700 dark:text-blue-200 underline"
+          >
+            Sign in to personalize
+          </Link>
+        </div>
+      )}
 
       <div className="view-tabs flex gap-2 mb-6 border-b border-gray-200 dark:border-slate-700" role="tablist" aria-label="View selection">
         <button
@@ -94,7 +131,15 @@ export default function TemplatesPage() {
               ? 'border-blue-600 text-blue-600 dark:text-blue-400' 
               : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
           }`}
-          onClick={() => setView('recommended')}
+          onClick={() => {
+            if (!isAuthenticated) {
+              toast.error('Sign in to see personalized recommendations.');
+              setView('browse');
+              return;
+            }
+            setView('recommended');
+          }}
+          disabled={!isAuthenticated}
         >
           Recommended
         </button>
@@ -107,7 +152,15 @@ export default function TemplatesPage() {
               ? 'border-blue-600 text-blue-600 dark:text-blue-400' 
               : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
           }`}
-          onClick={() => setView('customized')}
+          onClick={() => {
+            if (!isAuthenticated) {
+              toast.error('Sign in to manage your custom templates.');
+              setView('browse');
+              return;
+            }
+            setView('customized');
+          }}
+          disabled={!isAuthenticated}
         >
           My Templates
         </button>

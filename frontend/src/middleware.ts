@@ -2,8 +2,23 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import type { User } from '@supabase/supabase-js';
 
-// Protected routes that require authentication
-const protectedRoutes = ['/dashboard', '/chat', '/profile', '/templates', '/admin', '/api/billing'];
+// Auth-required route patterns (private app surface)
+const authRequiredMatchers: Array<RegExp> = [
+  /^\/dashboard(\/|$)/,
+  /^\/chat(\/|$)/,
+  /^\/profile(\/|$)/,
+  /^\/account(\/|$)/,
+  /^\/admin(\/|$)/,
+  /^\/onboarding(\/|$)/,
+  /^\/image-control(\/|$)/,
+  /^\/playground(\/|$)/,
+  /^\/dev(\/|$)/,
+  /^\/extension-auth(\/|$)/,
+  /^\/api\/billing(\/|$)/,
+  /^\/templates\/(analytics|presets|shared|export)(\/|$)/,
+  /^\/templates\/[^/]+\/customize(\/|$)/,
+  /^\/templates\/[^/]+\/share(\/|$)/,
+];
 
 // Public routes that authenticated users should be redirected away from
 const publicAuthRoutes = ['/signin', '/signup'];
@@ -124,19 +139,25 @@ export async function middleware(request: NextRequest) {
   }
 
   // Check if route is protected
-  const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route));
+  const isProtectedRoute = authRequiredMatchers.some((matcher) => matcher.test(pathname));
   const isPublicAuthRoute = publicAuthRoutes.some((route) => pathname.startsWith(route));
 
   // For protected routes, check authentication
   if (isProtectedRoute && !user && url && key) {
     const signInUrl = new URL('/signin', request.url);
     signInUrl.searchParams.set('returnUrl', pathname);
-    return NextResponse.redirect(signInUrl);
+    const redirectResponse = NextResponse.redirect(signInUrl);
+    redirectResponse.headers.set('X-Robots-Tag', 'noindex, nofollow');
+    return redirectResponse;
   }
 
   // If authenticated user tries to access signin/signup, redirect to dashboard
   if (isPublicAuthRoute && user) {
     return NextResponse.redirect(new URL('/dashboard', request.url));
+  }
+
+  if (isProtectedRoute || isPublicAuthRoute) {
+    supabaseResponse.headers.set('X-Robots-Tag', 'noindex, nofollow');
   }
 
   return supabaseResponse;
