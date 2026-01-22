@@ -5,6 +5,12 @@ import { validateBody } from '../middleware/validation.js';
 import { z } from 'zod';
 import Stripe from 'stripe';
 import { logger } from '../utils/logger.js';
+import {
+  getAllowedRedirectOrigins,
+  getFrontendUrl,
+  resolveReturnUrl,
+  validateRedirectUrl,
+} from '../utils/redirects.js';
 
 const router = Router();
 
@@ -79,6 +85,24 @@ router.post(
 
     const userId = req.userId!;
     const { priceId, successUrl, cancelUrl } = req.body;
+    const allowedOrigins = getAllowedRedirectOrigins();
+
+    let safeSuccessUrl: string;
+    let safeCancelUrl: string;
+
+    try {
+      safeSuccessUrl = validateRedirectUrl(successUrl, allowedOrigins);
+      safeCancelUrl = validateRedirectUrl(cancelUrl, allowedOrigins);
+    } catch (error) {
+      logger.warn('Rejected checkout redirect URL', {
+        userId,
+        successUrl,
+        cancelUrl,
+        allowedOrigins,
+        error: error instanceof Error ? error.message : String(error),
+      });
+      return res.status(400).json({ error: 'Invalid redirect URL' });
+    }
 
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
@@ -89,8 +113,8 @@ router.post(
           quantity: 1,
         },
       ],
-      success_url: successUrl,
-      cancel_url: cancelUrl,
+      success_url: safeSuccessUrl,
+      cancel_url: safeCancelUrl,
       client_reference_id: userId,
       metadata: {
         userId,
@@ -148,7 +172,12 @@ router.get(
         .eq('user_id', userId);
     }
 
-    const returnUrl = (req.query.returnUrl as string) || process.env.FRONTEND_URL || 'http://localhost:3000';
+    const allowedOrigins = getAllowedRedirectOrigins();
+    const returnUrl = resolveReturnUrl(
+      req.query.returnUrl as string | undefined,
+      allowedOrigins,
+      getFrontendUrl()
+    );
     const session = await stripe.billingPortal.sessions.create({
       customer: customerId,
       return_url: returnUrl,
