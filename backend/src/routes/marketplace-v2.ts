@@ -27,6 +27,7 @@ import {
 } from '../lib/marketplace/stripe.js';
 import { ingestAllKeys, ingestFromAssetsIndex } from '../lib/marketplace/ingestion.js';
 import { logger } from '../utils/logger.js';
+import { getAllowedRedirectOrigins, validateRedirectUrl } from '../utils/redirects.js';
 
 const router = Router();
 const supabase = createClient(
@@ -350,9 +351,28 @@ router.post(
     const { slug } = req.params;
     const userId = req.userId!;
     const { successUrl, cancelUrl } = req.body;
+    const allowedOrigins = getAllowedRedirectOrigins();
+
+    let safeSuccessUrl: string;
+    let safeCancelUrl: string;
 
     try {
-      const session = await createKeyCheckoutSession(userId, slug, successUrl, cancelUrl);
+      safeSuccessUrl = validateRedirectUrl(successUrl, allowedOrigins);
+      safeCancelUrl = validateRedirectUrl(cancelUrl, allowedOrigins);
+    } catch (error) {
+      logger.warn('Rejected marketplace checkout redirect URL', {
+        userId,
+        slug,
+        successUrl,
+        cancelUrl,
+        allowedOrigins,
+        error: error instanceof Error ? error.message : String(error),
+      });
+      return res.status(400).json({ error: 'Invalid redirect URL' });
+    }
+
+    try {
+      const session = await createKeyCheckoutSession(userId, slug, safeSuccessUrl, safeCancelUrl);
       res.json(session);
     } catch (error: any) {
       logger.error('Failed to create checkout session:', error);
@@ -462,9 +482,28 @@ router.post(
     const { slug } = req.params;
     const userId = req.userId!;
     const { successUrl, cancelUrl } = req.body;
+    const allowedOrigins = getAllowedRedirectOrigins();
+
+    let safeSuccessUrl: string;
+    let safeCancelUrl: string;
 
     try {
-      const session = await createBundleCheckoutSession(userId, slug, successUrl, cancelUrl);
+      safeSuccessUrl = validateRedirectUrl(successUrl, allowedOrigins);
+      safeCancelUrl = validateRedirectUrl(cancelUrl, allowedOrigins);
+    } catch (error) {
+      logger.warn('Rejected marketplace bundle checkout redirect URL', {
+        userId,
+        slug,
+        successUrl,
+        cancelUrl,
+        allowedOrigins,
+        error: error instanceof Error ? error.message : String(error),
+      });
+      return res.status(400).json({ error: 'Invalid redirect URL' });
+    }
+
+    try {
+      const session = await createBundleCheckoutSession(userId, slug, safeSuccessUrl, safeCancelUrl);
       res.json(session);
     } catch (error: any) {
       logger.error('Failed to create bundle checkout session:', error);
