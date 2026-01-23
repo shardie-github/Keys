@@ -9,7 +9,6 @@ export const metadata = {
 
 export default async function PrivacyPage() {
   return (
-        // @ts-expect-error - Async Server Component (Next.js 13+)
     <MarkdownPage
       title="Privacy Policy"
       description="How KEYS collects, uses, and protects data."

@@ -9,7 +9,6 @@ export const metadata = {
 
 export default async function BlogPage() {
   return (
-        // @ts-expect-error - Async Server Component (Next.js 13+)
     <MarkdownPage
       title="KEYS Story"
       description="Product narrative and positioning materials."

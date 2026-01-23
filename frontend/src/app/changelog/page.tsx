@@ -9,7 +9,6 @@ export const metadata = {
 
 export default async function ChangelogPage() {
   return (
-        // @ts-expect-error - Async Server Component (Next.js 13+)
     <MarkdownPage
       title="Changelog"
       description="Release notes and product updates for KEYS."
