@@ -1,12 +1,11 @@
 import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
-import { Inter } from 'next/font/google';
 import './globals.css';
+import '@/utils/env-validation'; // Validate environment variables
 import { RootProvider } from '@/components/providers/root-provider';
 import { StructuredData, generateOrganizationSchema, generateSoftwareApplicationSchema } from '@/components/SEO/StructuredData';
 import { resolveSiteUrl } from '@/utils/site-url';
 
-const inter = Inter({ subsets: ['latin'], display: 'swap', preload: true });
 const siteUrl = resolveSiteUrl();
 
 export const viewport: Viewport = {
@@ -128,7 +127,7 @@ export default function RootLayout({
         <StructuredData type="Organization" data={generateOrganizationSchema()} />
         <StructuredData type="SoftwareApplication" data={generateSoftwareApplicationSchema()} />
       </head>
-      <body className={`${inter.className} antialiased`}>
+      <body className="font-sans antialiased">
         <RootProvider>
           <div id="skip-to-content" className="sr-only">
             <a href="#main-content" className="skip-link">

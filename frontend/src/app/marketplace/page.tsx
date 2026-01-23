@@ -331,7 +331,7 @@ export default function MarketplacePage() {
             type="text"
             placeholder="Search keys..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
             aria-label="Search keys"
             whileFocus={{ scale: 1.02 }}
             className="px-4 py-2 border rounded-lg flex-1 min-w-full sm:min-w-[200px] dark:bg-slate-800 dark:border-slate-700 dark:text-white"
@@ -342,7 +342,7 @@ export default function MarketplacePage() {
           <motion.select
             id="key-type-filter"
             value={keyTypeFilter}
-            onChange={(e) => setKeyTypeFilter(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setKeyTypeFilter(e.target.value)}
             aria-label="Filter by key type"
             whileFocus={{ scale: 1.02 }}
             className="px-4 py-2 border rounded-lg dark:bg-slate-800 dark:border-slate-700 dark:text-white"
@@ -362,7 +362,7 @@ export default function MarketplacePage() {
               <motion.select
                 id="category-filter"
                 value={categoryFilter}
-                onChange={(e) => setCategoryFilter(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setCategoryFilter(e.target.value)}
                 aria-label="Filter by category"
                 whileFocus={{ scale: 1.02 }}
                 className="px-4 py-2 border rounded-lg dark:bg-slate-800 dark:border-slate-700 dark:text-white"

@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 import { motion } from 'framer-motion';
-import Script from 'next/script';
 import { toast } from '@/components/Toast';
 import { getDemoKey, DEMO_KEYS } from '@/services/demoData';
 import { KeyViewTabs, ViewType } from '@/components/KeyDetail/KeyViewTabs';
@@ -367,7 +366,7 @@ function KeyDetailContent({ slug }: { slug: string }) {
 
   return (
     <>
-      <Script
+      <script
         id="key-structured-data"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
@@ -502,7 +501,7 @@ function KeyDetailContent({ slug }: { slug: string }) {
                 <motion.select
                   whileFocus={{ scale: 1.02 }}
                   value={selectedVersion}
-                  onChange={(e) => setSelectedVersion(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedVersion(e.target.value)}
                   className="w-full px-4 py-2 border rounded-lg dark:bg-slate-800 dark:border-slate-700 dark:text-white"
                 >
                   {key.versions.map((v) => (
