@@ -9,6 +9,7 @@ export const metadata = {
 
 export default async function FaqPage() {
   return (
+        // @ts-expect-error - Async Server Component (Next.js 13+)
     <MarkdownPage
       title="FAQ"
       description="Answers to common questions about KEYS."

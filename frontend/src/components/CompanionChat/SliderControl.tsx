@@ -67,7 +67,7 @@ export function SliderControl({
           aria-valuemax={max}
           aria-valuenow={value}
         />
-        <style jsx>{`
+        <style>{`
           .slider-thumb::-webkit-slider-thumb {
             appearance: none;
             width: 18px;

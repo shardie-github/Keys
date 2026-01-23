@@ -49,7 +49,7 @@ export function Confetti({ trigger = false, duration = 3000, colors = ['#3b82f6'
           }}
         />
       ))}
-      <style jsx>{`
+      <style>{`
         @keyframes confetti-fall {
           0% {
             transform: translateY(0) rotate(0deg);
