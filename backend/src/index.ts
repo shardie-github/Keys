@@ -71,6 +71,10 @@ app.use(corsMiddleware());
 // Request logging
 app.use(requestLoggingMiddleware);
 
+// Request timeout (30s default)
+import { timeoutMiddleware } from './middleware/timeout.js';
+app.use(timeoutMiddleware({ timeoutMs: 30000 }));
+
 // Metrics middleware
 import { metricsMiddleware } from './middleware/metrics.js';
 import { apmMiddleware } from './middleware/apm.js';
