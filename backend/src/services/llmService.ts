@@ -2,6 +2,8 @@ import OpenAI from 'openai';
 import Anthropic from '@anthropic-ai/sdk';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { logger } from '../utils/logger.js';
+import { retry } from '../utils/retry.js';
+import { CircuitBreaker } from '../utils/circuitBreaker.js';
 import type { LLMProvider } from '../types/filters.js';
 
 export interface LLMRequest {
@@ -26,6 +28,12 @@ export class UnifiedLLMService {
   private anthropic: Anthropic | null = null;
   private googleAI: GoogleGenerativeAI | null = null;
   private localLLMBaseUrl: string | null = null;
+
+  // Circuit breakers per provider to prevent cascading failures
+  private openaiCircuit = new CircuitBreaker({ failureThreshold: 5, resetTimeout: 60000 });
+  private anthropicCircuit = new CircuitBreaker({ failureThreshold: 5, resetTimeout: 60000 });
+  private googleCircuit = new CircuitBreaker({ failureThreshold: 5, resetTimeout: 60000 });
+  private localLLMCircuit = new CircuitBreaker({ failureThreshold: 3, resetTimeout: 30000 });
 
   constructor() {
     this.initializeProviders();
@@ -103,25 +111,42 @@ export class UnifiedLLMService {
       ? [{ role: 'system', content: request.systemPrompt }, ...request.messages]
       : request.messages;
 
-    const response = await this.openai.chat.completions.create({
-      model: request.model,
-      messages: messages as any,
-      temperature: request.temperature ?? 0.7,
-      max_tokens: request.maxTokens,
+    // Wrap with circuit breaker and retry logic
+    return this.openaiCircuit.execute(async () => {
+      return retry(
+        async () => {
+          const response = await this.openai!.chat.completions.create({
+            model: request.model,
+            messages: messages as any,
+            temperature: request.temperature ?? 0.7,
+            max_tokens: request.maxTokens,
+          });
+
+          const choice = response.choices[0];
+          if (!choice || !choice.message) {
+            throw new Error('No response from OpenAI');
+          }
+
+          return {
+            content: choice.message.content || '',
+            model: response.model,
+            provider: 'openai' as const,
+            tokensUsed: response.usage?.total_tokens,
+            finishReason: choice.finish_reason || undefined,
+          };
+        },
+        {
+          maxAttempts: 3,
+          initialDelayMs: 1000,
+          maxDelayMs: 10000,
+          retryable: (error: any) => {
+            // Retry on rate limits, timeouts, and transient network errors
+            const statusCode = error?.status || error?.response?.status;
+            return statusCode === 429 || statusCode === 503 || statusCode >= 500 || error?.code === 'ETIMEDOUT';
+          },
+        }
+      );
     });
-
-    const choice = response.choices[0];
-    if (!choice || !choice.message) {
-      throw new Error('No response from OpenAI');
-    }
-
-    return {
-      content: choice.message.content || '',
-      model: response.model,
-      provider: 'openai',
-      tokensUsed: response.usage?.total_tokens,
-      finishReason: choice.finish_reason || undefined,
-    };
   }
 
   /**
@@ -141,28 +166,45 @@ export class UnifiedLLMService {
         content: m.content,
       })) as any;
 
-    const response = await (this.anthropic as any).messages.create({
-      model: request.model,
-      system: systemMessage,
-      messages: anthropicMessages,
-      temperature: request.temperature ?? 0.7,
-      max_tokens: request.maxTokens ?? 4096,
+    // Wrap with circuit breaker and retry logic
+    return this.anthropicCircuit.execute(async () => {
+      return retry(
+        async () => {
+          const response = await (this.anthropic as any).messages.create({
+            model: request.model,
+            system: systemMessage,
+            messages: anthropicMessages,
+            temperature: request.temperature ?? 0.7,
+            max_tokens: request.maxTokens ?? 4096,
+          });
+
+          const content = response.content.find((c: any) => c.type === 'text');
+          if (!content || content.type !== 'text') {
+            throw new Error('No text content in Anthropic response');
+          }
+
+          return {
+            content: content.text,
+            model: response.model,
+            provider: 'anthropic' as const,
+            tokensUsed: response.usage?.input_tokens
+              ? response.usage.input_tokens + (response.usage.output_tokens || 0)
+              : undefined,
+            finishReason: response.stop_reason || undefined,
+          };
+        },
+        {
+          maxAttempts: 3,
+          initialDelayMs: 1000,
+          maxDelayMs: 10000,
+          retryable: (error: any) => {
+            // Retry on rate limits and transient errors
+            const statusCode = error?.status || error?.response?.status;
+            return statusCode === 429 || statusCode === 529 || statusCode >= 500;
+          },
+        }
+      );
     });
-
-    const content = response.content.find((c: any) => c.type === 'text');
-    if (!content || content.type !== 'text') {
-      throw new Error('No text content in Anthropic response');
-    }
-
-    return {
-      content: content.text,
-      model: response.model,
-      provider: 'anthropic',
-      tokensUsed: response.usage?.input_tokens
-        ? response.usage.input_tokens + (response.usage.output_tokens || 0)
-        : undefined,
-      finishReason: response.stop_reason || undefined,
-    };
   }
 
   /**
@@ -173,40 +215,57 @@ export class UnifiedLLMService {
       throw new Error('Google AI API key not configured');
     }
 
-    const model = this.googleAI.getGenerativeModel({
-      model: request.model,
-      ...(request.systemPrompt && { systemInstruction: request.systemPrompt }),
+    // Wrap with circuit breaker and retry logic
+    return this.googleCircuit.execute(async () => {
+      return retry(
+        async () => {
+          const model = this.googleAI!.getGenerativeModel({
+            model: request.model,
+            ...(request.systemPrompt && { systemInstruction: request.systemPrompt }),
+          });
+
+          // Convert messages format for Gemini
+          const geminiMessages = request.messages
+            .filter((m) => m.role !== 'system')
+            .map((m) => ({
+              role: m.role === 'assistant' ? 'model' : 'user',
+              parts: [{ text: m.content }],
+            }));
+
+          const generationConfig = {
+            temperature: request.temperature ?? 0.7,
+            maxOutputTokens: request.maxTokens,
+          };
+
+          const chat = model.startChat({
+            history: geminiMessages.slice(0, -1) as any,
+            generationConfig,
+          });
+
+          const lastMessage = geminiMessages[geminiMessages.length - 1];
+          const result = await chat.sendMessage(lastMessage.parts[0].text);
+          const response = await result.response;
+          const text = response.text();
+
+          return {
+            content: text,
+            model: request.model,
+            provider: 'google' as const,
+            finishReason: response.candidates?.[0]?.finishReason || undefined,
+          };
+        },
+        {
+          maxAttempts: 3,
+          initialDelayMs: 1000,
+          maxDelayMs: 10000,
+          retryable: (error: any) => {
+            // Retry on rate limits and transient errors
+            const statusCode = error?.status || error?.response?.status;
+            return statusCode === 429 || statusCode === 503 || statusCode >= 500;
+          },
+        }
+      );
     });
-
-    // Convert messages format for Gemini
-    const geminiMessages = request.messages
-      .filter((m) => m.role !== 'system')
-      .map((m) => ({
-        role: m.role === 'assistant' ? 'model' : 'user',
-        parts: [{ text: m.content }],
-      }));
-
-    const generationConfig = {
-      temperature: request.temperature ?? 0.7,
-      maxOutputTokens: request.maxTokens,
-    };
-
-    const chat = model.startChat({
-      history: geminiMessages.slice(0, -1) as any,
-      generationConfig,
-    });
-
-    const lastMessage = geminiMessages[geminiMessages.length - 1];
-    const result = await chat.sendMessage(lastMessage.parts[0].text);
-    const response = await result.response;
-    const text = response.text();
-
-    return {
-      content: text,
-      model: request.model,
-      provider: 'google',
-      finishReason: response.candidates?.[0]?.finishReason || undefined,
-    };
   }
 
   /**
@@ -239,42 +298,58 @@ export class UnifiedLLMService {
       ? [{ role: 'system', content: request.systemPrompt }, ...request.messages]
       : request.messages;
 
-    const response = await fetch(`${baseUrl}/v1/chat/completions`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: request.model,
-        messages,
-        temperature: request.temperature ?? 0.7,
-        max_tokens: request.maxTokens,
-      }),
+    // Wrap with circuit breaker and retry logic
+    return this.localLLMCircuit.execute(async () => {
+      return retry(
+        async () => {
+          const response = await fetch(`${baseUrl}/v1/chat/completions`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              model: request.model,
+              messages,
+              temperature: request.temperature ?? 0.7,
+              max_tokens: request.maxTokens,
+            }),
+          });
+
+          if (!response.ok) {
+            const error = await response.text();
+            throw new Error(`Local LLM error: ${error}`);
+          }
+
+          const data = (await response.json()) as {
+            choices?: Array<{ message?: { content?: string }; finish_reason?: string }>;
+            model?: string;
+            usage?: { total_tokens?: number };
+          };
+          const choice = data.choices?.[0];
+
+          if (!choice || !choice.message) {
+            throw new Error('No response from local LLM');
+          }
+
+          return {
+            content: choice.message.content || '',
+            model: data.model || request.model,
+            provider: providerType,
+            tokensUsed: data.usage?.total_tokens,
+            finishReason: choice.finish_reason || undefined,
+          };
+        },
+        {
+          maxAttempts: 2, // Local LLMs may be less stable
+          initialDelayMs: 500,
+          maxDelayMs: 5000,
+          retryable: (error: any) => {
+            // Retry on connection errors and transient failures
+            return error?.code === 'ECONNREFUSED' || error?.code === 'ETIMEDOUT' || error?.message?.includes('timeout');
+          },
+        }
+      );
     });
-
-    if (!response.ok) {
-      const error = await response.text();
-      throw new Error(`Local LLM error: ${error}`);
-    }
-
-    const data = (await response.json()) as {
-      choices?: Array<{ message?: { content?: string }; finish_reason?: string }>;
-      model?: string;
-      usage?: { total_tokens?: number };
-    };
-    const choice = data.choices?.[0];
-
-    if (!choice || !choice.message) {
-      throw new Error('No response from local LLM');
-    }
-
-    return {
-      content: choice.message.content || '',
-      model: data.model || request.model,
-      provider: providerType,
-      tokensUsed: data.usage?.total_tokens,
-      finishReason: choice.finish_reason || undefined,
-    };
   }
 
   /**
