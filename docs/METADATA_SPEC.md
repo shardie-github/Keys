@@ -17,7 +17,8 @@ docs/library/incident-runbook-triage.metadata.json
 ```
 
 ## Schema
-Metadata must conform to `tools/keys-indexer/schemas/artifact_metadata.schema.json`.
+Metadata must conform to `contracts/artifact_metadata.schema.json`. The indexer schema in
+`tools/keys-indexer/schemas/artifact_metadata.schema.json` is kept in sync for compatibility.
 
 ### Required fields
 | Field | Type | Notes |
@@ -56,10 +57,10 @@ Metadata must conform to `tools/keys-indexer/schemas/artifact_metadata.schema.js
 ```
 
 ## Validation rules
-- Schema validation uses `tools/keys-indexer/schemas/artifact_metadata.schema.json`.
+- Schema validation uses `contracts/artifact_metadata.schema.json`.
 - IDs must be unique across the library.
 - `content_path` must resolve to a file inside the repo.
-- `tags`, `categories`, and `tools_supported` are normalized to lowercase; duplicates are removed.
+- `tags`, `categories`, and `tools_supported` must be sorted alphabetically and contain no duplicates.
 
 ## One source of truth
 Metadata must not be duplicated in Markdown frontmatter. If metadata changes, update only the `.metadata.json` file.
