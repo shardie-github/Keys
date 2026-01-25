@@ -5,6 +5,7 @@ import { logger } from '../utils/logger.js';
 import { retry } from '../utils/retry.js';
 import { CircuitBreaker } from '../utils/circuitBreaker.js';
 import type { LLMProvider } from '../types/filters.js';
+import { getSecretValueByName, resolveSecretRef } from './vaultService.js';
 
 export interface LLMRequest {
   provider: LLMProvider;
@@ -13,6 +14,7 @@ export interface LLMRequest {
   temperature?: number;
   maxTokens?: number;
   systemPrompt?: string;
+  userId?: string; // For per-user secret resolution
 }
 
 export interface LLMResponse {
@@ -65,6 +67,56 @@ export class UnifiedLLMService {
   }
 
   /**
+   * Resolve API key for a provider from user secrets or env vars
+   * Secret names: openai/default, anthropic/default, google/default, etc.
+   */
+  private async resolveProviderKey(provider: LLMProvider, userId?: string): Promise<string | null> {
+    if (!userId) {
+      // Fall back to env vars if no userId provided
+      return this.getEnvKeyForProvider(provider);
+    }
+
+    // Try to resolve from secrets
+    const secretName = `${provider}/default`;
+    const secretValue = await getSecretValueByName(userId, secretName);
+
+    if (secretValue) {
+      logger.debug('Using user secret for provider', { provider, userId });
+      return secretValue;
+    }
+
+    // Fall back to env vars
+    logger.debug('Falling back to env key for provider', { provider, userId });
+    return this.getEnvKeyForProvider(provider);
+  }
+
+  /**
+   * Get API key from environment variables
+   */
+  private getEnvKeyForProvider(provider: LLMProvider): string | null {
+    switch (provider) {
+      case 'openai':
+        return process.env.OPENAI_API_KEY || null;
+      case 'anthropic':
+        return process.env.ANTHROPIC_API_KEY || null;
+      case 'google':
+        return process.env.GOOGLE_AI_API_KEY || null;
+      case 'together':
+        return process.env.TOGETHER_API_KEY || null;
+      case 'groq':
+        return process.env.GROQ_API_KEY || null;
+      case 'mistral':
+        return process.env.MISTRAL_API_KEY || null;
+      case 'cohere':
+        return process.env.COHERE_API_KEY || null;
+      case 'perplexity':
+        return process.env.PERPLEXITY_API_KEY || null;
+      default:
+        return null;
+    }
+  }
+
+  /**
    * Unified method to call any LLM provider
    */
   async generate(request: LLMRequest): Promise<LLMResponse> {
@@ -103,9 +155,18 @@ export class UnifiedLLMService {
    * OpenAI / OpenAI-compatible API (Ollama, LM Studio, etc.)
    */
   private async callOpenAI(request: LLMRequest): Promise<LLMResponse> {
-    if (!this.openai) {
+    // Resolve API key (user secret or env)
+    const apiKey = await this.resolveProviderKey('openai', request.userId);
+
+    if (!apiKey) {
       throw new Error('OpenAI API key not configured');
     }
+
+    // Create client with resolved key (on-demand, not cached)
+    const client = new OpenAI({
+      apiKey,
+      baseURL: process.env.OPENAI_BASE_URL,
+    });
 
     const messages = request.systemPrompt
       ? [{ role: 'system', content: request.systemPrompt }, ...request.messages]
@@ -115,7 +176,7 @@ export class UnifiedLLMService {
     return this.openaiCircuit.execute(async () => {
       return retry(
         async () => {
-          const response = await this.openai!.chat.completions.create({
+          const response = await client.chat.completions.create({
             model: request.model,
             messages: messages as any,
             temperature: request.temperature ?? 0.7,
@@ -153,9 +214,17 @@ export class UnifiedLLMService {
    * Anthropic Claude
    */
   private async callAnthropic(request: LLMRequest): Promise<LLMResponse> {
-    if (!this.anthropic) {
+    // Resolve API key (user secret or env)
+    const apiKey = await this.resolveProviderKey('anthropic', request.userId);
+
+    if (!apiKey) {
       throw new Error('Anthropic API key not configured');
     }
+
+    // Create client with resolved key (on-demand, not cached)
+    const client = new Anthropic({
+      apiKey,
+    });
 
     // Convert messages format for Anthropic
     const systemMessage = request.systemPrompt || '';
@@ -170,7 +239,7 @@ export class UnifiedLLMService {
     return this.anthropicCircuit.execute(async () => {
       return retry(
         async () => {
-          const response = await (this.anthropic as any).messages.create({
+          const response = await (client as any).messages.create({
             model: request.model,
             system: systemMessage,
             messages: anthropicMessages,
@@ -211,15 +280,21 @@ export class UnifiedLLMService {
    * Google Gemini
    */
   private async callGoogle(request: LLMRequest): Promise<LLMResponse> {
-    if (!this.googleAI) {
+    // Resolve API key (user secret or env)
+    const apiKey = await this.resolveProviderKey('google', request.userId);
+
+    if (!apiKey) {
       throw new Error('Google AI API key not configured');
     }
+
+    // Create client with resolved key (on-demand, not cached)
+    const client = new GoogleGenerativeAI(apiKey);
 
     // Wrap with circuit breaker and retry logic
     return this.googleCircuit.execute(async () => {
       return retry(
         async () => {
-          const model = this.googleAI!.getGenerativeModel({
+          const model = client.getGenerativeModel({
             model: request.model,
             ...(request.systemPrompt && { systemInstruction: request.systemPrompt }),
           });

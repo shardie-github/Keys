@@ -8,6 +8,7 @@ import { authMiddleware, AuthenticatedRequest } from '../middleware/auth.js';
 import { AuthorizationError } from '../types/errors.js';
 import { checkLimit } from '../services/usageMetering.js';
 import { RateLimitError } from '../types/errors.js';
+import { getPersonaPack, getActivePersona } from '../services/personaService.js';
 
 const router = Router();
 
@@ -42,6 +43,7 @@ const assemblePromptSchema = z.object({
     useProviderGuidelines: z.boolean().optional(),
     usePromptEngineering: z.boolean().optional(),
   }).optional(),
+  personaId: z.string().uuid().optional(), // Optional persona pack ID
 });
 
 router.post(
@@ -50,7 +52,7 @@ router.post(
   validateBody(assemblePromptSchema),
   asyncHandler(async (req: AuthenticatedRequest, res) => {
     const userId = req.userId!; // Always use authenticated user ID
-    const { taskDescription, vibeConfig, inputFilter } = req.body;
+    const { taskDescription, vibeConfig, inputFilter, personaId } = req.body;
 
     // Check usage limits (assemble-prompt is part of the run flow)
     const usageCheck = await checkLimit(userId, 'runs', 0);
@@ -67,13 +69,36 @@ router.post(
       throw error;
     }
 
-    // Ignore userId from body if present - always use authenticated user
+    // Assemble base prompt
     const result = await assemblePrompt(
       userId,
       taskDescription,
       vibeConfig || {},
       inputFilter
     );
+
+    // Integrate persona if provided (or use default)
+    let persona = null;
+    if (personaId) {
+      persona = await getPersonaPack(userId, personaId);
+    } else {
+      // Try to get user's default persona
+      persona = await getActivePersona(userId);
+    }
+
+    if (persona) {
+      // Prepend persona system prompt to assembled prompt
+      const personaPrompt = persona.render_claude || '';
+      result.systemPrompt = personaPrompt + '\n\n' + (result.systemPrompt || '');
+
+      // Override provider/model if persona specifies defaults
+      if (persona.default_provider && !inputFilter?.provider) {
+        result.provider = persona.default_provider as any;
+      }
+      if (persona.default_model && !inputFilter?.model) {
+        result.model = persona.default_model;
+      }
+    }
 
     res.json(result);
   })

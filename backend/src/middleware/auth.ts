@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { createClient } from '@supabase/supabase-js';
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { verifyApiKeyToken } from '../services/apiKeyService.js';
+import { logger } from '../utils/logger.js';
 
 let supabaseClient: SupabaseClient<any> | null = null;
 
@@ -26,6 +28,13 @@ export interface AuthenticatedRequest extends Request {
     id: string;
     email?: string;
     role?: string;
+  };
+  // Principal context (for API keys vs user sessions)
+  principal?: {
+    type: 'user_session' | 'api_key';
+    userId: string;
+    apiKeyId?: string;
+    scopes?: string[];
   };
 }
 
@@ -55,7 +64,8 @@ function getUserRole(user: { app_metadata?: any; user_metadata?: any; id?: strin
 }
 
 /**
- * Auth middleware to verify JWT token and extract user info
+ * Auth middleware to verify JWT token or API key and extract user info
+ * Supports both Supabase JWT sessions and Keys-issued API keys
  */
 export async function authMiddleware(
   req: AuthenticatedRequest,
@@ -66,7 +76,7 @@ export async function authMiddleware(
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      res.status(401).json({ 
+      res.status(401).json({
         error: {
           code: 'AUTHENTICATION_ERROR',
           message: 'Missing or invalid authorization header',
@@ -78,14 +88,46 @@ export async function authMiddleware(
 
     const token = authHeader.substring(7);
 
-    // Verify token with Supabase
+    // Check if it's a Keys API key (starts with kx_)
+    if (token.startsWith('kx_')) {
+      const verified = await verifyApiKeyToken(token);
+
+      if (!verified) {
+        res.status(401).json({
+          error: {
+            code: 'AUTHENTICATION_ERROR',
+            message: 'Invalid or revoked API key',
+          },
+          requestId: req.headers['x-request-id'],
+        });
+        return;
+      }
+
+      // Attach API key principal info
+      req.userId = verified.userId;
+      req.user = {
+        id: verified.userId,
+        role: 'user', // API keys don't have elevated roles by default
+      };
+      req.principal = {
+        type: 'api_key',
+        userId: verified.userId,
+        apiKeyId: verified.apiKeyId,
+        scopes: verified.scopes,
+      };
+
+      next();
+      return;
+    }
+
+    // Otherwise, verify as Supabase JWT
     const {
       data: { user },
       error,
     } = await getSupabaseAdminClient().auth.getUser(token);
 
     if (error || !user) {
-      res.status(401).json({ 
+      res.status(401).json({
         error: {
           code: 'AUTHENTICATION_ERROR',
           message: 'Invalid or expired token',
@@ -95,18 +137,22 @@ export async function authMiddleware(
       return;
     }
 
-    // Attach user info to request
+    // Attach user session info
     req.userId = user.id;
     req.user = {
       id: user.id,
       email: user.email,
       role: getUserRole(user),
     };
+    req.principal = {
+      type: 'user_session',
+      userId: user.id,
+    };
 
     next();
   } catch (error) {
-    console.error('Auth middleware error:', error);
-    res.status(500).json({ 
+    logger.error('Auth middleware error', error as Error);
+    res.status(500).json({
       error: {
         code: 'INTERNAL_ERROR',
         message: 'Authentication error',
@@ -118,6 +164,7 @@ export async function authMiddleware(
 
 /**
  * Optional auth - doesn't fail if no token, but attaches user if present
+ * Supports both Supabase JWT sessions and Keys-issued API keys
  */
 export async function optionalAuthMiddleware(
   req: AuthenticatedRequest,
@@ -129,17 +176,42 @@ export async function optionalAuthMiddleware(
 
     if (authHeader && authHeader.startsWith('Bearer ')) {
       const token = authHeader.substring(7);
-      const {
-        data: { user },
-      } = await getSupabaseAdminClient().auth.getUser(token);
 
-      if (user) {
-        req.userId = user.id;
-        req.user = {
-          id: user.id,
-          email: user.email,
-          role: getUserRole(user),
-        };
+      // Check if it's a Keys API key
+      if (token.startsWith('kx_')) {
+        const verified = await verifyApiKeyToken(token);
+
+        if (verified) {
+          req.userId = verified.userId;
+          req.user = {
+            id: verified.userId,
+            role: 'user',
+          };
+          req.principal = {
+            type: 'api_key',
+            userId: verified.userId,
+            apiKeyId: verified.apiKeyId,
+            scopes: verified.scopes,
+          };
+        }
+      } else {
+        // Verify as Supabase JWT
+        const {
+          data: { user },
+        } = await getSupabaseAdminClient().auth.getUser(token);
+
+        if (user) {
+          req.userId = user.id;
+          req.user = {
+            id: user.id,
+            email: user.email,
+            role: getUserRole(user),
+          };
+          req.principal = {
+            type: 'user_session',
+            userId: user.id,
+          };
+        }
       }
     }
 
