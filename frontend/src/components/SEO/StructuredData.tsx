@@ -30,7 +30,7 @@ export function generateOrganizationSchema() {
     name: 'Keys',
     url: siteUrl,
     logo: `${siteUrl.replace(/\/$/, '')}/icon-512.png`,
-    description: 'Your day-to-day AI co-founder that works alongside Cursor. Operational automation, business process intelligence, and institutional memory.',
+    description: 'Keys is an open source library of prompts, notebooks, and runbooks for modern software and operations workflows.',
     sameAs: [
       'https://twitter.com/cursorventure',
       'https://github.com/cursor-venture-companion',
@@ -57,14 +57,7 @@ export function generateSoftwareApplicationSchema() {
       priceCurrency: 'USD',
       availability: 'https://schema.org/InStock',
     },
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: '4.8',
-      ratingCount: '1247',
-      bestRating: '5',
-      worstRating: '1',
-    },
-    description: 'Your day-to-day AI co-founder that works alongside Cursor. Operational automation, business process intelligence, and institutional memory.',
+    description: 'A curated, open source library of prompts, notebooks, and runbooks that teams can adapt to their workflows.',
     url: siteUrl,
   };
 }
