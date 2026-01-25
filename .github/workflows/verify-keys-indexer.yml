@@ -1,0 +1,60 @@
+name: Verify Keys Indexer
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '20'
+  GO_VERSION: '1.22.x'
+  SOURCE_DATE_EPOCH: '1700000000'
+
+jobs:
+  verify-indexer:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.13.1
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run keys-indexer in strict mode
+        env:
+          KEYS_INDEX_STRICT: '1'
+        run: pnpm keys:index
+
+      - name: Capture outputs
+        run: |
+          mkdir -p /tmp/keys-indexer
+          cp frontend/public/keys-index.json /tmp/keys-indexer/keys-index.json
+          cp frontend/public/validation_report.json /tmp/keys-indexer/validation_report.json
+          cp frontend/public/artifacts_manifest.json /tmp/keys-indexer/artifacts_manifest.json
+
+      - name: Re-run keys-indexer and verify determinism
+        env:
+          KEYS_INDEX_STRICT: '1'
+        run: |
+          pnpm keys:index
+          diff -u /tmp/keys-indexer/keys-index.json frontend/public/keys-index.json
+          diff -u /tmp/keys-indexer/validation_report.json frontend/public/validation_report.json
+          diff -u /tmp/keys-indexer/artifacts_manifest.json frontend/public/artifacts_manifest.json

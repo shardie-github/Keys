@@ -1,0 +1,56 @@
+name: Release Keys Indexer
+
+on:
+  push:
+    tags:
+      - 'keys-indexer-v*'
+  workflow_dispatch:
+
+env:
+  GO_VERSION: '1.22.x'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - goos: linux
+            goarch: amd64
+          - goos: darwin
+            goarch: amd64
+          - goos: darwin
+            goarch: arm64
+          - goos: windows
+            goarch: amd64
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: Build binary
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+        run: |
+          mkdir -p dist
+          EXT=""
+          if [ "${{ matrix.goos }}" = "windows" ]; then
+            EXT=".exe"
+          fi
+          (cd tools/keys-indexer && go build -o "../../dist/keys-indexer-${{ matrix.goos }}-${{ matrix.goarch }}${EXT}")
+
+      - name: Generate checksums
+        run: |
+          cd dist
+          sha256sum * > checksums.txt
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: keys-indexer-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: dist/*

@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://keys.dev/schemas/index_output.schema.json",
+  "title": "Keys Index Output",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "tool_version",
+    "artifact_count",
+    "warnings",
+    "errors",
+    "output_paths",
+    "manifest",
+    "artifacts"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "tool_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "artifact_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "warnings": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/validationMessage" }
+    },
+    "errors": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/validationMessage" }
+    },
+    "output_paths": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["index_json", "validation_report", "artifacts_manifest"],
+      "properties": {
+        "index_json": { "type": "string" },
+        "validation_report": { "type": "string" },
+        "artifacts_manifest": { "type": "string" }
+      }
+    },
+    "manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["files"],
+      "properties": {
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "sha256"],
+            "properties": {
+              "path": { "type": "string", "minLength": 1 },
+              "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+            }
+          }
+        }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/indexArtifact" }
+    }
+  },
+  "definitions": {
+    "validationMessage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["message"],
+      "properties": {
+        "message": { "type": "string", "minLength": 1 },
+        "artifact_id": { "type": "string" },
+        "file": { "type": "string" }
+      }
+    },
+    "indexArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "slug",
+        "title",
+        "description",
+        "tags",
+        "categories",
+        "tools_supported",
+        "schema_version",
+        "content_path",
+        "searchable_text"
+      ],
+      "properties": {
+        "id": { "type": "string" },
+        "slug": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "categories": { "type": "array", "items": { "type": "string" } },
+        "tools_supported": { "type": "array", "items": { "type": "string" } },
+        "created_at": { "type": "string", "format": "date-time" },
+        "updated_at": { "type": "string", "format": "date-time" },
+        "schema_version": { "type": "string" },
+        "content_path": { "type": "string" },
+        "license": { "type": "string" },
+        "safety_notes": { "type": "string" },
+        "searchable_text": { "type": "string" }
+      }
+    }
+  }
+}

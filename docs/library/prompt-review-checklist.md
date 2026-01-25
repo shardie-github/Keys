@@ -1,10 +1,3 @@
----
-title: "Prompt Review Checklist"
-type: "Prompt Pack"
-description: "A checklist for reviewing prompts before they are shared or reused."
-tags: [review, safety, prompts, quality]
-last_updated: "2024-05-10"
----
 # Prompt Review Checklist
 
 Use this checklist before sharing or reusing a prompt.
