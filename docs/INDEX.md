@@ -2,9 +2,6 @@
 
 ## Getting Started
 - [Quick Start Guide](../QUICK_START.md)
-- [Indexer Quickstart](./INDEXER_QUICKSTART.md)
-- [Metadata Spec](./METADATA_SPEC.md)
-- [Contributing](../CONTRIBUTING.md)
 - [Final Status](../FINAL_STATUS.md)
 
 ## API Documentation
