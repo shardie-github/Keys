@@ -76,6 +76,19 @@ const nextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      { source: '/pricing', destination: '/enterprise', permanent: true },
+      { source: '/compare', destination: '/open-source', permanent: true },
+      { source: '/features', destination: '/library', permanent: true },
+      { source: '/for-founders', destination: '/what-is-keys', permanent: true },
+      { source: '/for-developers', destination: '/what-is-keys', permanent: true },
+      { source: '/discover', destination: '/library', permanent: true },
+      { source: '/marketplace', destination: '/library', permanent: true },
+      { source: '/marketplace/bundles', destination: '/library', permanent: true },
+      { source: '/marketplace/:slug', destination: '/library/:slug', permanent: true },
+    ];
+  },
   // Enable static exports for desktop app
   output: process.env.NEXT_OUTPUT || undefined,
   // Experimental features for performance

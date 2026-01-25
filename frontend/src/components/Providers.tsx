@@ -6,34 +6,14 @@
 
 'use client';
 
-import { useEffect, type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import ErrorBoundary from './ErrorBoundary';
 import { ToastContainer } from './Toast';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { DiagnosticsPanel } from './DiagnosticsPanel';
 import { RuntimeUiBanner } from './RuntimeUiBanner';
-import { useAnalytics } from '@/hooks/useAnalytics';
 import { KeyboardShortcutsHelp } from './KeyboardShortcuts';
 import { useKeyboardShortcuts, defaultShortcuts } from '@/hooks/useKeyboardShortcuts';
-
-function AnalyticsProvider({ children }: { children: ReactNode }) {
-  const { trackPageView } = useAnalytics();
-
-  useEffect(() => {
-    // Track initial page view
-    trackPageView(window.location.pathname, document.title);
-
-    // Track navigation
-    const handleRouteChange = () => {
-      trackPageView(window.location.pathname, document.title);
-    };
-
-    window.addEventListener('popstate', handleRouteChange);
-    return () => window.removeEventListener('popstate', handleRouteChange);
-  }, [trackPageView]);
-
-  return <>{children}</>;
-}
 
 function KeyboardShortcutsProvider({ children }: { children: ReactNode }) {
   useKeyboardShortcuts(defaultShortcuts, true);
@@ -44,15 +24,13 @@ export function Providers({ children }: { children: ReactNode }) {
   return (
     <ErrorBoundary>
       <AuthProvider>
-        <AnalyticsProvider>
-          <KeyboardShortcutsProvider>
-            <RuntimeUiBanner />
-            {children}
-            <ToastContainer />
-            <DiagnosticsPanel />
-            <KeyboardShortcutsHelp />
-          </KeyboardShortcutsProvider>
-        </AnalyticsProvider>
+        <KeyboardShortcutsProvider>
+          <RuntimeUiBanner />
+          {children}
+          <ToastContainer />
+          <DiagnosticsPanel />
+          <KeyboardShortcutsHelp />
+        </KeyboardShortcutsProvider>
       </AuthProvider>
     </ErrorBoundary>
   );

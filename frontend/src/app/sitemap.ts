@@ -5,21 +5,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const routes = [
     '',
-    '/chat',
-    '/dashboard',
-    '/profile',
-    '/profile/settings',
-    '/templates',
-    '/templates/shared',
-    '/templates/presets',
-    '/templates/analytics',
-    '/templates/export',
+    '/what-is-keys',
+    '/open-source',
+    '/library',
+    '/docs',
+    '/governance',
+    '/enterprise',
+    '/about',
   ];
 
   return routes.map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
     changeFrequency: route === '' ? 'daily' : 'weekly',
-    priority: route === '' ? 1.0 : route === '/chat' ? 0.9 : 0.7,
+    priority: route === '' ? 1.0 : route === '/library' ? 0.9 : 0.7,
   }));
 }
