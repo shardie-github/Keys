@@ -1,10 +1,3 @@
----
-title: "Notebook Decision Log Template"
-type: "Notebook"
-description: "A lightweight template for capturing decisions and assumptions during analysis."
-tags: [notebook, analysis, documentation]
-last_updated: "2024-05-15"
----
 # Notebook Decision Log Template
 
 Use this template to document decisions during exploratory analysis or data work.

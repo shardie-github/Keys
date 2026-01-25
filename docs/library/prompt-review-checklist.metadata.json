@@ -1,0 +1,12 @@
+{
+  "id": "prompt-review-checklist",
+  "title": "Prompt Review Checklist",
+  "description": "A checklist for reviewing prompts before they are shared or reused.",
+  "tags": ["review", "safety", "prompts", "quality"],
+  "categories": ["prompt", "safety"],
+  "tools_supported": ["codex", "claude-code", "cursor"],
+  "updated_at": "2024-05-10T00:00:00Z",
+  "schema_version": "1.0.0",
+  "content_path": "docs/library/prompt-review-checklist.md",
+  "safety_notes": "Review prompts for sensitive data handling and least-privilege assumptions before reuse."
+}

@@ -14,6 +14,9 @@
 /out/
 frontend/.next/
 frontend/out/
+frontend/public/keys-index.json
+frontend/public/validation_report.json
+frontend/public/artifacts_manifest.json
 
 # Production
 /build

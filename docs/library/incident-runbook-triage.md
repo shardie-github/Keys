@@ -1,10 +1,3 @@
----
-title: "Incident Triage Runbook"
-type: "Runbook"
-description: "A structured triage flow for production incidents."
-tags: [incident, operations, reliability]
-last_updated: "2024-05-12"
----
 # Incident Triage Runbook
 
 This runbook is a starting point for incident triage. Adapt it to your service topology and on-call policies.
