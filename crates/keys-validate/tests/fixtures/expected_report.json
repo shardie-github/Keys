@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0.0",
+  "summary": {
+    "artifacts": 2,
+    "errors": 4,
+    "warnings": 0
+  },
+  "messages": [
+    {
+      "severity": "error",
+      "rule_id": "metadata.duplicate_id",
+      "message": "artifact id \"alpha-artifact\" appears in 2 files",
+      "file": "docs/library/alpha.metadata.json",
+      "artifact_id": "alpha-artifact",
+      "suggested_fix": "Ensure each artifact id is unique."
+    },
+    {
+      "severity": "error",
+      "rule_id": "metadata.content_path_missing",
+      "message": "content_path does not exist: docs/library/missing.md",
+      "file": "docs/library/beta.metadata.json",
+      "artifact_id": "alpha-artifact",
+      "suggested_fix": "Ensure the content file exists at content_path."
+    },
+    {
+      "severity": "error",
+      "rule_id": "metadata.duplicate_id",
+      "message": "artifact id \"alpha-artifact\" appears in 2 files",
+      "file": "docs/library/beta.metadata.json",
+      "artifact_id": "alpha-artifact",
+      "suggested_fix": "Ensure each artifact id is unique."
+    },
+    {
+      "severity": "error",
+      "rule_id": "metadata.tags.sorted",
+      "message": "tags must be sorted in ascending order",
+      "file": "docs/library/beta.metadata.json",
+      "artifact_id": "alpha-artifact",
+      "suggested_fix": "Sort tags alphabetically for stable output."
+    }
+  ]
+}

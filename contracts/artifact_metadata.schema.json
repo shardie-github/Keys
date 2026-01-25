@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://keys.dev/schemas/artifact_metadata.schema.json",
+  "$id": "https://keys.dev/contracts/artifact_metadata.schema.json",
   "title": "Keys Artifact Metadata",
   "type": "object",
   "additionalProperties": false,

@@ -32,6 +32,7 @@
     "keys:doctor": "npm run lint && npm run type-check",
     "keys:check": "npm run lint && npm run type-check && npm --workspace backend run test && npm --workspace frontend run test",
     "keys:index": "node scripts/keys-index.mjs",
+    "keys:validate": "node scripts/keys-validate.mjs",
     "keys:smoke": "python scripts/run_notebooks_smoke.py --timeout 300",
     "keys:audit": "detect-secrets scan --baseline .secrets.baseline && npm --workspace backend audit --audit-level=high && npm --workspace frontend audit --audit-level=high"
   },

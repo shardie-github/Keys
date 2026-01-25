@@ -8,17 +8,20 @@ Thanks for helping improve the Keys library. This guide covers how to add artifa
 3. Validate and generate the static index:
 
 ```bash
+pnpm keys:validate
 pnpm keys:index
 ```
 
 ## Metadata requirements
-- Metadata must follow the schema in `tools/keys-indexer/schemas/artifact_metadata.schema.json`.
+- Metadata must follow the schema in `contracts/artifact_metadata.schema.json`.
 - The metadata file is the **single source of truth**. Do not add frontmatter to Markdown artifacts.
 - `content_path` must point to the artifact content file.
 
 For details, see [`docs/METADATA_SPEC.md`](docs/METADATA_SPEC.md).
 
 ## Validation workflow
+- `pnpm keys:validate` runs the Rust validator and writes:
+  - `frontend/public/validation_report.json`
 - `pnpm keys:index` validates metadata and writes:
   - `frontend/public/keys-index.json`
   - `frontend/public/validation_report.json`

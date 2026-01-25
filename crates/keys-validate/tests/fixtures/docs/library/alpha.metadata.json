@@ -1,0 +1,10 @@
+{
+  "id": "alpha-artifact",
+  "title": "Alpha Artifact",
+  "description": "Alpha description.",
+  "tags": ["alpha", "beta"],
+  "categories": ["incident", "runbook"],
+  "tools_supported": ["codex"],
+  "schema_version": "1.0.0",
+  "content_path": "docs/library/alpha.md"
+}

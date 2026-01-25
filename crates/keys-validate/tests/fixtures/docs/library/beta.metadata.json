@@ -1,0 +1,10 @@
+{
+  "id": "alpha-artifact",
+  "title": "Beta Artifact",
+  "description": "Beta description.",
+  "tags": ["beta", "alpha"],
+  "categories": ["incident", "runbook"],
+  "tools_supported": ["codex"],
+  "schema_version": "1.0.0",
+  "content_path": "docs/library/missing.md"
+}

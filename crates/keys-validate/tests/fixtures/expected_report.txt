@@ -1,0 +1,16 @@
+Artifacts scanned: 2
+Errors: 4
+Warnings: 0
+
+[error] metadata.duplicate_id docs/library/alpha.metadata.json: artifact id "alpha-artifact" appears in 2 files
+  Artifact: alpha-artifact
+  Suggested fix: Ensure each artifact id is unique.
+[error] metadata.content_path_missing docs/library/beta.metadata.json: content_path does not exist: docs/library/missing.md
+  Artifact: alpha-artifact
+  Suggested fix: Ensure the content file exists at content_path.
+[error] metadata.duplicate_id docs/library/beta.metadata.json: artifact id "alpha-artifact" appears in 2 files
+  Artifact: alpha-artifact
+  Suggested fix: Ensure each artifact id is unique.
+[error] metadata.tags.sorted docs/library/beta.metadata.json: tags must be sorted in ascending order
+  Artifact: alpha-artifact
+  Suggested fix: Sort tags alphabetically for stable output.
