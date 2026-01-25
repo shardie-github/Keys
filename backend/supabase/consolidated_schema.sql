@@ -1229,5 +1229,253 @@ INSERT INTO prompt_atoms (name, category, system_prompt, target_roles, target_ve
 ON CONFLICT (name, version) DO NOTHING;
 
 -- ============================================================================
+-- SECTION 9: SECRET VAULT + API KEYS + PERSONA PACKS (Migration 021)
+-- ============================================================================
+
+-- ----------------------------------------------------------------------------
+-- API Keys Table (Keys-issued API keys for using Keys API)
+-- ----------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS api_keys (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id TEXT NOT NULL,
+  org_id UUID NULL,
+
+  -- Key metadata
+  name TEXT NOT NULL,
+  prefix TEXT NOT NULL,
+  hashed_key TEXT NOT NULL UNIQUE,
+
+  -- Scopes and permissions
+  scopes TEXT[] NOT NULL DEFAULT '{}',
+
+  -- Status and lifecycle
+  status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'revoked')),
+  last_used_at TIMESTAMP NULL,
+  expires_at TIMESTAMP NULL,
+
+  -- Timestamps
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_api_keys_user_id ON api_keys(user_id);
+CREATE INDEX IF NOT EXISTS idx_api_keys_status ON api_keys(status) WHERE status = 'active';
+CREATE INDEX IF NOT EXISTS idx_api_keys_hashed_key ON api_keys(hashed_key);
+
+-- ----------------------------------------------------------------------------
+-- Secrets Table (Metadata only)
+-- ----------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS secrets (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id TEXT NOT NULL,
+  org_id UUID NULL,
+
+  -- Secret metadata
+  name TEXT NOT NULL,
+  kind TEXT NOT NULL DEFAULT 'generic',
+  description TEXT NULL,
+
+  -- Timestamps
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW(),
+
+  UNIQUE(user_id, name)
+);
+
+CREATE INDEX IF NOT EXISTS idx_secrets_user_id ON secrets(user_id);
+CREATE INDEX IF NOT EXISTS idx_secrets_kind ON secrets(kind);
+
+-- ----------------------------------------------------------------------------
+-- Secret Versions Table (Encrypted values)
+-- ----------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS secret_versions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  secret_id UUID NOT NULL REFERENCES secrets(id) ON DELETE CASCADE,
+
+  -- Version tracking
+  version INTEGER NOT NULL,
+  status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'inactive')),
+
+  -- Encrypted payload (AES-256-GCM)
+  ciphertext TEXT NOT NULL,
+  iv TEXT NOT NULL,
+  tag TEXT NOT NULL,
+  key_version TEXT NOT NULL DEFAULT '1',
+
+  -- Timestamp
+  created_at TIMESTAMP DEFAULT NOW(),
+
+  UNIQUE(secret_id, version)
+);
+
+CREATE INDEX IF NOT EXISTS idx_secret_versions_secret_id ON secret_versions(secret_id);
+CREATE INDEX IF NOT EXISTS idx_secret_versions_status ON secret_versions(status) WHERE status = 'active';
+
+-- ----------------------------------------------------------------------------
+-- Persona Packs Table
+-- ----------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS persona_packs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id TEXT NOT NULL,
+
+  -- Persona metadata
+  name TEXT NOT NULL,
+  slug TEXT NOT NULL,
+  description TEXT NULL,
+
+  -- Canonical representation (source of truth)
+  canonical_json JSONB NOT NULL,
+
+  -- Pre-rendered variants (for performance)
+  render_claude TEXT NULL,
+  render_openai JSONB NULL,
+  render_agent_md TEXT NULL,
+
+  -- Default model mapping
+  default_provider TEXT NULL,
+  default_model TEXT NULL,
+
+  -- Timestamps
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW(),
+
+  UNIQUE(user_id, slug)
+);
+
+CREATE INDEX IF NOT EXISTS idx_persona_packs_user_id ON persona_packs(user_id);
+CREATE INDEX IF NOT EXISTS idx_persona_packs_slug ON persona_packs(user_id, slug);
+
+-- ----------------------------------------------------------------------------
+-- Extend user_profiles Table
+-- ----------------------------------------------------------------------------
+ALTER TABLE user_profiles
+  ADD COLUMN IF NOT EXISTS default_persona_id UUID NULL REFERENCES persona_packs(id) ON DELETE SET NULL,
+  ADD COLUMN IF NOT EXISTS default_provider TEXT NULL,
+  ADD COLUMN IF NOT EXISTS default_model TEXT NULL;
+
+CREATE INDEX IF NOT EXISTS idx_user_profiles_default_persona ON user_profiles(default_persona_id);
+
+-- ----------------------------------------------------------------------------
+-- RLS for new tables
+-- ----------------------------------------------------------------------------
+ALTER TABLE api_keys ENABLE ROW LEVEL SECURITY;
+ALTER TABLE secrets ENABLE ROW LEVEL SECURITY;
+ALTER TABLE secret_versions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE persona_packs ENABLE ROW LEVEL SECURITY;
+
+-- RLS Policies for api_keys
+CREATE POLICY "Users can view own API keys"
+  ON api_keys FOR SELECT
+  USING (auth.uid()::text = user_id);
+
+CREATE POLICY "Users can create own API keys"
+  ON api_keys FOR INSERT
+  WITH CHECK (auth.uid()::text = user_id);
+
+CREATE POLICY "Users can update own API keys"
+  ON api_keys FOR UPDATE
+  USING (auth.uid()::text = user_id)
+  WITH CHECK (auth.uid()::text = user_id);
+
+CREATE POLICY "Users can delete own API keys"
+  ON api_keys FOR DELETE
+  USING (auth.uid()::text = user_id);
+
+-- RLS Policies for secrets
+CREATE POLICY "Users can view own secrets"
+  ON secrets FOR SELECT
+  USING (auth.uid()::text = user_id);
+
+CREATE POLICY "Users can create own secrets"
+  ON secrets FOR INSERT
+  WITH CHECK (auth.uid()::text = user_id);
+
+CREATE POLICY "Users can update own secrets"
+  ON secrets FOR UPDATE
+  USING (auth.uid()::text = user_id)
+  WITH CHECK (auth.uid()::text = user_id);
+
+CREATE POLICY "Users can delete own secrets"
+  ON secrets FOR DELETE
+  USING (auth.uid()::text = user_id);
+
+-- RLS Policies for secret_versions
+CREATE POLICY "Users can view own secret versions"
+  ON secret_versions FOR SELECT
+  USING (
+    EXISTS (
+      SELECT 1 FROM secrets
+      WHERE secrets.id = secret_versions.secret_id
+        AND secrets.user_id = auth.uid()::text
+    )
+  );
+
+CREATE POLICY "Users can create own secret versions"
+  ON secret_versions FOR INSERT
+  WITH CHECK (
+    EXISTS (
+      SELECT 1 FROM secrets
+      WHERE secrets.id = secret_versions.secret_id
+        AND secrets.user_id = auth.uid()::text
+    )
+  );
+
+CREATE POLICY "Users can update own secret versions"
+  ON secret_versions FOR UPDATE
+  USING (
+    EXISTS (
+      SELECT 1 FROM secrets
+      WHERE secrets.id = secret_versions.secret_id
+        AND secrets.user_id = auth.uid()::text
+    )
+  );
+
+CREATE POLICY "Users can delete own secret versions"
+  ON secret_versions FOR DELETE
+  USING (
+    EXISTS (
+      SELECT 1 FROM secrets
+      WHERE secrets.id = secret_versions.secret_id
+        AND secrets.user_id = auth.uid()::text
+    )
+  );
+
+-- RLS Policies for persona_packs
+CREATE POLICY "Users can view own persona packs"
+  ON persona_packs FOR SELECT
+  USING (auth.uid()::text = user_id);
+
+CREATE POLICY "Users can create own persona packs"
+  ON persona_packs FOR INSERT
+  WITH CHECK (auth.uid()::text = user_id);
+
+CREATE POLICY "Users can update own persona packs"
+  ON persona_packs FOR UPDATE
+  USING (auth.uid()::text = user_id)
+  WITH CHECK (auth.uid()::text = user_id);
+
+CREATE POLICY "Users can delete own persona packs"
+  ON persona_packs FOR DELETE
+  USING (auth.uid()::text = user_id);
+
+-- ----------------------------------------------------------------------------
+-- Triggers for updated_at
+-- ----------------------------------------------------------------------------
+CREATE TRIGGER update_api_keys_updated_at
+  BEFORE UPDATE ON api_keys
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_secrets_updated_at
+  BEFORE UPDATE ON secrets
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_persona_packs_updated_at
+  BEFORE UPDATE ON persona_packs
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+-- ============================================================================
 -- END OF CONSOLIDATED SCHEMA
 -- ============================================================================

@@ -24,6 +24,9 @@ import { auditRouter } from './routes/audit.js';
 import { marketplaceRouter } from './routes/marketplace.js';
 import { marketplaceV2Router } from './routes/marketplace-v2.js';
 import { uiConfigPublicRouter, uiConfigAdminRouter } from './routes/ui-config.js';
+import secretsRouter from './routes/secrets.js';
+import apiKeysRouter from './routes/api-keys.js';
+import personasRouter from './routes/personas.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 import { optionalAuthMiddleware, authMiddleware } from './middleware/auth.js';
 import { userRateLimiterMiddleware, apiRateLimiter } from './middleware/rateLimit.js';
@@ -172,6 +175,15 @@ app.use('/audit', auditRouter);
 app.use('/marketplace', marketplaceRouter);
 // Marketplace v2 routes (unified keys, discovery, bundles)
 app.use('/marketplace', marketplaceV2Router);
+
+// Secrets vault routes (require auth)
+app.use('/api/secrets', secretsRouter);
+
+// API keys routes (require auth)
+app.use('/api/api-keys', apiKeysRouter);
+
+// Persona packs routes (require auth)
+app.use('/api/personas', personasRouter);
 
 // Initialize WebSocket server
 const wsServer = new WebSocketServer();
