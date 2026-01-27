@@ -5,6 +5,7 @@
  * Automatic PR comments with security/compliance checks, merge blocking on failures.
  */
 
+import type { Request, Response } from 'express';
 import { Router } from 'express';
 import { z } from 'zod';
 import { createClient } from '@supabase/supabase-js';
@@ -15,7 +16,7 @@ import { safetyEnforcementService } from '../services/safetyEnforcementService.j
 import { failurePatternService } from '../services/failurePatternService.js';
 import { logger } from '../utils/logger.js';
 
-const router = Router();
+const router = Router() as Router;
 const supabase = createClient(
   process.env.SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!

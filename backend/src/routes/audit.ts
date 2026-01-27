@@ -1,10 +1,11 @@
+import type { Request, Response } from 'express';
 import { Router } from 'express';
 import { asyncHandler } from '../middleware/errorHandler.js';
 import { authMiddleware, AuthenticatedRequest } from '../middleware/auth.js';
 import { requireRole } from '../middleware/auth.js';
 import { auditLogService } from '../services/auditLogService.js';
 
-const router = Router();
+const router = Router() as Router;
 
 // All audit routes require admin authentication
 router.use(authMiddleware);

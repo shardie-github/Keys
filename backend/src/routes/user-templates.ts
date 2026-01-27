@@ -1,3 +1,4 @@
+import type { Request, Response } from 'express';
 import { Router } from 'express';
 import { z } from 'zod';
 import { asyncHandler } from '../middleware/errorHandler.js';
@@ -5,7 +6,7 @@ import { validateBody, validateQuery, validateParams } from '../middleware/valid
 import { authMiddleware, AuthenticatedRequest } from '../middleware/auth.js';
 import { userTemplateService } from '../services/userTemplateService.js';
 
-const router = Router();
+const router = Router() as Router;
 
 // All routes require authentication
 router.use(authMiddleware);

@@ -7,13 +7,14 @@
  * - Audit trails (full value - compliance requirement)
  */
 
+import type { Request, Response } from 'express';
 import { Router } from 'express';
 import { asyncHandler } from '../middleware/errorHandler.js';
 import { authMiddleware, AuthenticatedRequest } from '../middleware/auth.js';
 import { createClient } from '@supabase/supabase-js';
 import { logger } from '../utils/logger.js';
 
-const router = Router();
+const router = Router() as Router;
 const supabase = createClient(
   process.env.SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!

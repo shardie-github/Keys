@@ -1,10 +1,11 @@
+import type { Request, Response } from 'express';
 import { Router } from 'express';
 import { asyncHandler } from '../middleware/errorHandler.js';
 import { authMiddleware, AuthenticatedRequest } from '../middleware/auth.js';
 import { apmService } from '../services/apmService.js';
 import { errorTrackingService } from '../services/errorTrackingService.js';
 
-const router = Router();
+const router = Router() as Router;
 
 /**
  * Get performance statistics

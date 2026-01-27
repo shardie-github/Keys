@@ -8,8 +8,7 @@ export const metadata = {
 };
 
 export default async function EnterprisePage() {
-  return (
-    // @ts-expect-error - Async Server Component (Next.js 13+)
+return (
     <MarkdownPage
       title="Enterprise"
       description="Managed distribution and support for organizations."

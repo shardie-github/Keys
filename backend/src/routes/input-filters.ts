@@ -1,3 +1,4 @@
+import type { Request, Response } from 'express';
 import { Router } from 'express';
 import { z } from 'zod';
 import { asyncHandler } from '../middleware/errorHandler.js';
@@ -8,7 +9,7 @@ import { voiceToTextService } from '../services/voiceToTextService.js';
 import { authMiddleware } from '../middleware/auth.js';
 import { logger } from '../utils/logger.js';
 
-const router = Router();
+const router = Router() as Router;
 
 const reformatInputSchema = z.object({
   input: z.string().min(1),

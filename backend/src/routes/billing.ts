@@ -1,3 +1,4 @@
+import type { Request, Response } from 'express';
 import { Router } from 'express';
 import { asyncHandler } from '../middleware/errorHandler.js';
 import { authMiddleware, AuthenticatedRequest } from '../middleware/auth.js';
@@ -12,7 +13,7 @@ import {
   validateRedirectUrl,
 } from '../utils/redirects.js';
 
-const router = Router();
+const router = Router() as Router;
 
 // Initialize Stripe (will be null if key not provided)
 const stripe = process.env.STRIPE_SECRET_KEY

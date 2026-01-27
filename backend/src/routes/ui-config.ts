@@ -163,8 +163,8 @@ async function readConfigRow(): Promise<{ config: PublicUiConfig; updatedAt: str
   return { config, updatedAt };
 }
 
-export const uiConfigPublicRouter = Router();
-export const uiConfigAdminRouter = Router();
+export const uiConfigPublicRouter = Router() as Router;
+export const uiConfigAdminRouter = Router() as Router;
 
 // Light rate limit to prevent abuse (config is public/cacheable).
 uiConfigPublicRouter.use(

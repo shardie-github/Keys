@@ -1,3 +1,4 @@
+import type { Request, Response } from 'express';
 import { Router } from 'express';
 import { z } from 'zod';
 import { asyncHandler } from '../middleware/errorHandler.js';
@@ -10,7 +11,7 @@ import { checkLimit } from '../services/usageMetering.js';
 import { RateLimitError } from '../types/errors.js';
 import { getPersonaPack, getActivePersona } from '../services/personaService.js';
 
-const router = Router();
+const router = Router() as Router;
 
 const assemblePromptSchema = z.object({
   taskDescription: z.string().min(1),

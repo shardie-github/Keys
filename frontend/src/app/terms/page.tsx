@@ -8,8 +8,7 @@ export const metadata = {
 };
 
 export default async function TermsPage() {
-  return (
-        // @ts-expect-error - Async Server Component (Next.js 13+)
+return (
     <MarkdownPage
       title="Terms of Service"
       description="Legal terms governing the use of KEYS."

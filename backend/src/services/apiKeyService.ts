@@ -98,8 +98,8 @@ export async function createApiKey(params: CreateApiKeyParams): Promise<CreateAp
     .select()
     .single();
 
-  if (error || !apiKey) {
-    logger.error('Failed to create API key', error, { userId, name });
+if (error || !apiKey) {
+    logger.error('Failed to create API key', error || undefined, { userId, name });
     throw new Error('Failed to create API key');
   }
 
@@ -161,17 +161,15 @@ export async function verifyApiKeyToken(token: string): Promise<VerifiedApiKey |
       }
     }
 
-    // Update last_used_at (fire and forget)
-    getSupabaseClient()
-      .from('api_keys')
-      .update({ last_used_at: new Date().toISOString() })
-      .eq('id', apiKey.id)
-      .then(() => {
-        // Silent update
-      })
-      .catch((err) => {
-        logger.error('Failed to update last_used_at', err, { apiKeyId: apiKey.id });
-      });
+// Update last_used_at (fire and forget)
+    try {
+      await getSupabaseClient()
+        .from('api_keys')
+        .update({ last_used_at: new Date().toISOString() })
+        .eq('id', apiKey.id);
+    } catch (err) {
+      logger.error('Failed to update last_used_at', err instanceof Error ? err : undefined, { apiKeyId: apiKey.id });
+    }
 
     return {
       userId: apiKey.user_id,

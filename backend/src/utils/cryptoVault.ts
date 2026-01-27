@@ -59,9 +59,9 @@ export function deriveTenantKey(masterKey: Buffer, tenantId: string): Buffer {
 
   const info = Buffer.from('keys-vault-v1', 'utf8');
 
-  // HKDF using HMAC-SHA256
+// HKDF using HMAC-SHA256
   // Length: 32 bytes for AES-256
-  const key = crypto.hkdfSync('sha256', masterKey, salt, info, 32);
+  const key = Buffer.from(crypto.hkdfSync('sha256', masterKey, salt, info, 32));
 
   return key;
 }

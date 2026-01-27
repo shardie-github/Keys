@@ -9,7 +9,6 @@ export const metadata = {
 
 export default async function AboutPage() {
   return (
-    // @ts-expect-error - Async Server Component (Next.js 13+)
     <MarkdownPage
       title="About KEYS"
       description="Mission, positioning, and brand overview."

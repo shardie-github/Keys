@@ -8,8 +8,7 @@ export const metadata = {
 };
 
 export default async function OpenSourcePage() {
-  return (
-    // @ts-expect-error - Async Server Component (Next.js 13+)
+return (
     <MarkdownPage
       title="Open Source"
       description="License, contribution model, and community standards."

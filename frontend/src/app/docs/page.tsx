@@ -8,8 +8,7 @@ export const metadata = {
 };
 
 export default async function DocsPage() {
-  return (
-        // @ts-expect-error - Async Server Component (Next.js 13+)
+return (
     <MarkdownPage
       title="Docs"
       description="Documentation and reference materials for KEYS."

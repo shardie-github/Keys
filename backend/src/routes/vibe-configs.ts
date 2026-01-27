@@ -1,3 +1,4 @@
+import type { Request, Response } from 'express';
 import { Router } from 'express';
 import { createClient } from '@supabase/supabase-js';
 import { z } from 'zod';
@@ -9,7 +10,7 @@ import { logger } from '../utils/logger.js';
 import { getCache, setCache, deleteCache, cacheKeys } from '../cache/redis.js';
 import { authMiddleware, AuthenticatedRequest } from '../middleware/auth.js';
 
-const router = Router();
+const router = Router() as Router;
 const supabase = createClient(
   process.env.SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!

@@ -164,4 +164,6 @@ export interface PromptAssemblyResult {
     weight: number;
     influence: 'primary' | 'secondary' | 'modifier';
   }>;
+  provider?: 'openai' | 'anthropic' | 'google' | 'meta' | 'custom';
+  model?: string;
 }

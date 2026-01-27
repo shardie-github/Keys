@@ -4,6 +4,7 @@
  * Comprehensive API with all features: validation, testing, history, analytics, sharing, etc.
  */
 
+import type { Request, Response } from 'express';
 import { Router } from 'express';
 import { z } from 'zod';
 import { asyncHandler } from '../middleware/errorHandler.js';
@@ -20,7 +21,7 @@ import { templatePresetService } from '../services/templatePresetService.js';
 import { templateExportService } from '../services/templateExportService.js';
 import { createClient } from '@supabase/supabase-js';
 
-const router = Router();
+const router = Router() as Router;
 const supabase = createClient(
   process.env.SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!

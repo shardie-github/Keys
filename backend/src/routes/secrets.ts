@@ -1,3 +1,4 @@
+import type { Request, Response } from 'express';
 import { Router } from 'express';
 import { authMiddleware } from '../middleware/auth.js';
 import type { AuthenticatedRequest } from '../middleware/auth.js';
@@ -12,7 +13,7 @@ import {
 import { logger } from '../utils/logger.js';
 import { redactSecrets } from '../utils/redaction.js';
 
-const router = Router();
+const router = Router() as Router;
 
 // All routes require authentication
 router.use(authMiddleware);

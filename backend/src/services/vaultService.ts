@@ -116,8 +116,8 @@ export async function createSecret(params: CreateSecretParams): Promise<Secret> 
     .select()
     .single();
 
-  if (secretError || !secret) {
-    logger.error('Failed to create secret metadata', secretError, { userId, name: redactSecrets(name) });
+if (secretError || !secret) {
+    logger.error('Failed to create secret metadata', secretError || undefined, { userId, name: redactSecrets(name) });
     throw new Error('Failed to create secret');
   }
 
@@ -244,8 +244,8 @@ export async function rotateSecret(params: RotateSecretParams): Promise<SecretVe
     .select()
     .single();
 
-  if (newVersionError || !newVersion) {
-    logger.error('Failed to create new secret version', newVersionError, { userId, secretId: secret.id });
+if (newVersionError || !newVersion) {
+    logger.error('Failed to create new secret version', newVersionError || undefined, { userId, secretId: secret.id });
     throw new Error('Failed to rotate secret');
   }
 

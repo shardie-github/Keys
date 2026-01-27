@@ -4,12 +4,13 @@
  * Provides endpoints for tracking lock-in metrics, churn prediction, and infrastructure signals
  */
 
+import type { Request, Response } from 'express';
 import { Router } from 'express';
 import { asyncHandler } from '../middleware/errorHandler.js';
 import { authMiddleware, AuthenticatedRequest } from '../middleware/auth.js';
 import { moatMetricsService } from '../services/moatMetricsService.js';
 
-const router = Router();
+const router = Router() as Router;
 
 /**
  * Get lock-in metrics for current user

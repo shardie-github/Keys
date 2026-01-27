@@ -1,3 +1,4 @@
+import type { Request, Response } from 'express';
 import { Router } from 'express';
 import { asyncHandler } from '../middleware/errorHandler.js';
 import { authMiddleware, AuthenticatedRequest, requireRole } from '../middleware/auth.js';
@@ -23,7 +24,7 @@ import {
 } from '../lib/marketplace/storage.js';
 import { createHash } from 'crypto';
 
-const router = Router();
+const router = Router() as Router;
 const supabase = createClient(
   process.env.SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!

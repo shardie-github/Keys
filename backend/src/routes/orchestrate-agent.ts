@@ -1,3 +1,4 @@
+import type { Request, Response } from 'express';
 import { Router } from 'express';
 import { z } from 'zod';
 import { orchestrateAgent } from '../services/agentOrchestration.js';
@@ -14,7 +15,7 @@ import { RateLimitError } from '../types/errors.js';
 import { failurePatternService } from '../services/failurePatternService.js';
 import { safetyEnforcementService } from '../services/safetyEnforcementService.js';
 
-const router = Router();
+const router = Router() as Router;
 
 let supabaseClient: SupabaseClient<any> | null = null;
 function getSupabaseAdminClient() {

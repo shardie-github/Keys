@@ -5,6 +5,7 @@
  * Auto-injects context (file tree, git history, recent changes) to make Keys unavoidable.
  */
 
+import type { Request, Response } from 'express';
 import { Router } from 'express';
 import { z } from 'zod';
 import { createClient } from '@supabase/supabase-js';
@@ -17,7 +18,7 @@ import { failurePatternService } from '../services/failurePatternService.js';
 import { safetyEnforcementService } from '../services/safetyEnforcementService.js';
 import { logger } from '../utils/logger.js';
 
-const router = Router();
+const router = Router() as Router;
 const supabase = createClient(
   process.env.SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!

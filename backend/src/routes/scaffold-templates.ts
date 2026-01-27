@@ -1,3 +1,4 @@
+import type { Request, Response } from 'express';
 import { Router } from 'express';
 import { z } from 'zod';
 import { asyncHandler } from '../middleware/errorHandler.js';
@@ -5,7 +6,7 @@ import { validateBody, validateQuery } from '../middleware/validation.js';
 import { scaffoldTemplateService } from '../services/scaffoldTemplateService.js';
 import { authMiddleware, AuthenticatedRequest } from '../middleware/auth.js';
 
-const router = Router();
+const router = Router() as Router;
 
 // Apply auth middleware to all routes
 router.use(authMiddleware);

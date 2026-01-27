@@ -8,8 +8,7 @@ export const metadata = {
 };
 
 export default async function SecurityPage() {
-  return (
-        // @ts-expect-error - Async Server Component (Next.js 13+)
+return (
     <MarkdownPage
       title="Security"
       description="Security posture, controls, and trust model overview."

@@ -8,8 +8,7 @@ export const metadata = {
 };
 
 export default async function GovernancePage() {
-  return (
-    // @ts-expect-error - Async Server Component (Next.js 13+)
+return (
     <MarkdownPage
       title="Governance"
       description="How artifacts are curated, reviewed, and maintained."

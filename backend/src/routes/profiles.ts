@@ -1,3 +1,4 @@
+import type { Request, Response } from 'express';
 import { Router } from 'express';
 import { createClient } from '@supabase/supabase-js';
 import type { SupabaseClient } from '@supabase/supabase-js';
@@ -12,7 +13,7 @@ import { getPaginationParams, createPaginatedResponse } from '../utils/paginatio
 import { authMiddleware, AuthenticatedRequest } from '../middleware/auth.js';
 import { checkLimit } from '../services/usageMetering.js';
 
-const router = Router();
+const router = Router() as Router;
 let supabaseClient: SupabaseClient<any> | null = null;
 function getSupabaseAdminClient() {
   const isTestRuntime = process.env.NODE_ENV === 'test' || typeof (import.meta as any)?.vitest !== 'undefined';

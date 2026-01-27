@@ -259,8 +259,8 @@ export async function importPersonaPack(params: ImportPersonaParams): Promise<Pe
     .select()
     .single();
 
-  if (error || !personaPack) {
-    logger.error('Failed to import persona pack', error, { userId, name: canonical.name });
+if (error || !personaPack) {
+    logger.error('Failed to import persona pack', error || undefined, { userId, name: canonical.name });
     throw new Error('Failed to import persona pack');
   }
 

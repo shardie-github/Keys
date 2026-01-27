@@ -1,3 +1,4 @@
+import type { Request, Response } from 'express';
 import { Router } from 'express';
 import { asyncHandler } from '../middleware/errorHandler.js';
 import { authMiddleware, AuthenticatedRequest } from '../middleware/auth.js';
@@ -5,7 +6,7 @@ import { telemetryService } from '../services/telemetryService.js';
 import { getCurrentUsage, checkLimit } from '../services/usageMetering.js';
 import { createClient } from '@supabase/supabase-js';
 
-const router = Router();
+const router = Router() as Router;
 const supabase = createClient(
   process.env.SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
