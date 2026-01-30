@@ -17,55 +17,60 @@ export default function Home() {
       <HeroSection />
       
       {/* Original content sections below hero */}
-      <section className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
-        <div className="text-center space-y-6">
-          <p className="text-sm uppercase tracking-[0.2em] text-blue-700 dark:text-blue-300">
-            Open Source Knowledge & Artifact Library
-          </p>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-gray-100">
-            Keys is a curated library of prompts, notebooks, and runbooks.
-          </h1>
-          <p className="text-lg sm:text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-            Use Keys as a starting point. Every artifact is designed for adaptation, local judgment, and responsible use.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link
-              href="/library"
-              className="px-6 py-3 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-            >
-              Browse the library
-            </Link>
-            <Link
-              href="/what-is-keys"
-              className="px-6 py-3 rounded-lg border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-200 font-semibold hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-            >
-              How to use Keys
-            </Link>
+      <section className="w-full px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center space-y-6">
+            <p className="text-sm uppercase tracking-[0.2em] text-blue-700 dark:text-blue-300">
+              Open Source Knowledge & Artifact Library
+            </p>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-gray-100">
+              Keys is a curated library of prompts, notebooks, and runbooks.
+            </h1>
+            <p className="text-lg sm:text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
+              Use Keys as a starting point. Every artifact is designed for adaptation, local judgment, and responsible use.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Link
+                href="/library"
+                className="px-6 py-3 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              >
+                Browse the library
+              </Link>
+              <Link
+                href="/what-is-keys"
+                className="px-6 py-3 rounded-lg border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-200 font-semibold hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              >
+                How to use Keys
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="w-full max-w-5xl mx-auto grid gap-6 sm:gap-8 sm:grid-cols-2 pb-6 sm:pb-10">
-        <div className="bg-white/80 dark:bg-slate-800/80 border border-gray-200 dark:border-slate-700 rounded-2xl p-6 shadow-sm">
-          <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-3">What Keys is</h2>
-          <ul className="space-y-2 text-gray-700 dark:text-gray-300">
-            <li>• A curated library of prompts, notebooks, and runbooks.</li>
-            <li>• Clear starting points, not final answers.</li>
-            <li>• Designed to be adapted to your tools and constraints.</li>
-          </ul>
-        </div>
-        <div className="bg-white/80 dark:bg-slate-800/80 border border-gray-200 dark:border-slate-700 rounded-2xl p-6 shadow-sm">
-          <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-3">What Keys is not</h2>
-          <ul className="space-y-2 text-gray-700 dark:text-gray-300">
-            <li>• Not a model or a decision engine.</li>
-            <li>• Not a guarantee of outcomes.</li>
-            <li>• Not a replacement for understanding.</li>
-          </ul>
+      <section className="w-full px-4 sm:px-6 lg:px-8 pb-6 sm:pb-10">
+        <div className="max-w-7xl mx-auto grid gap-6 sm:gap-8 sm:grid-cols-2">
+          <div className="bg-white/80 dark:bg-slate-800/80 border border-gray-200 dark:border-slate-700 rounded-2xl p-6 shadow-sm">
+            <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-3">What Keys is</h2>
+            <ul className="space-y-2 text-gray-700 dark:text-gray-300">
+              <li>• A curated library of prompts, notebooks, and runbooks.</li>
+              <li>• Clear starting points, not final answers.</li>
+              <li>• Designed to be adapted to your tools and constraints.</li>
+            </ul>
+          </div>
+          <div className="bg-white/80 dark:bg-slate-800/80 border border-gray-200 dark:border-slate-700 rounded-2xl p-6 shadow-sm">
+            <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-3">What Keys is not</h2>
+            <ul className="space-y-2 text-gray-700 dark:text-gray-300">
+              <li>• Not a model or a decision engine.</li>
+              <li>• Not a guarantee of outcomes.</li>
+              <li>• Not a replacement for understanding.</li>
+            </ul>
+          </div>
         </div>
       </section>
 
-      <section className="w-full max-w-5xl mx-auto grid gap-6 sm:grid-cols-3 pb-10">
-        {[
+      <section className="w-full px-4 sm:px-6 lg:px-8 pb-10">
+        <div className="max-w-7xl mx-auto grid gap-6 sm:grid-cols-3">
+          {[
           {
             title: 'Prompts',
             body: 'Reusable prompt patterns with context and guardrails.',
@@ -84,9 +89,11 @@ export default function Home() {
             <p className="text-sm text-gray-600 dark:text-gray-400">{item.body}</p>
           </div>
         ))}
+        </div>
       </section>
 
-      <section className="w-full max-w-5xl mx-auto grid gap-6 sm:grid-cols-2 pb-12">
+      <section className="w-full px-4 sm:px-6 lg:px-8 pb-12">
+        <div className="max-w-7xl mx-auto grid gap-6 sm:grid-cols-2">
         <div className="bg-white/80 dark:bg-slate-800/80 border border-gray-200 dark:border-slate-700 rounded-2xl p-6 shadow-sm">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-3">Open source by default</h2>
           <p className="text-gray-700 dark:text-gray-300 mb-4">
@@ -103,9 +110,10 @@ export default function Home() {
             Teams can use the library directly or choose a managed distribution for procurement, access control,
             and support.
           </p>
-          <Link href="/enterprise" className="text-blue-700 dark:text-blue-200 font-semibold hover:underline">
+         <Link href="/enterprise" className="text-blue-700 dark:text-blue-200 font-semibold hover:underline">
             Explore managed distribution →
           </Link>
+        </div>
         </div>
       </section>
 
