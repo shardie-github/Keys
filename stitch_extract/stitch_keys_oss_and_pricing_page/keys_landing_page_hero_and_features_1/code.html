@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KEYS - You already have the tools.</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#2563EB", // Blue-600
+                        "primary-hover": "#1D4ED8", // Blue-700
+                        "background-light": "#FFFFFF",
+                        "background-dark": "#0F172A", // Slate-900
+                        "surface-light": "#F8FAFC", // Slate-50
+                        "surface-dark": "#1E293B", // Slate-800
+                    },
+                    fontFamily: {
+                        display: ["Inter", "sans-serif"],
+                        sans: ["Inter", "sans-serif"],
+                        mono: ["Fira Code", "monospace"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "3xl": "1.5rem",
+                    },
+                    keyframes: {
+                        typing: {
+                            '0%': { width: '0' },
+                            '100%': { width: '100%' },
+                        },
+                        cursor: {
+                            '50%': { borderColor: 'transparent' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        }
+                    },
+                    animation: {
+                        'typing-1': 'typing 2s steps(40, end) forwards',
+                        'typing-2': 'typing 1s steps(20, end) forwards 2.5s',
+                        'typing-3': 'typing 1s steps(20, end) forwards 4s',
+                        'cursor-blink': 'cursor .75s step-end infinite',
+                        'fade-in-delayed-1': 'fadeIn 0.5s ease-out forwards 2s',
+                        'fade-in-delayed-2': 'fadeIn 0.5s ease-out forwards 3.5s',
+                        'fade-in-delayed-3': 'fadeIn 0.5s ease-out forwards 5s',
+                    }
+                },
+            },
+        };
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .typewriter-text {
+            overflow: hidden;
+            white-space: nowrap;
+            width: 0; 
+        }
+        .custom-cursor::after {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 18px;
+            background-color: #a0aec0;
+            vertical-align: middle;
+            animation: blink 1s step-end infinite;
+            margin-left: 4px;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 transition-colors duration-200">
+<div class="fixed top-24 left-1/2 -translate-x-1/2 z-[60] flex items-center gap-3 px-5 py-3 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-full shadow-xl border border-blue-100 dark:border-slate-700 transition-all duration-300 transform opacity-0 translate-y-[-1rem] pointer-events-none backdrop-blur-sm" id="copy-toast">
+<div class="flex items-center justify-center w-6 h-6 rounded-full bg-blue-50 dark:bg-blue-900/40 text-primary">
+<span class="material-symbols-outlined text-sm font-bold">check</span>
+</div>
+<span class="text-sm font-semibold tracking-tight">Command copied!</span>
+</div>
+<nav class="fixed w-full z-50 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between h-16 items-center">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-3xl">api</span>
+<span class="font-bold text-xl tracking-tight">KEYS</span>
+</div>
+<div class="hidden md:flex space-x-8 text-sm font-medium text-slate-600 dark:text-slate-300">
+<a class="hover:text-primary transition-colors" href="#">Product</a>
+<a class="hover:text-primary transition-colors" href="#">Docs</a>
+<a class="hover:text-primary transition-colors" href="#">Open Source</a>
+<a class="hover:text-primary transition-colors" href="#">Pricing</a>
+</div>
+<div class="flex items-center space-x-4">
+<button class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400" id="theme-toggle">
+<span class="material-symbols-outlined text-xl dark:hidden">dark_mode</span>
+<span class="material-symbols-outlined text-xl hidden dark:block">light_mode</span>
+</button>
+<a class="bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm" href="#">
+                        Get Started
+                    </a>
+</div>
+</div>
+</div>
+</nav>
+<main class="pt-24 pb-16">
+<section class="max-w-7xl mx-auto px-4 mb-16">
+<div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+<div class="flex-1 text-center lg:text-left">
+<div class="inline-flex items-center justify-center p-3 mb-6 bg-blue-50 dark:bg-blue-900/30 rounded-full">
+<span class="material-symbols-outlined text-primary text-3xl">track_changes</span>
+</div>
+<h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6 leading-tight">
+            You're not behind.<br/>
+<span class="text-primary">You already have the tools.</span>
+</h1>
+<p class="text-lg md:text-xl text-slate-600 dark:text-slate-400 mb-10 max-w-2xl mx-auto lg:mx-0">
+            KEYS helps you unlock practical capability from the tools you already use—without competing with them.
+        </p>
+<div class="flex flex-wrap justify-center lg:justify-start gap-4 mb-8">
+<button class="bg-primary hover:bg-primary-hover text-white px-8 py-3 rounded-lg font-medium shadow-md transition-transform hover:scale-105">
+                Browse Keys
+            </button>
+<button class="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white px-8 py-3 rounded-lg font-medium shadow-md flex items-center gap-2 transition-transform hover:scale-105">
+<span class="material-symbols-outlined text-sm">auto_awesome</span> Try Demo
+            </button>
+</div>
+<div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 rounded-xl p-6 text-sm text-left max-w-2xl mx-auto lg:mx-0">
+<p class="mb-2">
+<span class="font-bold text-blue-900 dark:text-blue-100">What KEYS is:</span>
+<span class="text-blue-800 dark:text-blue-200">Structured assets (notebooks, prompts, workflows) that unlock capability in Cursor, Jupyter, GitHub, Stripe, and more.</span>
+</p>
+<p>
+<span class="font-bold text-blue-900 dark:text-blue-100">What KEYS isn't:</span>
+<span class="text-blue-800 dark:text-blue-200">A framework, an AI autopilot, or an execution engine. KEYS is the keyring—you own the tools.</span>
+</p>
+</div>
+</div>
+<div class="w-full max-w-xl lg:w-1/2 flex-shrink-0">
+<div class="relative rounded-xl overflow-hidden shadow-2xl bg-[#0F172A] border border-slate-700 dark:border-slate-600 ring-1 ring-white/10 font-mono text-sm leading-relaxed transform transition-all hover:scale-[1.01]">
+<div class="bg-[#1E293B] px-4 py-2 flex items-center justify-between border-b border-slate-700">
+<div class="flex items-center gap-2">
+<div class="flex gap-1.5">
+<div class="w-3 h-3 rounded-full bg-red-500/80"></div>
+<div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+<div class="w-3 h-3 rounded-full bg-green-500/80"></div>
+</div>
+</div>
+<div class="flex bg-[#0F172A] rounded-md p-1 gap-1 text-[10px] font-medium text-slate-400">
+<button class="px-3 py-0.5 rounded bg-slate-700 text-slate-100 shadow-sm">Mac</button>
+<button class="px-3 py-0.5 rounded hover:bg-slate-800 hover:text-slate-300 transition-colors">Linux</button>
+<button class="px-3 py-0.5 rounded hover:bg-slate-800 hover:text-slate-300 transition-colors">Windows</button>
+</div>
+<button aria-label="Copy to clipboard" class="group relative flex items-center justify-center p-1.5 rounded transition-all duration-200 text-slate-400 hover:text-blue-400 hover:bg-slate-700/50" id="copy-terminal-btn">
+<span class="material-symbols-outlined text-sm">content_copy</span>
+</button>
+</div>
+<div class="p-6 text-slate-300 h-[320px] overflow-hidden flex flex-col">
+<div class="flex items-center gap-2 mb-2">
+<span class="text-green-400 select-none">➜</span>
+<span class="text-blue-400 select-none">~</span>
+<div class="relative">
+<span class="typewriter-text inline-block animate-typing-1 border-r-2 border-transparent">
+                            curl -sSL https://keys.dev/install.sh | bash
+                        </span>
+</div>
+</div>
+<div class="mb-4 text-slate-400 opacity-0 animate-fade-in-delayed-1 text-xs pl-6">
+<div>Downloading KEYS installer...</div>
+<div class="text-green-400">✔ Successfully installed KEYS v1.0.4</div>
+</div>
+<div class="flex items-center gap-2 mb-2 opacity-0 animate-fade-in-delayed-1">
+<span class="text-green-400 select-none">➜</span>
+<span class="text-blue-400 select-none">~</span>
+<div class="relative">
+<span class="typewriter-text inline-block animate-typing-2 border-r-2 border-transparent">
+                            keys login
+                        </span>
+</div>
+</div>
+<div class="mb-4 text-slate-400 opacity-0 animate-fade-in-delayed-2 text-xs pl-6">
+<div>Opening browser for authentication...</div>
+<div class="text-green-400">✔ Authenticated as developer@example.com</div>
+</div>
+<div class="flex items-center gap-2 mb-2 opacity-0 animate-fade-in-delayed-2">
+<span class="text-green-400 select-none">➜</span>
+<span class="text-blue-400 select-none">~</span>
+<div class="relative">
+<span class="typewriter-text inline-block animate-typing-3 border-r-2 border-transparent">
+                            keys init
+                        </span>
+</div>
+</div>
+<div class="mb-2 text-slate-400 opacity-0 animate-fade-in-delayed-3 text-xs pl-6">
+<div>Initializing project workspace...</div>
+<div class="text-green-400">✔ Ready to build.</div>
+</div>
+<div class="flex items-center gap-2 opacity-0 animate-fade-in-delayed-3">
+<span class="text-green-400 select-none">➜</span>
+<span class="text-blue-400 select-none">keys-project</span>
+<span class="custom-cursor"></span>
+</div>
+</div>
+<div class="bg-[#2563EB] text-white text-[10px] px-3 py-1 flex justify-between items-center font-sans">
+<div class="flex gap-3">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[10px]">terminal</span> TERMINAL</span>
+<span class="opacity-75">master*</span>
+</div>
+<div class="flex gap-3">
+<span>UTF-8</span>
+<span>Ln 12, Col 45</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="max-w-5xl mx-auto px-4 mb-12">
+<div class="grid md:grid-cols-2 gap-6">
+<div class="bg-orange-50 dark:bg-orange-900/10 border border-orange-100 dark:border-orange-900/30 rounded-2xl p-8 hover:shadow-lg transition-shadow">
+<div class="mb-4 text-slate-700 dark:text-slate-200">
+<span class="material-symbols-outlined text-4xl text-slate-500 dark:text-slate-400">shield</span>
+</div>
+<h3 class="text-lg font-bold mb-2">I'm responsible for something breaking</h3>
+<p class="text-sm text-slate-600 dark:text-slate-400 mb-6">
+                        Find Keys that help you respond calmly and systematically when things go wrong.
+                    </p>
+<a class="text-sm font-semibold flex items-center gap-1 hover:gap-2 transition-all" href="#">
+                        Explore Keys <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+<div class="bg-yellow-50 dark:bg-yellow-900/10 border border-yellow-100 dark:border-yellow-900/30 rounded-2xl p-8 hover:shadow-lg transition-shadow">
+<div class="mb-4 text-slate-700 dark:text-slate-200">
+<span class="material-symbols-outlined text-4xl text-yellow-500 dark:text-yellow-600">bolt</span>
+</div>
+<h3 class="text-lg font-bold mb-2">I want to ship faster without messing things up</h3>
+<p class="text-sm text-slate-600 dark:text-slate-400 mb-6">
+                        Discover Keys that help you move quickly while maintaining quality and avoiding common pitfalls.
+                    </p>
+<a class="text-sm font-semibold flex items-center gap-1 hover:gap-2 transition-all" href="#">
+                        Explore Keys <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+<div class="bg-sky-50 dark:bg-sky-900/10 border border-sky-100 dark:border-sky-900/30 rounded-2xl p-8 hover:shadow-lg transition-shadow">
+<div class="mb-4 text-slate-700 dark:text-slate-200">
+<span class="material-symbols-outlined text-4xl text-sky-500 dark:text-sky-400">search</span>
+</div>
+<h3 class="text-lg font-bold mb-2">I inherited a system I don't fully trust</h3>
+<p class="text-sm text-slate-600 dark:text-slate-400 mb-6">
+                        Get Keys that help you understand, document, and safely modify systems you didn't build.
+                    </p>
+<a class="text-sm font-semibold flex items-center gap-1 hover:gap-2 transition-all" href="#">
+                        Explore Keys <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+<div class="bg-pink-50 dark:bg-pink-900/10 border border-pink-100 dark:border-pink-900/30 rounded-2xl p-8 hover:shadow-lg transition-shadow">
+<div class="mb-4 text-slate-700 dark:text-slate-200">
+<span class="material-symbols-outlined text-4xl text-pink-500 dark:text-pink-400">groups</span>
+</div>
+<h3 class="text-lg font-bold mb-2">I don't want to be the only one who understands this</h3>
+<p class="text-sm text-slate-600 dark:text-slate-400 mb-6">
+                        Find Keys that help you share knowledge and reduce single points of failure.
+                    </p>
+<a class="text-sm font-semibold flex items-center gap-1 hover:gap-2 transition-all" href="#">
+                        Explore Keys <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+</div>
+</section>
+<div class="text-center mb-16">
+<a class="inline-flex items-center gap-2 px-6 py-3 border border-primary text-primary hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg font-medium transition-colors" href="#">
+                Not sure where to start? Take a guided tour <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+<section class="max-w-4xl mx-auto px-4 mb-16">
+<div class="bg-white dark:bg-surface-dark border border-slate-200 dark:border-slate-700 rounded-3xl p-8 md:p-12 shadow-sm text-center">
+<h2 class="text-2xl font-bold mb-4">The Toolshed Metaphor</h2>
+<p class="text-slate-600 dark:text-slate-400 mb-8 max-w-2xl mx-auto">
+                    Imagine a modern toolshed filled with powerful tools: Cursor, Jupyter, GitHub, Stripe, Supabase, and more. Each tool provides raw capability—but capability alone isn't enough. You need to know how to use them effectively. <strong class="text-slate-900 dark:text-slate-100">KEYS is the keyring.</strong>
+</p>
+<div class="grid md:grid-cols-3 gap-4 text-left">
+<div class="bg-slate-50 dark:bg-slate-800 rounded-xl p-4">
+<div class="mb-2"><span class="material-symbols-outlined text-blue-500">build</span></div>
+<h4 class="font-bold text-sm mb-1">Cursor Keys</h4>
+<p class="text-xs text-slate-500 dark:text-slate-400">Unlock advanced workflows, prompt patterns, and code generation strategies.</p>
+</div>
+<div class="bg-slate-50 dark:bg-slate-800 rounded-xl p-4">
+<div class="mb-2"><span class="material-symbols-outlined text-orange-500">bar_chart</span></div>
+<h4 class="font-bold text-sm mb-1">Jupyter Keys</h4>
+<p class="text-xs text-slate-500 dark:text-slate-400">Unlock data science workflows, analysis patterns, and validation harnesses.</p>
+</div>
+<div class="bg-slate-50 dark:bg-slate-800 rounded-xl p-4">
+<div class="mb-2"><span class="material-symbols-outlined text-purple-500">settings</span></div>
+<h4 class="font-bold text-sm mb-1">GitHub Keys</h4>
+<p class="text-xs text-slate-500 dark:text-slate-400">Unlock workflow automation, CI/CD patterns, and repository structures.</p>
+</div>
+</div>
+</div>
+</section>
+<div class="max-w-3xl mx-auto px-4 mb-12">
+<div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4 text-center text-sm text-green-800 dark:text-green-300">
+<strong>Remember:</strong> KEYS is not an AI tool. KEYS is the keyring to modern tools. You already own the tools—KEYS gives you the keys to unlock them. <a class="underline font-semibold hover:text-green-900 dark:hover:text-green-200" href="#">See pricing</a>
+</div>
+</div>
+<section class="max-w-6xl mx-auto px-4 mb-16">
+<h2 class="text-2xl font-bold text-center mb-8">Keys That Unlock Tools</h2>
+<div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="bg-white dark:bg-surface-dark border border-slate-200 dark:border-slate-700 rounded-2xl p-6 hover:border-primary/50 transition-colors">
+<span class="material-symbols-outlined text-blue-500 text-3xl mb-4">build</span>
+<h3 class="font-bold mb-2">Cursor Keys</h3>
+<p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Unlock advanced workflows, prompt patterns, and code generation strategies in Cursor. Prompt packs and Composer instructions.</p>
+</div>
+<div class="bg-white dark:bg-surface-dark border border-slate-200 dark:border-slate-700 rounded-2xl p-6 hover:border-primary/50 transition-colors">
+<span class="material-symbols-outlined text-orange-500 text-3xl mb-4">analytics</span>
+<h3 class="font-bold mb-2">Jupyter Keys</h3>
+<p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Unlock data science workflows, analysis patterns, and validation harnesses in Jupyter. Notebook packs and analysis templates.</p>
+</div>
+<div class="relative bg-white dark:bg-surface-dark border border-slate-200 dark:border-slate-700 rounded-2xl p-6 hover:border-primary/50 transition-colors">
+<span class="absolute top-4 right-4 bg-slate-100 dark:bg-slate-800 text-[10px] uppercase font-bold px-2 py-1 rounded text-slate-500">Coming Soon</span>
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-400 text-3xl mb-4">settings</span>
+<h3 class="font-bold mb-2">GitHub Keys</h3>
+<p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Unlock workflow automation, CI/CD patterns, and repository structures in GitHub. Workflow templates and starter repos.</p>
+</div>
+<div class="relative bg-white dark:bg-surface-dark border border-slate-200 dark:border-slate-700 rounded-2xl p-6 hover:border-primary/50 transition-colors">
+<span class="absolute top-4 right-4 bg-slate-100 dark:bg-slate-800 text-[10px] uppercase font-bold px-2 py-1 rounded text-slate-500">Coming Soon</span>
+<span class="material-symbols-outlined text-indigo-500 text-3xl mb-4">credit_card</span>
+<h3 class="font-bold mb-2">Stripe Keys</h3>
+<p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Unlock payment flows, subscription management, and billing patterns in Stripe. Payment workflows and subscription templates.</p>
+</div>
+</div>
+</section>
+<section class="max-w-6xl mx-auto px-4 mb-20">
+<div class="grid md:grid-cols-3 gap-6">
+<div class="bg-purple-50 dark:bg-purple-900/10 border border-purple-100 dark:border-purple-900/30 rounded-2xl p-6">
+<span class="material-symbols-outlined text-purple-500 text-2xl mb-3">key</span>
+<h3 class="font-bold text-sm mb-2">Tool-Agnostic</h3>
+<p class="text-xs text-slate-600 dark:text-slate-400">Keys work with tools you already own. No lock-in, no platform requirements.</p>
+</div>
+<div class="bg-amber-50 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-900/30 rounded-2xl p-6">
+<span class="material-symbols-outlined text-amber-600 text-2xl mb-3">inventory_2</span>
+<h3 class="font-bold text-sm mb-2">Reusable Assets</h3>
+<p class="text-xs text-slate-600 dark:text-slate-400">Keys are structured, reusable, and updatable. Not one-off solutions—proven patterns.</p>
+</div>
+<div class="bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/30 rounded-2xl p-6">
+<span class="material-symbols-outlined text-red-500 text-2xl mb-3">ads_click</span>
+<h3 class="font-bold text-sm mb-2">Outcome-Driven</h3>
+<p class="text-xs text-slate-600 dark:text-slate-400">Every key unlocks a specific, practical outcome. No vague promises—tangible results.</p>
+</div>
+</div>
+</section>
+<section class="max-w-6xl mx-auto px-4 mb-20 border-t border-slate-100 dark:border-slate-800 pt-10">
+<div class="flex flex-wrap md:flex-nowrap justify-between gap-4 text-center text-xs text-slate-500 dark:text-slate-400">
+<a class="flex-1 hover:text-primary transition-colors" href="#">Dashboard</a>
+<a class="flex-1 hover:text-primary transition-colors" href="#">Settings</a>
+<a class="flex-1 hover:text-primary transition-colors" href="#">Pricing</a>
+<a class="flex-1 hover:text-primary transition-colors" href="#">Compare</a>
+<a class="flex-1 hover:text-primary transition-colors" href="#">Features</a>
+<a class="flex-1 hover:text-primary transition-colors" href="#">Advanced</a>
+<a class="flex-1 hover:text-primary transition-colors" href="#">Terms</a>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12">
+<div class="bg-white dark:bg-surface-dark border border-slate-100 dark:border-slate-700 p-6 rounded-lg text-center shadow-sm">
+<div class="w-8 h-1 bg-blue-500 mx-auto mb-4 rounded-full"></div>
+<div class="text-xs font-medium text-slate-500 dark:text-slate-400">Active Users</div>
+</div>
+<div class="bg-white dark:bg-surface-dark border border-slate-100 dark:border-slate-700 p-6 rounded-lg text-center shadow-sm">
+<div class="w-8 h-1 bg-blue-500 mx-auto mb-4 rounded-full"></div>
+<div class="text-xs font-medium text-slate-500 dark:text-slate-400">Prompts Generated</div>
+</div>
+<div class="bg-white dark:bg-surface-dark border border-slate-100 dark:border-slate-700 p-6 rounded-lg text-center shadow-sm">
+<div class="w-8 h-1 bg-blue-500 mx-auto mb-4 rounded-full"></div>
+<div class="text-xs font-medium text-slate-500 dark:text-slate-400">Templates Created</div>
+</div>
+<div class="bg-white dark:bg-surface-dark border border-slate-100 dark:border-slate-700 p-6 rounded-lg text-center shadow-sm">
+<div class="w-8 h-1 bg-blue-500 mx-auto mb-4 rounded-full"></div>
+<div class="text-xs font-medium text-slate-500 dark:text-slate-400">Avg. Time Saved</div>
+</div>
+</div>
+</section>
+<section class="max-w-6xl mx-auto px-4 mb-20">
+<h2 class="text-3xl font-bold text-center mb-2">Loved by builders worldwide</h2>
+<p class="text-center text-slate-500 dark:text-slate-400 mb-12 text-sm">Trusted by founders, developers, and product teams</p>
+<div class="grid md:grid-cols-3 gap-6">
+<div class="bg-white dark:bg-surface-dark border border-slate-100 dark:border-slate-700 p-6 rounded-xl shadow-sm">
+<div class="flex text-yellow-400 mb-3 text-sm">
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="material-symbols-outlined text-sm">star</span>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-300 mb-4 leading-relaxed">"This AI companion transformed how we build products. From ideation to launch, it's like having a cofounder who never sleeps."</p>
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs font-bold">A</div>
+<div>
+<div class="text-xs font-bold">Alex Chen</div>
+<div class="text-[10px] text-slate-500">Founder at TechStart</div>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-surface-dark border border-slate-100 dark:border-slate-700 p-6 rounded-xl shadow-sm">
+<div class="flex text-yellow-400 mb-3 text-sm">
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="material-symbols-outlined text-sm">star</span>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-300 mb-4 leading-relaxed">"The prompt engineering and template system saved us weeks of work. Our team ships faster and smarter."</p>
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white text-xs font-bold">S</div>
+<div>
+<div class="text-xs font-bold">Sarah Martinez</div>
+<div class="text-[10px] text-slate-500">Product Manager at ScaleUp Inc</div>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-surface-dark border border-slate-100 dark:border-slate-700 p-6 rounded-xl shadow-sm">
+<div class="flex text-yellow-400 mb-3 text-sm">
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="material-symbols-outlined text-sm">star</span>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-300 mb-4 leading-relaxed">"Best AI tool for technical founders. It understands context, provides actionable insights, and scales with our needs."</p>
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center text-white text-xs font-bold">J</div>
+<div>
+<div class="text-xs font-bold">Jordan Kim</div>
+<div class="text-[10px] text-slate-500">CTO at InnovateLabs</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="max-w-4xl mx-auto px-4">
+<div class="bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800 rounded-2xl p-8 md:p-10 flex flex-col md:flex-row items-start gap-6">
+<div class="shrink-0">
+<div class="w-12 h-12 bg-indigo-500 rounded-full flex items-center justify-center text-white shadow-lg">
+<span class="material-symbols-outlined">diamond</span>
+</div>
+</div>
+<div class="flex-grow">
+<h3 class="text-lg font-bold mb-1">Unlock Premium Features</h3>
+<p class="text-sm text-slate-600 dark:text-slate-400 mb-6">Get more power, flexibility, and support with Premium.</p>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-8 mb-6">
+<div class="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined text-green-500 text-sm">check</span>
+                            Unlimited prompts &amp; templates
+                        </div>
+<div class="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined text-green-500 text-sm">check</span>
+                            Advanced AI models (GPT-4, Claude Opus)
+                        </div>
+<div class="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined text-green-500 text-sm">check</span>
+                            Voice input &amp; output
+                        </div>
+<div class="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined text-green-500 text-sm">check</span>
+                            Priority support
+                        </div>
+</div>
+<button class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-colors">
+                        Upgrade Now <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+<footer class="bg-slate-50 dark:bg-background-dark border-t border-slate-200 dark:border-slate-800 py-12">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-slate-500 text-sm">
+<p>© 2023 KEYS. All rights reserved.</p>
+</div>
+</footer>
+<script>
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        // Check for saved theme preference or system preference
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            htmlElement.classList.add('dark');
+        } else {
+            htmlElement.classList.remove('dark');
+        }
+        themeToggle.addEventListener('click', () => {
+            if (htmlElement.classList.contains('dark')) {
+                htmlElement.classList.remove('dark');
+                localStorage.theme = 'light';
+            } else {
+                htmlElement.classList.add('dark');
+                localStorage.theme = 'dark';
+            }
+        });
+        // Copy Terminal Functionality
+        const copyBtn = document.getElementById('copy-terminal-btn');
+        const toast = document.getElementById('copy-toast');
+        let toastTimeout;
+        copyBtn.addEventListener('click', () => {
+            // Simulate clipboard copy
+            navigator.clipboard.writeText('curl -sSL https://keys.dev/install.sh | bash');
+            // Reset existing timeout if any
+            if (toastTimeout) clearTimeout(toastTimeout);
+            // Show toast
+            toast.classList.remove('opacity-0', 'translate-y-[-1rem]', 'pointer-events-none');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            // Hide toast after 3s
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', 'translate-y-[-1rem]', 'pointer-events-none');
+            }, 3000);
+        });
+    </script>
+</body></html>

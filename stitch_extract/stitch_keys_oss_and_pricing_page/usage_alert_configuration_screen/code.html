@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Usage Alert Configuration - KEYS Managed Cloud</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                        "slate-card": "#1c2433",
+                        "slate-border": "#2d3748",
+                        "warning-amber": "#f59e0b"
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-icon {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-white">
+<div class="flex min-h-screen">
+<!-- Side Navigation -->
+<aside class="w-64 border-r border-slate-border bg-background-dark hidden lg:flex flex-col">
+<div class="p-6 flex flex-col h-full">
+<div class="flex items-center gap-3 mb-10">
+<div class="bg-primary size-10 rounded-lg flex items-center justify-center shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-white">vpn_key</span>
+</div>
+<div class="flex flex-col">
+<h1 class="text-white text-base font-bold leading-none">KEYS Cloud</h1>
+<p class="text-[#9da6b9] text-xs font-medium">Admin Console</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2 flex-1">
+<a class="flex items-center gap-3 px-3 py-2 text-[#9da6b9] hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-[#9da6b9] hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">shield</span>
+<span class="text-sm font-medium">Security</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 bg-primary/10 text-primary rounded-lg" href="#">
+<span class="material-symbols-outlined active-icon">payments</span>
+<span class="text-sm font-medium">Billing</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-[#9da6b9] hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">account_balance</span>
+<span class="text-sm font-medium">Governance</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-[#9da6b9] hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 border-t border-slate-border">
+<div class="flex items-center gap-3 px-2">
+<div class="size-8 rounded-full bg-slate-card border border-slate-border flex items-center justify-center overflow-hidden">
+<img alt="User avatar" data-alt="User profile avatar circle" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfjFmaCRoQvq6SYLZqyLxtzPDa2AgxgcJ2pBfkMU2_gHs8GkrWauWbmJcZU_tCVnnAnlm2GapXUn8oDVd2sG0lKlTWCQkhnPDxpNYcJfZ7LhFRr8Eu7NGiIA28q_A6hKRbuLpe_Lw3kFN1o7wLlplnoqDNe3kzefF5OG1uVpk-OE-Hju2TaFfYpfnsceH2LlosSfKuUNNtrXeeGhiyUQb9r1YJqh7Hoslmkq9-UitovGpOq1rWFcjZA4h-ioHxdCjLrUAHGtnWUDlN"/>
+</div>
+<div class="flex flex-col">
+<span class="text-xs font-bold">Alex Chen</span>
+<span class="text-[10px] text-[#9da6b9]">Pro Plan</span>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col min-w-0 bg-background-dark">
+<!-- Breadcrumbs -->
+<div class="px-8 pt-8">
+<div class="flex items-center gap-2 text-sm">
+<a class="text-[#9da6b9] hover:text-white transition-colors" href="#">Settings</a>
+<span class="text-[#4a5568] material-symbols-outlined text-xs">chevron_right</span>
+<a class="text-[#9da6b9] hover:text-white transition-colors" href="#">Billing</a>
+<span class="text-[#4a5568] material-symbols-outlined text-xs">chevron_right</span>
+<span class="text-primary font-medium">Alerts</span>
+</div>
+</div>
+<!-- Page Header -->
+<div class="px-8 py-6 flex flex-wrap items-end justify-between gap-6 border-b border-slate-border/50">
+<div class="max-w-2xl">
+<h1 class="text-4xl font-black tracking-tight text-white mb-2">Usage Alerts</h1>
+<p class="text-[#9da6b9] text-base leading-relaxed">
+                        Configure notifications to stay informed about your cloud consumption. Alerts help prevent overages and maintain budget governance across services.
+                    </p>
+</div>
+<button class="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary/90 text-white rounded-lg font-bold text-sm transition-all shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-[20px]">add</span>
+<span>Create New Alert</span>
+</button>
+</div>
+<div class="p-8 flex flex-col gap-8 max-w-6xl">
+<!-- Quick Inline Creation Form (Collapsible State - Shown for demo) -->
+<section class="bg-slate-card/40 border border-slate-border p-6 rounded-xl">
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-primary">add_circle</span>
+<h3 class="text-lg font-bold">New Alert Configuration</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="flex flex-col gap-2">
+<label class="text-xs font-bold text-[#9da6b9] uppercase tracking-wider">Metric Type</label>
+<select class="bg-background-dark border-slate-border text-white rounded-lg focus:ring-primary focus:border-primary">
+<option>API Calls (Total)</option>
+<option>Secrets Managed</option>
+<option>User Seats</option>
+<option>Monthly Budget ($)</option>
+</select>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-xs font-bold text-[#9da6b9] uppercase tracking-wider">Threshold Value</label>
+<div class="relative">
+<input class="w-full bg-background-dark border-slate-border text-white rounded-lg focus:ring-primary focus:border-primary pr-10" placeholder="80" type="number"/>
+<span class="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-[#4a5568] font-bold">%</span>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-xs font-bold text-[#9da6b9] uppercase tracking-wider">Notify Via</label>
+<div class="flex gap-2">
+<button class="flex-1 flex items-center justify-center p-2 rounded-lg bg-primary text-white border border-primary/20">
+<span class="material-symbols-outlined text-[18px]">mail</span>
+</button>
+<button class="flex-1 flex items-center justify-center p-2 rounded-lg bg-background-dark text-[#9da6b9] border border-slate-border hover:border-primary/50">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+</button>
+<button class="flex-1 flex items-center justify-center p-2 rounded-lg bg-background-dark text-[#9da6b9] border border-slate-border hover:border-primary/50">
+<span class="material-symbols-outlined text-[18px]">webhook</span>
+</button>
+</div>
+</div>
+</div>
+<div class="mt-6 pt-6 border-t border-slate-border/30 flex justify-end gap-3">
+<button class="px-4 py-2 text-sm font-bold text-[#9da6b9] hover:text-white">Cancel</button>
+<button class="px-6 py-2 text-sm font-bold bg-primary text-white rounded-lg">Save Alert Rule</button>
+</div>
+</section>
+<!-- Active Alert Rules -->
+<section>
+<div class="flex items-center justify-between mb-4 px-1">
+<h2 class="text-xl font-bold">Active Alert Rules</h2>
+<span class="text-xs font-medium text-[#9da6b9] px-2 py-1 bg-slate-card rounded-md">3 Rules Configured</span>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Alert Item 1 -->
+<div class="flex flex-col md:flex-row md:items-center gap-4 bg-slate-card border border-slate-border/60 hover:border-primary/40 p-4 rounded-xl transition-all">
+<div class="flex items-center gap-4 flex-1">
+<div class="size-12 rounded-xl bg-primary/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[28px]">api</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<p class="text-base font-bold text-white leading-tight">80% Monthly API Limit</p>
+<span class="px-2 py-0.5 rounded text-[10px] font-black bg-warning-amber/20 text-warning-amber uppercase tracking-widest">Urgent</span>
+</div>
+<p class="text-[#9da6b9] text-xs font-medium mt-1">Notifying: <span class="text-white">Email, Slack</span> • Threshold: <span class="text-white">80%</span></p>
+</div>
+</div>
+<div class="flex items-center gap-8">
+<div class="hidden sm:flex flex-col items-end gap-1">
+<span class="text-[10px] font-bold text-[#4a5568] uppercase">Current Usage</span>
+<div class="w-32 h-1.5 bg-background-dark rounded-full overflow-hidden border border-slate-border/50">
+<div class="h-full bg-warning-amber" style="width: 74%"></div>
+</div>
+<span class="text-[10px] font-medium text-[#9da6b9]">74% consumed</span>
+</div>
+<div class="flex items-center gap-4 pl-4 border-l border-slate-border">
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-background-dark peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+<button class="text-[#4a5568] hover:text-white transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Alert Item 2 -->
+<div class="flex flex-col md:flex-row md:items-center gap-4 bg-slate-card border border-slate-border/60 hover:border-primary/40 p-4 rounded-xl transition-all">
+<div class="flex items-center gap-4 flex-1">
+<div class="size-12 rounded-xl bg-primary/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[28px]">key</span>
+</div>
+<div class="flex flex-col">
+<p class="text-base font-bold text-white leading-tight">Secret Count Threshold</p>
+<p class="text-[#9da6b9] text-xs font-medium mt-1">Notifying: <span class="text-white">Webhook</span> • Threshold: <span class="text-white">500 units</span></p>
+</div>
+</div>
+<div class="flex items-center gap-8">
+<div class="hidden sm:flex flex-col items-end gap-1">
+<span class="text-[10px] font-bold text-[#4a5568] uppercase">Current Usage</span>
+<div class="w-32 h-1.5 bg-background-dark rounded-full overflow-hidden border border-slate-border/50">
+<div class="h-full bg-primary" style="width: 42%"></div>
+</div>
+<span class="text-[10px] font-medium text-[#9da6b9]">210 secrets</span>
+</div>
+<div class="flex items-center gap-4 pl-4 border-l border-slate-border">
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-background-dark peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+<button class="text-[#4a5568] hover:text-white transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Alert Item 3 -->
+<div class="flex flex-col md:flex-row md:items-center gap-4 bg-slate-card/50 border border-slate-border/40 p-4 rounded-xl opacity-60">
+<div class="flex items-center gap-4 flex-1">
+<div class="size-12 rounded-xl bg-slate-card flex items-center justify-center text-[#4a5568]">
+<span class="material-symbols-outlined text-[28px]">group</span>
+</div>
+<div class="flex flex-col">
+<p class="text-base font-bold text-[#9da6b9] leading-tight">90% User Seats Capacity</p>
+<p class="text-[#4a5568] text-xs font-medium mt-1">Notifying: Email • Threshold: 90%</p>
+</div>
+</div>
+<div class="flex items-center gap-8">
+<div class="hidden sm:flex flex-col items-end gap-1">
+<span class="text-[10px] font-bold text-[#4a5568] uppercase">Status</span>
+<span class="text-[10px] font-medium text-[#9da6b9]">Inactive Rule</span>
+</div>
+<div class="flex items-center gap-4 pl-4 border-l border-slate-border">
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-background-dark peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+<button class="text-[#4a5568] hover:text-white transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Help Info -->
+<section class="mt-8 flex gap-6">
+<div class="flex-1 bg-gradient-to-br from-primary/10 to-transparent border border-primary/20 p-6 rounded-2xl flex items-start gap-4">
+<div class="size-10 bg-primary/20 rounded-lg flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined">lightbulb</span>
+</div>
+<div>
+<h4 class="font-bold text-white mb-1">Cost Management Tip</h4>
+<p class="text-sm text-[#9da6b9] leading-relaxed">
+                                Most teams set their first alert at 75% of their monthly budget. This allows for nearly a week of buffer time to optimize usage before reaching limits.
+                            </p>
+</div>
+</div>
+<div class="hidden lg:flex flex-1 bg-slate-card/20 border border-slate-border p-6 rounded-2xl items-start gap-4">
+<div class="size-10 bg-slate-card rounded-lg flex items-center justify-center text-[#9da6b9] shrink-0">
+<span class="material-symbols-outlined">integration_instructions</span>
+</div>
+<div>
+<h4 class="font-bold text-white mb-1">Webhook Payloads</h4>
+<p class="text-sm text-[#9da6b9] leading-relaxed">
+                                Our usage webhooks provide JSON payloads including metric type, current value, and timestamp. Perfect for custom automation.
+                            </p>
+</div>
+</div>
+</section>
+</div>
+</main>
+</div>
+</body></html>

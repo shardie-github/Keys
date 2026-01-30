@@ -2,7 +2,9 @@ import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
 import './globals.css';
 import '@/utils/env-validation'; // Validate environment variables
+import { interVariable } from '@/lib/fonts';
 import { RootProvider } from '@/components/providers/root-provider';
+import { Navigation } from '@/components/Navigation';
 import { StructuredData, generateOrganizationSchema, generateSoftwareApplicationSchema } from '@/components/SEO/StructuredData';
 import { resolveSiteUrl } from '@/utils/site-url';
 
@@ -111,7 +113,7 @@ export default function RootLayout({
   children: ReactNode;
 }) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className={`scroll-smooth ${interVariable.variable}`}>
       <head>
         <link rel="manifest" href="/manifest.json" />
         <link rel="canonical" href={siteUrl} />
@@ -124,13 +126,14 @@ export default function RootLayout({
         <StructuredData type="Organization" data={generateOrganizationSchema()} />
         <StructuredData type="SoftwareApplication" data={generateSoftwareApplicationSchema()} />
       </head>
-      <body className="font-sans antialiased">
+      <body className={`${interVariable.className} antialiased bg-white dark:bg-slate-950 text-gray-900 dark:text-gray-100`}>
         <RootProvider>
           <div id="skip-to-content" className="sr-only">
             <a href="#main-content" className="skip-link">
               Skip to main content
             </a>
           </div>
+          <Navigation />
           {children}
         </RootProvider>
         <script

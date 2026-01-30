@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>User Settings - KEYS</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                        "surface-dark": "#1c1f27",
+                        "border-dark": "#282e39",
+                        "text-secondary": "#9da6b9"
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white overflow-x-hidden min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="sticky top-0 z-50 flex items-center justify-between whitespace-nowrap border-b border-solid border-b-border-dark bg-background-dark px-10 py-3">
+<div class="flex items-center gap-4 text-white">
+<div class="size-6 text-primary">
+<svg class="w-full h-full" fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M24 4H42V17.3333V30.6667H24V44H6V30.6667V17.3333H24V4Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">KEYS</h2>
+</div>
+<div class="flex flex-1 justify-end gap-6 items-center">
+<button class="flex items-center justify-center rounded-lg size-10 text-white hover:bg-border-dark transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-10 ring-2 ring-border-dark" data-alt="User profile avatar showing a blurred abstract gradient" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDuh8xUfDkuHRIMjAXXD1-FAWMHGOfPQZyw6nETGGKhhGOfyZBFiTGuPOUUFUy8_ni22Bapj3ImxMU0n5glYLdHnE5D-UwrdxAE5ae8gA92YT8ox1CSJxL1c_4yr7puB4mrlf2fXdIrYakOA5gBrSFKqdCYA2_U7jqggxuoVp50XyZqQzCfm6gPA3ZYWlibiDB5G3Icj0vxCdQ3Inul3MrPzMbI8DlBDAsxkJ_CZHw0jfNVvMI-rxMhJb4mnCUu_67WweMDJai-YTAW");'></div>
+</div>
+</header>
+<main class="flex-1 flex justify-center py-8 px-4 sm:px-8 lg:px-40">
+<div class="flex flex-col max-w-[960px] w-full gap-8">
+<!-- Page Heading -->
+<div class="flex flex-col gap-3">
+<h1 class="text-white text-4xl font-black leading-tight tracking-[-0.033em]">Account Settings</h1>
+<p class="text-text-secondary text-base font-normal leading-normal">Manage your account security, authentication methods, and active sessions.</p>
+</div>
+<!-- Tabs -->
+<div class="border-b border-border-dark">
+<div class="flex gap-8 overflow-x-auto no-scrollbar">
+<a class="flex flex-col items-center justify-center border-b-[3px] border-b-transparent text-text-secondary pb-[13px] pt-4 hover:text-white transition-colors" href="#">
+<p class="text-sm font-bold leading-normal tracking-[0.015em]">Profile</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-b-primary text-white pb-[13px] pt-4" href="#">
+<p class="text-sm font-bold leading-normal tracking-[0.015em]">Security</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-b-transparent text-text-secondary pb-[13px] pt-4 hover:text-white transition-colors" href="#">
+<p class="text-sm font-bold leading-normal tracking-[0.015em]">Billing</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-b-transparent text-text-secondary pb-[13px] pt-4 hover:text-white transition-colors" href="#">
+<p class="text-sm font-bold leading-normal tracking-[0.015em]">API Keys</p>
+</a>
+</div>
+</div>
+<!-- Section: Sign-in Method (Password) -->
+<section class="flex flex-col gap-6">
+<div class="flex justify-between items-end">
+<h2 class="text-white text-[22px] font-bold leading-tight tracking-[-0.015em]">Password</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 rounded-xl bg-surface-dark border border-border-dark">
+<div class="md:col-span-2">
+<label class="flex flex-col gap-2">
+<span class="text-white text-sm font-medium">Current Password</span>
+<input class="form-input w-full rounded-lg text-white focus:outline-0 focus:ring-2 focus:ring-primary border border-border-dark bg-background-dark h-12 placeholder:text-text-secondary px-4 text-sm" placeholder="Enter current password" type="password"/>
+</label>
+</div>
+<div>
+<label class="flex flex-col gap-2">
+<span class="text-white text-sm font-medium">New Password</span>
+<input class="form-input w-full rounded-lg text-white focus:outline-0 focus:ring-2 focus:ring-primary border border-border-dark bg-background-dark h-12 placeholder:text-text-secondary px-4 text-sm" placeholder="Enter new password" type="password"/>
+</label>
+</div>
+<div>
+<label class="flex flex-col gap-2">
+<span class="text-white text-sm font-medium">Confirm New Password</span>
+<input class="form-input w-full rounded-lg text-white focus:outline-0 focus:ring-2 focus:ring-primary border border-border-dark bg-background-dark h-12 placeholder:text-text-secondary px-4 text-sm" placeholder="Confirm new password" type="password"/>
+</label>
+</div>
+<div class="md:col-span-2 flex justify-end pt-2">
+<button class="bg-primary hover:bg-blue-600 text-white font-bold py-2.5 px-6 rounded-lg transition-colors text-sm">
+                            Update Password
+                        </button>
+</div>
+</div>
+</section>
+<!-- Section: 2FA -->
+<section class="flex flex-col gap-6">
+<h2 class="text-white text-[22px] font-bold leading-tight tracking-[-0.015em]">Two-Factor Authentication</h2>
+<div class="flex flex-col sm:flex-row justify-between items-center p-6 rounded-xl bg-surface-dark border border-border-dark gap-6">
+<div class="flex gap-5 items-start">
+<div class="p-3 bg-primary/10 rounded-full text-primary shrink-0">
+<span class="material-symbols-outlined text-[28px]">security</span>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-3">
+<h3 class="text-white font-bold text-lg">Secure your account</h3>
+<span class="bg-red-500/20 text-red-400 text-xs font-bold px-2 py-0.5 rounded uppercase tracking-wide">Disabled</span>
+</div>
+<p class="text-text-secondary text-sm max-w-lg leading-relaxed">
+                                Add an extra layer of security to your account. We recommend using an authenticator app like Google Authenticator or Authy.
+                            </p>
+</div>
+</div>
+<button class="bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 font-bold py-2.5 px-6 rounded-lg transition-colors text-sm whitespace-nowrap">
+                        Enable 2FA
+                    </button>
+</div>
+</section>
+<!-- Section: Active Sessions -->
+<section class="flex flex-col gap-6">
+<h2 class="text-white text-[22px] font-bold leading-tight tracking-[-0.015em]">Active Sessions</h2>
+<div class="overflow-hidden rounded-xl border border-border-dark bg-surface-dark">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-border-dark bg-background-dark/50">
+<th class="py-4 px-6 text-xs font-bold uppercase tracking-wider text-text-secondary">Device</th>
+<th class="py-4 px-6 text-xs font-bold uppercase tracking-wider text-text-secondary">Location</th>
+<th class="py-4 px-6 text-xs font-bold uppercase tracking-wider text-text-secondary">IP Address</th>
+<th class="py-4 px-6 text-xs font-bold uppercase tracking-wider text-text-secondary">Last Active</th>
+<th class="py-4 px-6 text-xs font-bold uppercase tracking-wider text-text-secondary text-right">Action</th>
+</tr>
+</thead>
+<tbody class="text-sm text-white divide-y divide-border-dark">
+<tr class="group hover:bg-background-dark/30 transition-colors">
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-text-secondary">desktop_mac</span>
+<div class="flex flex-col">
+<span class="font-medium">Chrome on macOS</span>
+<span class="text-green-500 text-xs">Current Session</span>
+</div>
+</div>
+</td>
+<td class="py-4 px-6 text-text-secondary">Austin, TX, USA</td>
+<td class="py-4 px-6 font-mono text-text-secondary">192.168.1.42</td>
+<td class="py-4 px-6 text-text-secondary">Just now</td>
+<td class="py-4 px-6 text-right">
+</td>
+</tr>
+<tr class="group hover:bg-background-dark/30 transition-colors">
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-text-secondary">smartphone</span>
+<div class="flex flex-col">
+<span class="font-medium">Safari on iPhone 13</span>
+</div>
+</div>
+</td>
+<td class="py-4 px-6 text-text-secondary">Austin, TX, USA</td>
+<td class="py-4 px-6 font-mono text-text-secondary">10.0.0.158</td>
+<td class="py-4 px-6 text-text-secondary">2 days ago</td>
+<td class="py-4 px-6 text-right">
+<button class="text-red-400 hover:text-red-300 font-medium text-xs border border-red-500/30 hover:border-red-500/60 bg-red-500/10 px-3 py-1.5 rounded transition-all">
+                                            Revoke
+                                        </button>
+</td>
+</tr>
+<tr class="group hover:bg-background-dark/30 transition-colors">
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-text-secondary">laptop_windows</span>
+<div class="flex flex-col">
+<span class="font-medium">Firefox on Windows 10</span>
+</div>
+</div>
+</td>
+<td class="py-4 px-6 text-text-secondary">Dallas, TX, USA</td>
+<td class="py-4 px-6 font-mono text-text-secondary">172.16.254.1</td>
+<td class="py-4 px-6 text-text-secondary">1 week ago</td>
+<td class="py-4 px-6 text-right">
+<button class="text-red-400 hover:text-red-300 font-medium text-xs border border-red-500/30 hover:border-red-500/60 bg-red-500/10 px-3 py-1.5 rounded transition-all">
+                                            Revoke
+                                        </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<!-- Section: API Tokens -->
+<section class="flex flex-col gap-6 pb-20">
+<div class="flex justify-between items-center flex-wrap gap-4">
+<h2 class="text-white text-[22px] font-bold leading-tight tracking-[-0.015em]">Personal Access Tokens</h2>
+<button class="bg-surface-dark hover:bg-border-dark text-white border border-border-dark font-medium py-2 px-4 rounded-lg transition-colors text-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">add</span>
+                        Generate New Token
+                    </button>
+</div>
+<div class="flex flex-col rounded-xl bg-surface-dark border border-border-dark divide-y divide-border-dark">
+<!-- Token Item 1 -->
+<div class="p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div class="flex items-start gap-4">
+<div class="mt-1 p-2 bg-background-dark rounded-lg text-text-secondary">
+<span class="material-symbols-outlined">key</span>
+</div>
+<div>
+<h3 class="text-white font-bold text-base">Development Key - Read Only</h3>
+<div class="flex items-center gap-3 mt-1 text-sm text-text-secondary">
+<span class="font-mono bg-background-dark px-1.5 py-0.5 rounded text-xs">keys_dev_...89x</span>
+<span>•</span>
+<span>Created 3 months ago</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-2 self-end sm:self-center">
+<button class="text-text-secondary hover:text-white p-2 hover:bg-background-dark rounded-lg transition-colors" title="Copy Token">
+<span class="material-symbols-outlined text-xl">content_copy</span>
+</button>
+<button class="text-text-secondary hover:text-red-400 p-2 hover:bg-background-dark rounded-lg transition-colors" title="Revoke Token">
+<span class="material-symbols-outlined text-xl">delete</span>
+</button>
+</div>
+</div>
+<!-- Token Item 2 -->
+<div class="p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div class="flex items-start gap-4">
+<div class="mt-1 p-2 bg-background-dark rounded-lg text-text-secondary">
+<span class="material-symbols-outlined">key</span>
+</div>
+<div>
+<h3 class="text-white font-bold text-base">CI/CD Pipeline</h3>
+<div class="flex items-center gap-3 mt-1 text-sm text-text-secondary">
+<span class="font-mono bg-background-dark px-1.5 py-0.5 rounded text-xs">keys_ci_...a2z</span>
+<span>•</span>
+<span>Last used 12 mins ago</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-2 self-end sm:self-center">
+<button class="text-text-secondary hover:text-white p-2 hover:bg-background-dark rounded-lg transition-colors" title="Copy Token">
+<span class="material-symbols-outlined text-xl">content_copy</span>
+</button>
+<button class="text-text-secondary hover:text-red-400 p-2 hover:bg-background-dark rounded-lg transition-colors" title="Revoke Token">
+<span class="material-symbols-outlined text-xl">delete</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+</body></html>

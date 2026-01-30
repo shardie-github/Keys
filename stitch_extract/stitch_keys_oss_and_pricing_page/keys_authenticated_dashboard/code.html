@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KEYS - Developer Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "primary-hover": "#1d64f2",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#0f1115",
+                        "card-dark": "#181b21",
+                        "border-dark": "#2a2f3a",
+                        "subtle-text": "#9da6b9",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "body": ["Inter", "sans-serif"]
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom scrollbar for dark mode feeling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f1115; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2a2f3a; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3b4354; 
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display overflow-hidden antialiased">
+<div class="flex h-screen w-full">
+<!-- Side Navigation -->
+<aside class="flex w-64 flex-col border-r border-gray-200 dark:border-border-dark bg-white dark:bg-[#111318]">
+<div class="flex h-16 items-center gap-3 px-6 border-b border-gray-200 dark:border-border-dark">
+<div class="flex items-center justify-center size-8 rounded bg-primary text-white">
+<span class="material-symbols-outlined" style="font-size: 20px;">vpn_key</span>
+</div>
+<div class="flex flex-col">
+<h1 class="text-base font-bold leading-none tracking-tight">KEYS</h1>
+<span class="text-[10px] uppercase tracking-wider text-subtle-text mt-0.5">Dev Console</span>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto px-3 py-4">
+<nav class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary" href="#">
+<span class="material-symbols-outlined fill">dashboard</span>
+<span class="text-sm font-medium">Overview</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-subtle-text hover:bg-slate-100 dark:hover:bg-card-dark hover:text-slate-900 dark:hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">dns</span>
+<span class="text-sm font-medium">Environments</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-subtle-text hover:bg-slate-100 dark:hover:bg-card-dark hover:text-slate-900 dark:hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">lock</span>
+<span class="text-sm font-medium">Secrets</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-subtle-text hover:bg-slate-100 dark:hover:bg-card-dark hover:text-slate-900 dark:hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">extension</span>
+<span class="text-sm font-medium">Integrations</span>
+</a>
+<div class="my-2 h-px bg-gray-200 dark:bg-border-dark mx-3"></div>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-subtle-text hover:bg-slate-100 dark:hover:bg-card-dark hover:text-slate-900 dark:hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-subtle-text hover:bg-slate-100 dark:hover:bg-card-dark hover:text-slate-900 dark:hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">library_books</span>
+<span class="text-sm font-medium">Docs</span>
+</a>
+</nav>
+</div>
+<div class="p-4 border-t border-gray-200 dark:border-border-dark">
+<div class="flex items-center gap-3 p-2 rounded-lg bg-slate-100 dark:bg-card-dark border border-transparent dark:border-border-dark">
+<div class="size-8 rounded-full bg-cover bg-center" data-alt="User profile avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBOeZ3FDAuNHR1oycgvqhL8bEk_0eHgwDmi4X3Tre3IyY4509CJIoHHrVRf0PjXgrviSCiDhUqpZLliDfcIT1bMXYTgAzH3BEmeDW91K99ghKarnIa_TWta5YkPAww-MfboY9i2Peb0fFwi8wkxM1po_kFh4Lnpbr3WKnrUSo54szK53NyDfHfrTsmQo648wUJHj6u7pOwTDprYrKO0Ush4EJiZd7oRDKBPAU7xMIhnaWFMdUPgYf9Rn6chyd6kxKugfNn7iZZbVnRJ");'></div>
+<div class="flex flex-col overflow-hidden">
+<p class="text-sm font-medium truncate text-slate-900 dark:text-white">Alex Chen</p>
+<p class="text-xs text-subtle-text truncate">alex@keys.dev</p>
+</div>
+<button class="ml-auto text-subtle-text hover:text-primary">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col h-full overflow-hidden bg-background-light dark:bg-background-dark">
+<!-- Top Header -->
+<header class="h-16 flex items-center justify-between px-8 border-b border-gray-200 dark:border-border-dark bg-white dark:bg-[#111318]">
+<div class="flex items-center gap-4">
+<h2 class="text-lg font-bold text-slate-900 dark:text-white">Dashboard</h2>
+<span class="h-4 w-px bg-gray-200 dark:bg-border-dark"></span>
+<div class="relative group">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-subtle-text material-symbols-outlined text-[20px]">search</span>
+<input class="pl-10 pr-4 py-1.5 w-64 bg-slate-100 dark:bg-card-dark border-none rounded-lg text-sm text-slate-900 dark:text-white placeholder-subtle-text focus:ring-1 focus:ring-primary transition-all" placeholder="Search keys, secrets..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<!-- Theme Toggle -->
+<div class="flex items-center p-1 bg-slate-100 dark:bg-card-dark rounded-lg border border-gray-200 dark:border-border-dark">
+<button class="p-1.5 rounded text-subtle-text hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-white/5 transition-colors">
+<span class="material-symbols-outlined text-[18px]">light_mode</span>
+</button>
+<button class="p-1.5 rounded bg-white dark:bg-primary shadow-sm text-slate-900 dark:text-white">
+<span class="material-symbols-outlined text-[18px]">dark_mode</span>
+</button>
+<button class="p-1.5 rounded text-subtle-text hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-white/5 transition-colors">
+<span class="material-symbols-outlined text-[18px]">computer</span>
+</button>
+</div>
+<button class="relative p-2 text-subtle-text hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-red-500 rounded-full border-2 border-white dark:border-[#111318]"></span>
+</button>
+</div>
+</header>
+<!-- Scrollable Page Content -->
+<div class="flex-1 overflow-y-auto p-8">
+<div class="max-w-6xl mx-auto space-y-8">
+<!-- Welcome & Action -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div>
+<h1 class="text-3xl font-bold text-slate-900 dark:text-white">System Overview</h1>
+<p class="text-subtle-text mt-1">Manage your keys, integrations and monitor system health.</p>
+</div>
+<button class="group flex items-center gap-2 bg-primary hover:bg-primary-hover text-white px-5 py-2.5 rounded-lg font-medium transition-all shadow-lg shadow-primary/20 hover:shadow-primary/40">
+<span class="material-symbols-outlined group-hover:rotate-90 transition-transform">add</span>
+                            Add New Integration
+                        </button>
+</div>
+<!-- Stats Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Stat 1 -->
+<div class="p-6 rounded-xl bg-white dark:bg-card-dark border border-gray-200 dark:border-border-dark shadow-sm">
+<div class="flex items-start justify-between mb-4">
+<div class="p-2 rounded-lg bg-green-500/10 text-green-500">
+<span class="material-symbols-outlined">check_circle</span>
+</div>
+<span class="flex items-center gap-1 text-xs font-medium text-green-500 bg-green-500/10 px-2 py-0.5 rounded-full">
+<span class="material-symbols-outlined text-[14px]">trending_up</span> +0.01%
+                                </span>
+</div>
+<h3 class="text-subtle-text text-sm font-medium">API Uptime</h3>
+<p class="text-2xl font-bold text-slate-900 dark:text-white mt-1">99.99%</p>
+</div>
+<!-- Stat 2 -->
+<div class="p-6 rounded-xl bg-white dark:bg-card-dark border border-gray-200 dark:border-border-dark shadow-sm">
+<div class="flex items-start justify-between mb-4">
+<div class="p-2 rounded-lg bg-blue-500/10 text-blue-500">
+<span class="material-symbols-outlined">key</span>
+</div>
+<span class="flex items-center gap-1 text-xs font-medium text-blue-500 bg-blue-500/10 px-2 py-0.5 rounded-full">
+<span class="material-symbols-outlined text-[14px]">add</span> 12 New
+                                </span>
+</div>
+<h3 class="text-subtle-text text-sm font-medium">Active Keys</h3>
+<p class="text-2xl font-bold text-slate-900 dark:text-white mt-1">142</p>
+</div>
+<!-- Stat 3 -->
+<div class="p-6 rounded-xl bg-white dark:bg-card-dark border border-gray-200 dark:border-border-dark shadow-sm">
+<div class="flex items-start justify-between mb-4">
+<div class="p-2 rounded-lg bg-orange-500/10 text-orange-500">
+<span class="material-symbols-outlined">security</span>
+</div>
+<span class="flex items-center gap-1 text-xs font-medium text-subtle-text bg-gray-100 dark:bg-white/5 px-2 py-0.5 rounded-full">
+                                    Safe
+                                </span>
+</div>
+<h3 class="text-subtle-text text-sm font-medium">Security Alerts</h3>
+<p class="text-2xl font-bold text-slate-900 dark:text-white mt-1">0</p>
+</div>
+</div>
+<!-- Main Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Activity Feed (2/3 width) -->
+<div class="lg:col-span-2 flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">Activity Feed</h3>
+<button class="text-sm text-primary hover:text-primary-hover font-medium">View All</button>
+</div>
+<div class="rounded-xl border border-gray-200 dark:border-border-dark bg-white dark:bg-card-dark shadow-sm overflow-hidden">
+<!-- Timeline Item 1 -->
+<div class="relative flex gap-4 p-5">
+<div class="flex flex-col items-center">
+<div class="size-2 rounded-full bg-blue-500 mt-2"></div>
+<div class="w-px h-full bg-gray-200 dark:bg-border-dark my-1 absolute top-9 left-[23px] bottom-0"></div>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-sm font-medium text-slate-900 dark:text-white">Stripe API Key rotated manually</p>
+<p class="text-xs text-subtle-text mt-0.5">Key ID: <span class="font-mono text-slate-500 dark:text-slate-400">sk_live_...93f2</span></p>
+</div>
+<span class="text-xs text-subtle-text whitespace-nowrap">2m ago</span>
+</div>
+<div class="mt-2 flex items-center gap-2">
+<div class="size-5 rounded-full bg-cover bg-center" data-alt="User avatar small" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAofRrbc-B0nnGgF78a0DFWMkTSu0HGTN4__IFw7XSmu-Ce8f96bhNVEHPDmyOk9mrVYEOU07cBJizA_WE9SrI35tzqHwN0r4LqszSVm0uOWS4jHlDwMjNGVL8zcj5exUDCp5snQzf7cjGt1awq_nGfvWcgg3IT6KwG2Ws--GN99tBWQtBoWVJ24hszwJMF5aRu3jggDugGHWJgpvmlI8RRSp90v5jBlGXtE1gS9BikWAV-ZwyqRaPfcLYL_p2X4eEA5Zs1DNtkaw4C");'></div>
+<span class="text-xs text-subtle-text">Rotated by <span class="text-slate-700 dark:text-slate-300">Alex Chen</span></span>
+</div>
+</div>
+</div>
+<!-- Timeline Item 2 -->
+<div class="relative flex gap-4 p-5 border-t border-gray-100 dark:border-border-dark/50">
+<div class="flex flex-col items-center">
+<div class="size-2 rounded-full bg-green-500 mt-2"></div>
+<div class="w-px h-full bg-gray-200 dark:bg-border-dark my-1 absolute top-9 left-[23px] bottom-0"></div>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-sm font-medium text-slate-900 dark:text-white">New Environment 'Staging' created</p>
+<p class="text-xs text-subtle-text mt-0.5">Project: <span class="text-slate-500 dark:text-slate-400">Core API</span></p>
+</div>
+<span class="text-xs text-subtle-text whitespace-nowrap">1h ago</span>
+</div>
+</div>
+</div>
+<!-- Timeline Item 3 -->
+<div class="relative flex gap-4 p-5 border-t border-gray-100 dark:border-border-dark/50">
+<div class="flex flex-col items-center">
+<div class="size-2 rounded-full bg-purple-500 mt-2"></div>
+<!-- Last item line removal handled by hiding overflow or just css logic, but keeping simple here -->
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-sm font-medium text-slate-900 dark:text-white">AWS Secrets Manager connected</p>
+<p class="text-xs text-subtle-text mt-0.5">Integration configured successfully</p>
+</div>
+<span class="text-xs text-subtle-text whitespace-nowrap">3h ago</span>
+</div>
+<div class="mt-3 bg-slate-50 dark:bg-[#111318] p-3 rounded border border-gray-200 dark:border-border-dark flex items-center gap-3">
+<div class="bg-white dark:bg-white/10 p-1.5 rounded">
+<!-- Placeholder for AWS Logo SVG -->
+<span class="material-symbols-outlined text-[20px] text-[#FF9900]">cloud</span>
+</div>
+<div class="flex flex-col">
+<span class="text-xs font-semibold text-slate-900 dark:text-white">AWS Integration</span>
+<span class="text-[10px] text-subtle-text">Synced 42 secrets</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Sidebar Right (1/3 width) -->
+<div class="flex flex-col gap-6">
+<!-- Quick Actions -->
+<div class="rounded-xl border border-gray-200 dark:border-border-dark bg-white dark:bg-card-dark p-5 shadow-sm">
+<h3 class="text-sm font-bold text-slate-900 dark:text-white mb-4 uppercase tracking-wider text-[11px] text-subtle-text">Quick Actions</h3>
+<div class="grid grid-cols-2 gap-3">
+<button class="flex flex-col items-center justify-center gap-2 p-3 rounded-lg border border-gray-200 dark:border-border-dark bg-slate-50 dark:bg-[#111318] hover:bg-slate-100 dark:hover:bg-[#1f2229] transition-colors group">
+<span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">autorenew</span>
+<span class="text-xs font-medium text-slate-700 dark:text-slate-300">Rotate Key</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-2 p-3 rounded-lg border border-gray-200 dark:border-border-dark bg-slate-50 dark:bg-[#111318] hover:bg-slate-100 dark:hover:bg-[#1f2229] transition-colors group">
+<span class="material-symbols-outlined text-purple-500 group-hover:scale-110 transition-transform">history</span>
+<span class="text-xs font-medium text-slate-700 dark:text-slate-300">Audit Logs</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-2 p-3 rounded-lg border border-gray-200 dark:border-border-dark bg-slate-50 dark:bg-[#111318] hover:bg-slate-100 dark:hover:bg-[#1f2229] transition-colors group">
+<span class="material-symbols-outlined text-orange-500 group-hover:scale-110 transition-transform">code</span>
+<span class="text-xs font-medium text-slate-700 dark:text-slate-300">API Docs</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-2 p-3 rounded-lg border border-gray-200 dark:border-border-dark bg-slate-50 dark:bg-[#111318] hover:bg-slate-100 dark:hover:bg-[#1f2229] transition-colors group">
+<span class="material-symbols-outlined text-green-500 group-hover:scale-110 transition-transform">group_add</span>
+<span class="text-xs font-medium text-slate-700 dark:text-slate-300">Invite Team</span>
+</button>
+</div>
+</div>
+<!-- System Status Mini -->
+<div class="rounded-xl border border-gray-200 dark:border-border-dark bg-white dark:bg-card-dark p-5 shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider text-[11px] text-subtle-text">Infrastructure</h3>
+<span class="relative flex h-2.5 w-2.5">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+</span>
+</div>
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="bg-slate-100 dark:bg-white/5 p-1 rounded">
+<span class="material-symbols-outlined text-[16px] text-subtle-text">database</span>
+</div>
+<span class="text-sm text-slate-700 dark:text-slate-300">Main Database</span>
+</div>
+<span class="text-xs font-medium text-green-500">Healthy</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="bg-slate-100 dark:bg-white/5 p-1 rounded">
+<span class="material-symbols-outlined text-[16px] text-subtle-text">cloud_queue</span>
+</div>
+<span class="text-sm text-slate-700 dark:text-slate-300">Key Vault</span>
+</div>
+<span class="text-xs font-medium text-green-500">Healthy</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="bg-slate-100 dark:bg-white/5 p-1 rounded">
+<span class="material-symbols-outlined text-[16px] text-subtle-text">webhook</span>
+</div>
+<span class="text-sm text-slate-700 dark:text-slate-300">Webhooks</span>
+</div>
+<span class="text-xs font-medium text-green-500">98% Success</span>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-gray-100 dark:border-border-dark">
+<a class="text-xs text-subtle-text hover:text-primary flex items-center gap-1 justify-center" href="#">
+                                        View Status Page <span class="material-symbols-outlined text-[12px]">open_in_new</span>
+</a>
+</div>
+</div>
+<!-- Pro Tip / Education -->
+<div class="rounded-xl border border-blue-100 dark:border-blue-900/30 bg-blue-50 dark:bg-blue-900/10 p-5">
+<div class="flex gap-3">
+<span class="material-symbols-outlined text-primary text-[20px]">lightbulb</span>
+<div>
+<h4 class="text-sm font-semibold text-slate-900 dark:text-blue-100">Did you know?</h4>
+<p class="text-xs text-slate-600 dark:text-blue-200/70 mt-1 leading-relaxed">
+                                            You can automate key rotation using our SDK. Check out the guide to improve security posture.
+                                        </p>
+<button class="text-xs font-medium text-primary mt-2 hover:underline">Read the guide</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

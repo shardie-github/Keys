@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Metadata } from 'next';
+import { HeroSection } from '@/components/HeroSection';
 
 export const metadata: Metadata = {
   title: 'Keys - Open Source Knowledge & Artifact Library',
@@ -12,8 +13,11 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <main id="main-content" className="min-h-screen flex flex-col items-center p-4 sm:p-6 lg:p-8 bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
-      <section className="w-full max-w-5xl mx-auto py-10 sm:py-14">
+    <main id="main-content" className="min-h-screen flex flex-col bg-white dark:bg-slate-950">
+      <HeroSection />
+      
+      {/* Original content sections below hero */}
+      <section className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
         <div className="text-center space-y-6">
           <p className="text-sm uppercase tracking-[0.2em] text-blue-700 dark:text-blue-300">
             Open Source Knowledge & Artifact Library

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KEYS Strategic Roadmap</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                        "card-dark": "#161b26",
+                        "border-dark": "#282e39",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for a developer feel */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #101622;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #282e39;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3b4354;
+        }
+        
+        .glow-border {
+            box-shadow: 0 0 0 1px rgba(19, 91, 236, 0.3), 0 0 15px rgba(19, 91, 236, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#111318] dark:text-white overflow-x-hidden min-h-screen flex flex-col">
+<!-- Top Navbar -->
+<header class="w-full border-b border-solid border-b-[#e5e7eb] dark:border-b-border-dark bg-white dark:bg-background-dark sticky top-0 z-50">
+<div class="px-4 md:px-10 py-3 max-w-[1440px] mx-auto flex items-center justify-between whitespace-nowrap">
+<div class="flex items-center gap-4 text-[#111318] dark:text-white">
+<div class="size-6 text-primary">
+<svg class="w-full h-full" fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M24 4H42V17.3333V30.6667H24V44H6V30.6667V17.3333H24V4Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-lg font-bold leading-tight tracking-[-0.015em]">KEYS</h2>
+</div>
+<!-- Mobile Menu Icon (Visible only on small screens) -->
+<button class="md:hidden text-[#111318] dark:text-white">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<!-- Desktop Menu -->
+<div class="hidden md:flex flex-1 justify-end gap-8 items-center">
+<nav class="flex items-center gap-9">
+<a class="text-[#111318] dark:text-white text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Docs</a>
+<a class="text-[#111318] dark:text-white text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Blog</a>
+<a class="text-[#111318] dark:text-white text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Community</a>
+<a class="text-[#111318] dark:text-white text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Sign In</a>
+</nav>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary hover:bg-blue-600 transition-colors text-white text-sm font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Get Started</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow flex flex-col items-center w-full">
+<div class="w-full max-w-[1440px] px-4 md:px-10 py-8 md:py-12 flex flex-col gap-8 md:gap-12">
+<!-- Page Heading -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-border-dark/50 pb-8">
+<div class="flex flex-col gap-3 max-w-2xl">
+<h1 class="text-[#111318] dark:text-white text-4xl md:text-5xl font-black leading-tight tracking-[-0.033em]">KEYS Strategic Roadmap</h1>
+<p class="text-[#6b7280] dark:text-[#9da6b9] text-lg font-normal leading-normal">
+                        Our path to a more transparent developer experience. See what we're building, what's next, and how we're evolving.
+                    </p>
+</div>
+<button class="flex shrink-0 items-center gap-2 cursor-pointer justify-center overflow-hidden rounded-lg h-10 px-5 bg-[#e5e7eb] dark:bg-border-dark hover:dark:bg-[#3b4354] transition-colors text-[#111318] dark:text-white text-sm font-bold leading-normal tracking-[0.015em]">
+<span class="material-symbols-outlined text-[20px]">lightbulb</span>
+<span class="truncate">Suggest a Feature</span>
+</button>
+</div>
+<!-- Kanban Board -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start h-full">
+<!-- Column: NOW -->
+<div class="flex flex-col gap-4">
+<div class="flex items-center justify-between pb-2 border-b-2 border-primary">
+<div class="flex items-center gap-2">
+<h3 class="text-xl font-bold dark:text-white">Now</h3>
+<span class="flex h-6 items-center justify-center rounded-full bg-primary/20 px-2.5 text-xs font-bold text-primary">In Progress</span>
+</div>
+<span class="material-symbols-outlined text-primary">bolt</span>
+</div>
+<!-- Card 1 -->
+<div class="group flex flex-col gap-4 rounded-xl p-5 bg-white dark:bg-card-dark border border-primary/50 glow-border hover:translate-y-[-2px] transition-all duration-200">
+<div class="flex flex-col gap-1">
+<span class="text-primary text-xs font-bold uppercase tracking-wider mb-1">Building</span>
+<h4 class="text-lg font-bold dark:text-white group-hover:text-primary transition-colors">Real-time API Analytics</h4>
+<p class="text-sm text-[#6b7280] dark:text-[#9da6b9] leading-relaxed">Live monitoring dashboard for all active keys with millisecond precision and geographic mapping.</p>
+</div>
+<div class="h-px w-full bg-[#e5e7eb] dark:bg-border-dark"></div>
+<a class="flex items-center justify-between text-sm font-medium text-[#6b7280] dark:text-[#9da6b9] hover:text-primary dark:hover:text-primary transition-colors" href="#">
+<span class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">forum</span>
+                                Discuss on GitHub
+                            </span>
+<span class="material-symbols-outlined text-[18px]">arrow_outward</span>
+</a>
+</div>
+<!-- Card 2 -->
+<div class="group flex flex-col gap-4 rounded-xl p-5 bg-white dark:bg-card-dark border border-primary/50 glow-border hover:translate-y-[-2px] transition-all duration-200">
+<div class="flex flex-col gap-1">
+<span class="text-purple-400 text-xs font-bold uppercase tracking-wider mb-1">In Review</span>
+<h4 class="text-lg font-bold dark:text-white group-hover:text-primary transition-colors">Team Permissions v2</h4>
+<p class="text-sm text-[#6b7280] dark:text-[#9da6b9] leading-relaxed">Granular scope controls for organization members including temporary access tokens.</p>
+</div>
+<div class="h-px w-full bg-[#e5e7eb] dark:bg-border-dark"></div>
+<a class="flex items-center justify-between text-sm font-medium text-[#6b7280] dark:text-[#9da6b9] hover:text-primary dark:hover:text-primary transition-colors" href="#">
+<span class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">forum</span>
+                                Discuss on GitHub
+                            </span>
+<span class="material-symbols-outlined text-[18px]">arrow_outward</span>
+</a>
+</div>
+</div>
+<!-- Column: NEXT -->
+<div class="flex flex-col gap-4">
+<div class="flex items-center justify-between pb-2 border-b-2 border-[#e5e7eb] dark:border-border-dark">
+<div class="flex items-center gap-2">
+<h3 class="text-xl font-bold dark:text-white">Next</h3>
+<span class="flex h-6 items-center justify-center rounded-full bg-[#e5e7eb] dark:bg-[#3b4354] px-2.5 text-xs font-bold text-[#111318] dark:text-white">Prioritized</span>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group flex flex-col gap-4 rounded-xl p-5 bg-white dark:bg-card-dark border border-[#e5e7eb] dark:border-border-dark hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all duration-200">
+<div class="flex flex-col gap-1">
+<span class="text-emerald-500 text-xs font-bold uppercase tracking-wider mb-1">Planned</span>
+<h4 class="text-lg font-bold dark:text-white group-hover:text-primary transition-colors">CLI Tool Integration</h4>
+<p class="text-sm text-[#6b7280] dark:text-[#9da6b9] leading-relaxed">Manage keys, rotate secrets, and view logs directly from your terminal workflow.</p>
+</div>
+<div class="h-px w-full bg-[#e5e7eb] dark:bg-border-dark"></div>
+<a class="flex items-center justify-between text-sm font-medium text-[#6b7280] dark:text-[#9da6b9] hover:text-primary dark:hover:text-primary transition-colors" href="#">
+<span class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">thumb_up</span>
+                                128 Votes
+                            </span>
+<span class="material-symbols-outlined text-[18px]">arrow_outward</span>
+</a>
+</div>
+<!-- Card 4 -->
+<div class="group flex flex-col gap-4 rounded-xl p-5 bg-white dark:bg-card-dark border border-[#e5e7eb] dark:border-border-dark hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all duration-200">
+<div class="flex flex-col gap-1">
+<span class="text-emerald-500 text-xs font-bold uppercase tracking-wider mb-1">Planned</span>
+<h4 class="text-lg font-bold dark:text-white group-hover:text-primary transition-colors">Usage Webhooks</h4>
+<p class="text-sm text-[#6b7280] dark:text-[#9da6b9] leading-relaxed">Receive instant notifications when usage limits are approaching or breached.</p>
+</div>
+<div class="h-px w-full bg-[#e5e7eb] dark:bg-border-dark"></div>
+<a class="flex items-center justify-between text-sm font-medium text-[#6b7280] dark:text-[#9da6b9] hover:text-primary dark:hover:text-primary transition-colors" href="#">
+<span class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">thumb_up</span>
+                                85 Votes
+                            </span>
+<span class="material-symbols-outlined text-[18px]">arrow_outward</span>
+</a>
+</div>
+</div>
+<!-- Column: LATER -->
+<div class="flex flex-col gap-4 opacity-80 hover:opacity-100 transition-opacity">
+<div class="flex items-center justify-between pb-2 border-b-2 border-[#e5e7eb] dark:border-border-dark">
+<div class="flex items-center gap-2">
+<h3 class="text-xl font-bold dark:text-white">Later</h3>
+<span class="flex h-6 items-center justify-center rounded-full bg-[#e5e7eb] dark:bg-[#3b4354] px-2.5 text-xs font-bold text-[#111318] dark:text-white">Exploration</span>
+</div>
+</div>
+<!-- Card 5 -->
+<div class="group flex flex-col gap-4 rounded-xl p-5 bg-white dark:bg-card-dark border border-[#e5e7eb] dark:border-border-dark hover:border-primary/30 transition-all duration-200">
+<div class="flex flex-col gap-1">
+<span class="text-orange-400 text-xs font-bold uppercase tracking-wider mb-1">Researching</span>
+<h4 class="text-lg font-bold dark:text-white group-hover:text-primary transition-colors">Automated Rotation</h4>
+<p class="text-sm text-[#6b7280] dark:text-[#9da6b9] leading-relaxed">Policy-based automated key rotation for enterprise security compliance.</p>
+</div>
+<div class="h-px w-full bg-[#e5e7eb] dark:bg-border-dark"></div>
+<a class="flex items-center justify-between text-sm font-medium text-[#6b7280] dark:text-[#9da6b9] hover:text-primary dark:hover:text-primary transition-colors" href="#">
+<span class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">thumb_up</span>
+                                245 Votes
+                            </span>
+<span class="material-symbols-outlined text-[18px]">arrow_outward</span>
+</a>
+</div>
+<!-- Card 6 -->
+<div class="group flex flex-col gap-4 rounded-xl p-5 bg-white dark:bg-card-dark border border-[#e5e7eb] dark:border-border-dark hover:border-primary/30 transition-all duration-200">
+<div class="flex flex-col gap-1">
+<span class="text-orange-400 text-xs font-bold uppercase tracking-wider mb-1">Researching</span>
+<h4 class="text-lg font-bold dark:text-white group-hover:text-primary transition-colors">Mobile SDK</h4>
+<p class="text-sm text-[#6b7280] dark:text-[#9da6b9] leading-relaxed">Native libraries for iOS and Android to manage keys securely on devices.</p>
+</div>
+<div class="h-px w-full bg-[#e5e7eb] dark:bg-border-dark"></div>
+<a class="flex items-center justify-between text-sm font-medium text-[#6b7280] dark:text-[#9da6b9] hover:text-primary dark:hover:text-primary transition-colors" href="#">
+<span class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">thumb_up</span>
+                                64 Votes
+                            </span>
+<span class="material-symbols-outlined text-[18px]">arrow_outward</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Bottom Callout -->
+<div class="mt-8 rounded-xl bg-[#e5e7eb] dark:bg-card-dark border border-[#e5e7eb] dark:border-border-dark p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
+<!-- Abstract background pattern via gradient -->
+<div class="absolute inset-0 opacity-10 bg-[linear-gradient(45deg,transparent_25%,rgba(19,91,236,0.5)_50%,transparent_75%,transparent_100%)] bg-[length:20px_20px]" data-alt="Abstract subtle diagonal stripe pattern"></div>
+<div class="relative z-10 flex flex-col gap-2 text-center md:text-left">
+<h3 class="text-2xl font-bold dark:text-white">Have a suggestion?</h3>
+<p class="text-[#6b7280] dark:text-[#9da6b9] max-w-lg">We build KEYS for you. Join our Discord community or open a discussion on GitHub to shape our roadmap.</p>
+</div>
+<div class="relative z-10 flex gap-4">
+<button class="flex min-w-[120px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 border border-[#e5e7eb] dark:border-border-dark hover:bg-[#e5e7eb] dark:hover:bg-border-dark text-[#111318] dark:text-white text-sm font-bold leading-normal transition-colors">
+<span class="truncate">Join Discord</span>
+</button>
+<button class="flex min-w-[120px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary hover:bg-blue-600 text-white text-sm font-bold leading-normal tracking-[0.015em] transition-colors">
+<span class="truncate">Open GitHub</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+</body></html>

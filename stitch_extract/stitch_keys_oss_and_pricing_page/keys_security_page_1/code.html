@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KEYS - Security</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0d7ff2",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#101922",
+                        "card-dark": "#1b232d",
+                        "border-dark": "#2a3441",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen flex flex-col overflow-x-hidden transition-colors duration-200">
+<!-- Top Navigation -->
+<header class="w-full border-b border-gray-200 dark:border-border-dark bg-white dark:bg-background-dark sticky top-0 z-50">
+<div class="layout-container max-w-[1200px] mx-auto px-4 md:px-10 h-16 flex items-center justify-between">
+<div class="flex items-center gap-4 text-gray-900 dark:text-white cursor-pointer">
+<div class="size-6 text-primary">
+<svg fill="currentColor" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M24 4H42V17.3333V30.6667H24V44H6V30.6667V17.3333H24V4Z" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-lg font-bold leading-tight tracking-[-0.015em] font-display">KEYS</h2>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Product</a>
+<a class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Docs</a>
+<a class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Blog</a>
+<a class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Pricing</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="hidden md:flex cursor-pointer items-center justify-center rounded-lg h-9 px-4 bg-primary hover:bg-blue-600 text-white text-sm font-bold transition-colors">
+<span>Sign In</span>
+</button>
+<button class="md:hidden text-gray-900 dark:text-white">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</div>
+</header>
+<main class="flex-1 w-full flex flex-col items-center">
+<!-- Hero Section -->
+<section class="w-full max-w-[960px] px-4 py-16 md:py-24 flex flex-col items-center text-center">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-wider mb-6">
+<span class="material-symbols-outlined text-[16px]">shield_lock</span>
+                Security Center
+            </div>
+<h1 class="text-gray-900 dark:text-white text-4xl md:text-6xl font-black leading-tight tracking-[-0.033em] mb-6 max-w-3xl">
+                Security is our foundation
+            </h1>
+<p class="text-gray-600 dark:text-gray-400 text-lg md:text-xl font-normal leading-relaxed max-w-2xl mb-10">
+                We build KEYS with a security-first mindset, ensuring your data remains yours. Transparent, audited, and encrypted.
+            </p>
+<div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+<button class="flex items-center justify-center rounded-lg h-12 px-6 bg-primary hover:bg-blue-600 text-white text-base font-bold transition-colors">
+                    View Documentation
+                </button>
+<button class="flex items-center justify-center rounded-lg h-12 px-6 bg-gray-200 dark:bg-card-dark hover:bg-gray-300 dark:hover:bg-border-dark text-gray-900 dark:text-white border border-transparent dark:border-border-dark text-base font-bold transition-colors">
+                    Download PGP Key
+                </button>
+</div>
+</section>
+<!-- Principles Grid -->
+<section class="w-full max-w-[960px] px-4 py-12">
+<div class="flex flex-col gap-4 mb-10">
+<h2 class="text-gray-900 dark:text-white text-2xl md:text-3xl font-bold leading-tight tracking-[-0.02em]">
+                    Our Security Principles
+                </h2>
+<p class="text-gray-600 dark:text-gray-400 text-base max-w-2xl">
+                    We implement rigorous security measures to ensure the integrity and confidentiality of your information at every layer of our stack.
+                </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Card 1 -->
+<div class="group flex flex-col gap-4 rounded-xl border border-gray-200 dark:border-border-dark bg-white dark:bg-card-dark p-6 transition-all hover:border-primary/50">
+<div class="size-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[28px]">lock</span>
+</div>
+<div>
+<h3 class="text-gray-900 dark:text-white text-lg font-bold mb-2">End-to-End Encryption</h3>
+<p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                            Your data is encrypted at rest and in transit using industry-standard AES-256 and TLS 1.3 protocols. We hold no keys to your private vaults.
+                        </p>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group flex flex-col gap-4 rounded-xl border border-gray-200 dark:border-border-dark bg-white dark:bg-card-dark p-6 transition-all hover:border-primary/50">
+<div class="size-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[28px]">verified_user</span>
+</div>
+<div>
+<h3 class="text-gray-900 dark:text-white text-lg font-bold mb-2">GDPR Compliance</h3>
+<p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                            We are fully compliant with GDPR regulations. You have complete control over your data with easy-to-use export and deletion tools.
+                        </p>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group flex flex-col gap-4 rounded-xl border border-gray-200 dark:border-border-dark bg-white dark:bg-card-dark p-6 transition-all hover:border-primary/50">
+<div class="size-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[28px]">policy</span>
+</div>
+<div>
+<h3 class="text-gray-900 dark:text-white text-lg font-bold mb-2">Regular Audits</h3>
+<p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                            Independent third-party firms conduct regular penetration testing and code audits. Reports are available upon request for enterprise customers.
+                        </p>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="group flex flex-col gap-4 rounded-xl border border-gray-200 dark:border-border-dark bg-white dark:bg-card-dark p-6 transition-all hover:border-primary/50">
+<div class="size-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[28px]">admin_panel_settings</span>
+</div>
+<div>
+<h3 class="text-gray-900 dark:text-white text-lg font-bold mb-2">Access Control</h3>
+<p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                            Strict internal protocols ensure that access to sensitive infrastructure is limited, monitored, and requires multi-factor authentication.
+                        </p>
+</div>
+</div>
+</div>
+</section>
+<!-- Certifications -->
+<section class="w-full max-w-[960px] px-4 py-12">
+<h3 class="text-gray-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] mb-6">Certifications &amp; Compliance</h3>
+<div class="flex flex-wrap gap-4 md:gap-8 items-center justify-start opacity-70 hover:opacity-100 transition-opacity">
+<!-- Placeholder for Cert Logos - Using consistent styled divs to represent logos in an abstract way -->
+<div class="h-12 px-6 rounded border border-gray-300 dark:border-border-dark bg-gray-50 dark:bg-card-dark flex items-center justify-center" data-alt="SOC2 Type II Certification Logo">
+<span class="text-gray-500 dark:text-gray-400 font-bold text-sm tracking-widest">SOC2 TYPE II</span>
+</div>
+<div class="h-12 px-6 rounded border border-gray-300 dark:border-border-dark bg-gray-50 dark:bg-card-dark flex items-center justify-center" data-alt="ISO 27001 Certification Logo">
+<span class="text-gray-500 dark:text-gray-400 font-bold text-sm tracking-widest">ISO 27001</span>
+</div>
+<div class="h-12 px-6 rounded border border-gray-300 dark:border-border-dark bg-gray-50 dark:bg-card-dark flex items-center justify-center" data-alt="HIPAA Compliance Badge">
+<span class="text-gray-500 dark:text-gray-400 font-bold text-sm tracking-widest">HIPAA</span>
+</div>
+<div class="h-12 px-6 rounded border border-gray-300 dark:border-border-dark bg-gray-50 dark:bg-card-dark flex items-center justify-center" data-alt="GDPR Ready Badge">
+<span class="text-gray-500 dark:text-gray-400 font-bold text-sm tracking-widest">GDPR READY</span>
+</div>
+</div>
+</section>
+<!-- Responsible Disclosure & Contact -->
+<section class="w-full max-w-[960px] px-4 py-12 mb-20">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Responsible Disclosure -->
+<div class="md:col-span-2 rounded-xl border border-gray-200 dark:border-border-dark bg-white dark:bg-card-dark p-8">
+<div class="flex items-start gap-4 mb-4">
+<span class="material-symbols-outlined text-primary text-3xl">bug_report</span>
+<div>
+<h3 class="text-gray-900 dark:text-white text-xl font-bold mb-2">Responsible Disclosure</h3>
+<p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-6">
+                                Security is a community effort. If you believe you’ve found a security vulnerability in KEYS, we encourage you to let us know right away. We investigate all reports and do our best to quickly fix valid issues.
+                            </p>
+<a class="inline-flex items-center text-primary font-bold text-sm hover:underline" href="#">
+                                Read our Disclosure Policy 
+                                <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Contact CTA -->
+<div class="rounded-xl bg-gradient-to-br from-primary to-blue-700 p-8 flex flex-col justify-between text-white relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-8xl">mark_email_unread</span>
+</div>
+<div class="relative z-10">
+<h3 class="text-white text-xl font-bold mb-2">Contact Security</h3>
+<p class="text-blue-100 text-sm mb-6">
+                            Have a specific concern or need to report an incident?
+                        </p>
+</div>
+<button class="relative z-10 w-full bg-white text-primary font-bold py-3 px-4 rounded-lg hover:bg-blue-50 transition-colors text-sm flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-lg">mail</span>
+                        security@keys.app
+                    </button>
+</div>
+</div>
+</section>
+</main>
+<!-- Simple Footer -->
+<footer class="w-full border-t border-gray-200 dark:border-border-dark bg-white dark:bg-background-dark py-12">
+<div class="layout-container max-w-[1200px] mx-auto px-10 flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex items-center gap-2 text-gray-500 dark:text-gray-400">
+<div class="size-5">
+<svg fill="currentColor" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M24 4H42V17.3333V30.6667H24V44H6V30.6667V17.3333H24V4Z" fill-rule="evenodd"></path>
+</svg>
+</div>
+<span class="text-sm">© 2024 KEYS Inc.</span>
+</div>
+<div class="flex gap-8">
+<a class="text-gray-500 dark:text-gray-400 hover:text-primary text-sm" href="#">Privacy</a>
+<a class="text-gray-500 dark:text-gray-400 hover:text-primary text-sm" href="#">Terms</a>
+<a class="text-gray-500 dark:text-gray-400 hover:text-primary text-sm" href="#">Status</a>
+<a class="text-gray-500 dark:text-gray-400 hover:text-primary text-sm" href="#">Security</a>
+</div>
+</div>
+</footer>
+</body></html>

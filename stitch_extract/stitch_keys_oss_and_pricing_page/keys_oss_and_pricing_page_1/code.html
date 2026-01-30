@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KEYS - Open Source &amp; Pricing</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#3B82F6", 
+              "primary-dark": "#60A5FA", // Vibrant blue for dark mode
+              secondary: "#8B5CF6", 
+              "secondary-dark": "#A78BFA",
+              "background-light": "#F9FAFB",
+              "background-dark": "#020617", // Deep Slate 950
+              "surface-light": "#FFFFFF",
+              "surface-dark": "#0F172A", // Slate 900
+              "surface-card": "#1E293B", // Slate 800
+              "text-light": "#1F2937",
+              "text-dark": "#F1F5F9",
+              "border-dark": "#1E293B",
+            },
+            fontFamily: {
+              display: ["Inter", "sans-serif"],
+              sans: ["Inter", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "0.5rem",
+              'xl': "0.75rem",
+              '2xl': "1rem",
+            },
+            boxShadow: {
+              'soft': '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
+              'glow': '0 0 20px rgba(59, 130, 246, 0.15)',
+              'glow-blue': '0 0 25px rgba(59, 130, 246, 0.25)',
+            }
+          },
+        },
+      };
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark font-sans transition-colors duration-200 antialiased selection:bg-blue-500 selection:text-white">
+<nav class="sticky top-0 z-50 backdrop-blur-xl bg-surface-light/80 dark:bg-background-dark/80 border-b border-gray-200 dark:border-white/10">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between h-16 items-center">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-blue-500/20">
+<span class="material-icons text-base">vpn_key</span>
+</div>
+<span class="font-bold text-xl tracking-tight text-gray-900 dark:text-white">KEYS</span>
+</div>
+<div class="hidden md:flex items-center space-x-8">
+<a class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary-dark transition-colors" href="#">Documentation</a>
+<a class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary-dark transition-colors" href="#">Community</a>
+<a class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary-dark transition-colors" href="#">Roadmap</a>
+<a class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary-dark transition-colors" href="#">Enterprise</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/10 transition-colors focus:outline-none" type="button">
+<span class="material-icons text-xl dark:hidden">dark_mode</span>
+<span class="material-icons text-xl hidden dark:block">light_mode</span>
+</button>
+<a class="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors" href="https://github.com/keys/keys" target="_blank">
+<i class="fab fa-github text-lg"></i>
+<span>Star</span>
+<span class="bg-gray-100 dark:bg-white/10 border border-transparent dark:border-white/5 px-2 py-0.5 rounded-full text-xs font-semibold">12.4k</span>
+</a>
+<a class="bg-primary hover:bg-blue-600 dark:bg-primary-dark dark:hover:bg-blue-400 text-white dark:text-slate-900 px-4 py-2 rounded-lg text-sm font-bold transition-colors shadow-sm shadow-blue-500/20" href="#">
+                        Sign In
+                    </a>
+</div>
+</div>
+</div>
+</nav>
+<section class="relative pt-20 pb-16 overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-b from-blue-50/50 to-transparent dark:from-blue-950/20 dark:to-transparent pointer-events-none"></div>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+<div class="text-center max-w-3xl mx-auto mb-16">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-500/10 text-primary dark:text-blue-300 text-xs font-semibold uppercase tracking-wide mb-6 border border-blue-200 dark:border-blue-500/20">
+<span class="w-2 h-2 rounded-full bg-primary dark:bg-blue-400 animate-pulse"></span>
+                    Open Source First
+                </div>
+<h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 text-gray-900 dark:text-white">
+                    Transparency is our <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600 dark:from-blue-400 dark:to-purple-400">key feature.</span>
+</h1>
+<p class="text-lg md:text-xl text-gray-600 dark:text-gray-400 leading-relaxed">
+                    KEYS is built in public. We believe that critical developer tools should be open, auditable, and community-driven. You own your keys; we just help you turn them.
+                </p>
+<div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+<a class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-lg font-bold hover:bg-gray-800 dark:hover:bg-gray-200 transition-all shadow-lg hover:shadow-xl dark:shadow-white/5" href="#">
+<i class="fab fa-github"></i>
+                        View on GitHub
+                    </a>
+<a class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white dark:bg-surface-card text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-white/10 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-white/5 transition-all" href="#roadmap">
+<span class="material-icons text-sm">map</span>
+                        See Roadmap
+                    </a>
+</div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20 border-y border-gray-200 dark:border-white/10 py-10 bg-surface-light/50 dark:bg-white/5 backdrop-blur-sm rounded-xl md:rounded-none">
+<div class="text-center">
+<div class="text-3xl font-bold text-gray-900 dark:text-white mb-1">12k+</div>
+<div class="text-sm text-gray-500 dark:text-gray-400 font-medium">GitHub Stars</div>
+</div>
+<div class="text-center">
+<div class="text-3xl font-bold text-gray-900 dark:text-white mb-1">450+</div>
+<div class="text-sm text-gray-500 dark:text-gray-400 font-medium">Contributors</div>
+</div>
+<div class="text-center">
+<div class="text-3xl font-bold text-gray-900 dark:text-white mb-1">2.5M+</div>
+<div class="text-sm text-gray-500 dark:text-gray-400 font-medium">Docker Pulls</div>
+</div>
+<div class="text-center">
+<div class="text-3xl font-bold text-gray-900 dark:text-white mb-1">99.9%</div>
+<div class="text-sm text-gray-500 dark:text-gray-400 font-medium">Uptime (Managed)</div>
+</div>
+</div>
+<div class="grid md:grid-cols-2 gap-8" id="roadmap">
+<div class="bg-surface-light dark:bg-surface-card rounded-2xl p-8 border border-gray-200 dark:border-white/10 shadow-soft dark:shadow-none hover:shadow-lg dark:hover:border-white/20 transition-all relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<i class="fab fa-git-alt text-9xl text-orange-500 -mr-4 -mt-4 transform rotate-12"></i>
+</div>
+<div class="relative z-10">
+<div class="w-12 h-12 rounded-lg bg-orange-100 dark:bg-orange-500/10 flex items-center justify-center text-orange-600 dark:text-orange-400 mb-6 border border-orange-200 dark:border-orange-500/20">
+<i class="fas fa-code-branch text-xl"></i>
+</div>
+<h3 class="text-2xl font-bold mb-3 text-gray-900 dark:text-white">Contribute to Core</h3>
+<p class="text-gray-600 dark:text-gray-400 mb-6">
+                            Help us build the standard for tool orchestration. We have issues tagged for beginners and detailed contribution guidelines.
+                        </p>
+<ul class="space-y-3 mb-6">
+<li class="flex items-center gap-3 text-sm text-gray-700 dark:text-gray-300">
+<span class="material-icons text-green-500 dark:text-green-400 text-sm">check_circle</span>
+                                Detailed setup documentation
+                            </li>
+<li class="flex items-center gap-3 text-sm text-gray-700 dark:text-gray-300">
+<span class="material-icons text-green-500 dark:text-green-400 text-sm">check_circle</span>
+                                Weekly office hours for contributors
+                            </li>
+<li class="flex items-center gap-3 text-sm text-gray-700 dark:text-gray-300">
+<span class="material-icons text-green-500 dark:text-green-400 text-sm">check_circle</span>
+                                Swag for first-time mergers
+                            </li>
+</ul>
+<a class="text-primary dark:text-primary-dark hover:text-blue-600 dark:hover:text-blue-300 font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all" href="#">
+                            Read Contribution Guide <span class="material-icons text-sm">arrow_forward</span>
+</a>
+</div>
+</div>
+<div class="bg-surface-light dark:bg-surface-card rounded-2xl p-8 border border-gray-200 dark:border-white/10 shadow-soft dark:shadow-none hover:shadow-lg dark:hover:border-white/20 transition-all relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<i class="fas fa-road text-9xl text-purple-500 -mr-4 -mt-4 transform -rotate-12"></i>
+</div>
+<div class="relative z-10">
+<div class="w-12 h-12 rounded-lg bg-purple-100 dark:bg-purple-500/10 flex items-center justify-center text-purple-600 dark:text-purple-400 mb-6 border border-purple-200 dark:border-purple-500/20">
+<span class="material-icons text-xl">map</span>
+</div>
+<h3 class="text-2xl font-bold mb-3 text-gray-900 dark:text-white">Transparent Roadmap</h3>
+<p class="text-gray-600 dark:text-gray-400 mb-6">
+                            See what's coming next. Vote on features, suggest improvements, and see exactly when your requested features will land.
+                        </p>
+<div class="space-y-4 mb-6">
+<div class="flex items-center gap-4">
+<span class="text-xs font-bold uppercase text-gray-400 dark:text-gray-500 w-12 text-right">Q3 '24</span>
+<div class="flex-1 bg-gray-100 dark:bg-white/10 rounded-full h-2 overflow-hidden">
+<div class="bg-green-500 h-full w-full"></div>
+</div>
+<span class="text-xs font-medium text-gray-600 dark:text-gray-400">Released</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-xs font-bold uppercase text-gray-400 dark:text-gray-500 w-12 text-right">Q4 '24</span>
+<div class="flex-1 bg-gray-100 dark:bg-white/10 rounded-full h-2 overflow-hidden">
+<div class="bg-primary dark:bg-primary-dark h-full w-3/4 shadow-[0_0_10px_rgba(96,165,250,0.5)]"></div>
+</div>
+<span class="text-xs font-medium text-primary dark:text-primary-dark">In Progress</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-xs font-bold uppercase text-gray-400 dark:text-gray-500 w-12 text-right">Q1 '25</span>
+<div class="flex-1 bg-gray-100 dark:bg-white/10 rounded-full h-2 overflow-hidden">
+<div class="bg-gray-300 dark:bg-white/20 h-full w-1/4"></div>
+</div>
+<span class="text-xs font-medium text-gray-500 dark:text-gray-400">Planned</span>
+</div>
+</div>
+<a class="text-secondary dark:text-secondary-dark hover:text-purple-600 dark:hover:text-purple-300 font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all" href="#">
+                            View Public Roadmap <span class="material-icons text-sm">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="py-24 bg-gray-50 dark:bg-black/20 border-t border-gray-100 dark:border-white/5 relative">
+<div class="absolute inset-0 bg-grid-slate-100 dark:bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')] [mask-image:linear-gradient(to_bottom,white,transparent)] pointer-events-none"></div>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+<div class="text-center max-w-2xl mx-auto mb-16">
+<h2 class="text-3xl md:text-5xl font-bold mb-4 text-gray-900 dark:text-white">Pricing that scales with you</h2>
+<p class="text-gray-600 dark:text-gray-400 text-lg">
+                    Start for free with our powerful open source edition, or upgrade to our managed cloud for peace of mind and enterprise features.
+                </p>
+<div class="mt-8 inline-flex bg-gray-200 dark:bg-surface-card p-1 rounded-full relative border border-transparent dark:border-white/10">
+<div class="w-1/2 h-full absolute left-0 bg-white dark:bg-gray-600/50 rounded-full shadow-sm transition-all transform translate-x-0"></div>
+<button class="relative z-10 px-6 py-2 text-sm font-semibold rounded-full text-gray-900 dark:text-white focus:outline-none">Monthly</button>
+<button class="relative z-10 px-6 py-2 text-sm font-medium rounded-full text-gray-600 dark:text-gray-400 focus:outline-none hover:text-gray-900 dark:hover:text-white transition-colors">Yearly <span class="text-green-600 dark:text-green-400 text-xs ml-1">-20%</span></button>
+</div>
+</div>
+<div class="grid lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
+<div class="bg-white dark:bg-surface-card rounded-2xl p-8 border-2 border-transparent hover:border-gray-200 dark:border-white/5 dark:hover:border-white/10 shadow-soft dark:shadow-none transition-all duration-300 flex flex-col relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-32 h-32 bg-gray-100 dark:bg-white/5 rounded-bl-full -mr-8 -mt-8 z-0"></div>
+<div class="relative z-10">
+<div class="mb-8">
+<h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Community (OSS)</h3>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl font-extrabold text-gray-900 dark:text-white">$0</span>
+<span class="text-gray-500 dark:text-gray-400 font-medium">/ forever</span>
+</div>
+<p class="mt-4 text-gray-600 dark:text-gray-400 text-sm h-10">
+                                Perfect for hackers, hobbyists, and teams who want full control over their infrastructure.
+                            </p>
+</div>
+<div class="flex-grow space-y-2 mb-8">
+<div class="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+<span class="material-icons text-primary-dark text-lg mt-0.5">check</span>
+<span class="text-sm text-gray-700 dark:text-gray-300"><strong>Self-hostable</strong> via Docker</span>
+</div>
+<div class="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+<span class="material-icons text-primary-dark text-lg mt-0.5">check</span>
+<span class="text-sm text-gray-700 dark:text-gray-300">Unlimited users &amp; projects</span>
+</div>
+<div class="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+<span class="material-icons text-primary-dark text-lg mt-0.5">check</span>
+<span class="text-sm text-gray-700 dark:text-gray-300">All Core Integrations</span>
+</div>
+<div class="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+<span class="material-icons text-primary-dark text-lg mt-0.5">check</span>
+<span class="text-sm text-gray-700 dark:text-gray-300">Community Support</span>
+</div>
+<div class="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+<span class="material-icons text-primary-dark text-lg mt-0.5">check</span>
+<span class="text-sm text-gray-700 dark:text-gray-300">Standard Access Control</span>
+</div>
+</div>
+<a class="w-full block text-center py-3 px-6 rounded-xl border-2 border-gray-900 dark:border-white/20 text-gray-900 dark:text-white font-semibold hover:bg-gray-50 dark:hover:bg-white/10 transition-colors" href="https://github.com/keys/keys">
+                            Deploy Now
+                        </a>
+<p class="text-xs text-center text-gray-400 dark:text-gray-500 mt-4">MIT Licensed. You own the data.</p>
+</div>
+</div>
+<div class="bg-white dark:bg-surface-card rounded-2xl p-8 border-2 border-primary dark:border-primary-dark shadow-glow dark:shadow-glow-blue transition-all duration-300 flex flex-col relative overflow-hidden">
+<div class="absolute top-0 right-0 bg-primary dark:bg-primary-dark text-white dark:text-slate-900 text-xs font-bold px-3 py-1 rounded-bl-lg z-20">MOST POPULAR</div>
+<div class="absolute top-0 right-0 w-32 h-32 bg-blue-50 dark:bg-blue-500/10 rounded-bl-full -mr-8 -mt-8 z-0"></div>
+<div class="relative z-10">
+<div class="mb-8">
+<h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+                                Managed Cloud 
+                                <span class="bg-blue-100 dark:bg-blue-900/40 text-primary dark:text-blue-300 text-xs px-2 py-0.5 rounded-full border border-blue-200 dark:border-blue-700">Cloud</span>
+</h3>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl font-extrabold text-gray-900 dark:text-white">$29</span>
+<span class="text-gray-500 dark:text-gray-400 font-medium">/ user / mo</span>
+</div>
+<p class="mt-4 text-gray-600 dark:text-gray-400 text-sm h-10">
+                                For teams that need reliability, security, and priority support without the maintenance overhead.
+                            </p>
+</div>
+<div class="flex-grow space-y-2 mb-8">
+<div class="flex items-start gap-3 p-2 rounded-lg bg-blue-50/50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-500/10">
+<span class="material-icons text-primary dark:text-primary-dark text-lg mt-0.5">check</span>
+<span class="text-sm text-gray-700 dark:text-gray-200 font-semibold">Everything in Community, plus:</span>
+</div>
+<div class="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+<span class="material-icons text-primary dark:text-primary-dark text-lg mt-0.5">check</span>
+<span class="text-sm text-gray-700 dark:text-gray-300">Fully Managed Infrastructure</span>
+</div>
+<div class="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+<span class="material-icons text-primary dark:text-primary-dark text-lg mt-0.5">check</span>
+<span class="text-sm text-gray-700 dark:text-gray-300">Advanced Audit Logs &amp; Security</span>
+</div>
+<div class="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+<span class="material-icons text-primary dark:text-primary-dark text-lg mt-0.5">check</span>
+<span class="text-sm text-gray-700 dark:text-gray-300">SSO &amp; SAML Integration</span>
+</div>
+<div class="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+<span class="material-icons text-primary dark:text-primary-dark text-lg mt-0.5">check</span>
+<span class="text-sm text-gray-700 dark:text-gray-300">Priority Email &amp; Slack Support</span>
+</div>
+</div>
+<a class="w-full block text-center py-3 px-6 rounded-xl bg-primary hover:bg-blue-600 dark:bg-primary-dark dark:hover:bg-blue-400 text-white dark:text-slate-900 font-bold shadow-lg hover:shadow-primary/50 dark:shadow-blue-500/20 transition-all" href="#">
+                            Start 14-Day Free Trial
+                        </a>
+<p class="text-xs text-center text-gray-400 dark:text-gray-500 mt-4">No credit card required for trial.</p>
+</div>
+</div>
+</div>
+<div class="max-w-4xl mx-auto mt-12 bg-white dark:bg-surface-card border border-gray-200 dark:border-white/10 rounded-xl p-6 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-gray-100 dark:bg-white/10 flex items-center justify-center flex-shrink-0">
+<span class="material-icons text-gray-600 dark:text-gray-300">apartment</span>
+</div>
+<div>
+<h4 class="text-lg font-bold text-gray-900 dark:text-white">Need custom deployment?</h4>
+<p class="text-sm text-gray-600 dark:text-gray-400">For VPC peering, custom SLAs, and dedicated instances.</p>
+</div>
+</div>
+<a class="whitespace-nowrap px-6 py-2.5 bg-gray-100 dark:bg-white/10 text-gray-900 dark:text-white font-medium rounded-lg hover:bg-gray-200 dark:hover:bg-white/20 transition-colors" href="#">
+                    Contact Sales
+                </a>
+</div>
+</div>
+</section>
+<section class="py-20 bg-white dark:bg-background-dark border-t border-gray-100 dark:border-white/5">
+<div class="max-w-3xl mx-auto px-4 sm:px-6">
+<h2 class="text-3xl font-bold text-center mb-12 text-gray-900 dark:text-white">Frequently Asked Questions</h2>
+<div class="space-y-6">
+<div class="border-b border-gray-200 dark:border-white/10 pb-6">
+<h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Can I really host this myself for free?</h3>
+<p class="text-gray-600 dark:text-gray-400">Yes! The Community Edition is 100% open source under the MIT license. You can spin it up on your own servers using our Docker image.</p>
+</div>
+<div class="border-b border-gray-200 dark:border-white/10 pb-6">
+<h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">What happens if I downgrade from Cloud to Community?</h3>
+<p class="text-gray-600 dark:text-gray-400">Since both versions use the same underlying engine, you can export your data from the Cloud version and import it into your self-hosted instance at any time.</p>
+</div>
+<div class="pb-6">
+<h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Do you offer discounts for open source maintainers?</h3>
+<p class="text-gray-600 dark:text-gray-400">Absolutely. If you maintain a popular open source project, we offer a free tier of our Managed Cloud. Contact us for details.</p>
+</div>
+</div>
+</div>
+</section>
+<footer class="bg-gray-50 dark:bg-black border-t border-gray-200 dark:border-white/10 pt-16 pb-12">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+<div class="col-span-2 md:col-span-1">
+<div class="flex items-center gap-2 mb-4">
+<div class="w-6 h-6 rounded-full bg-gradient-to-tr from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-xs shadow-lg shadow-blue-500/20">
+<span class="material-icons text-xs">vpn_key</span>
+</div>
+<span class="font-bold text-lg text-gray-900 dark:text-white">KEYS</span>
+</div>
+<p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                        Unlock practical capability from the tools you already use—without competing with them.
+                    </p>
+<div class="flex gap-4">
+<a class="text-gray-400 hover:text-gray-600 dark:hover:text-white transition-colors" href="#"><i class="fab fa-twitter"></i></a>
+<a class="text-gray-400 hover:text-gray-600 dark:hover:text-white transition-colors" href="#"><i class="fab fa-github"></i></a>
+<a class="text-gray-400 hover:text-gray-600 dark:hover:text-white transition-colors" href="#"><i class="fab fa-discord"></i></a>
+</div>
+</div>
+<div>
+<h4 class="font-semibold text-gray-900 dark:text-white mb-4">Product</h4>
+<ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+<li><a class="hover:text-primary dark:hover:text-primary-dark transition-colors" href="#">Features</a></li>
+<li><a class="hover:text-primary dark:hover:text-primary-dark transition-colors" href="#">Pricing</a></li>
+<li><a class="hover:text-primary dark:hover:text-primary-dark transition-colors" href="#">Changelog</a></li>
+<li><a class="hover:text-primary dark:hover:text-primary-dark transition-colors" href="#">Docs</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-semibold text-gray-900 dark:text-white mb-4">Community</h4>
+<ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+<li><a class="hover:text-primary dark:hover:text-primary-dark transition-colors" href="#">GitHub</a></li>
+<li><a class="hover:text-primary dark:hover:text-primary-dark transition-colors" href="#">Discord</a></li>
+<li><a class="hover:text-primary dark:hover:text-primary-dark transition-colors" href="#">Twitter</a></li>
+<li><a class="hover:text-primary dark:hover:text-primary-dark transition-colors" href="#">Events</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-semibold text-gray-900 dark:text-white mb-4">Legal</h4>
+<ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+<li><a class="hover:text-primary dark:hover:text-primary-dark transition-colors" href="#">Privacy</a></li>
+<li><a class="hover:text-primary dark:hover:text-primary-dark transition-colors" href="#">Terms</a></li>
+<li><a class="hover:text-primary dark:hover:text-primary-dark transition-colors" href="#">Security</a></li>
+</ul>
+</div>
+</div>
+<div class="border-t border-gray-200 dark:border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="text-sm text-gray-500 dark:text-gray-400">© 2024 KEYS Inc. All rights reserved.</p>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></span>
+<span class="text-sm text-gray-500 dark:text-gray-400">All systems operational</span>
+</div>
+</div>
+</div>
+</footer>
+</body></html>

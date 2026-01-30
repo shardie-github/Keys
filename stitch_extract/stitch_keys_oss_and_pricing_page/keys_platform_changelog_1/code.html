@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KEYS Platform - Changelog</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                        "card-dark": "#181e29",
+                        "border-dark": "#282e39",
+                        "text-secondary": "#9da6b9",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "body": ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #101622; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #282e39; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3b4354; 
+        }.version-glow {
+            box-shadow: 0 0 12px rgba(19, 91, 236, 0.4);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display min-h-screen flex flex-col overflow-x-hidden">
+<header class="sticky top-0 z-50 w-full border-b border-solid border-border-dark bg-background-dark/80 backdrop-blur-md px-6 py-3 lg:px-10">
+<div class="mx-auto flex max-w-7xl items-center justify-between">
+<div class="flex items-center gap-4 text-white">
+<div class="size-6 text-primary">
+<svg fill="currentColor" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M24 4H42V17.3333V30.6667H24V44H6V30.6667V17.3333H24V4Z" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-white text-xl font-bold leading-tight tracking-[-0.015em]">KEYS</h2>
+</div>
+<div class="hidden md:flex flex-1 justify-end gap-8 items-center">
+<nav class="flex items-center gap-6">
+<a class="text-text-secondary hover:text-white text-sm font-medium transition-colors" href="#">Documentation</a>
+<a class="text-text-secondary hover:text-white text-sm font-medium transition-colors" href="#">API Reference</a>
+<a class="text-text-secondary hover:text-white text-sm font-medium transition-colors" href="#">Support</a>
+</nav>
+<div class="flex gap-3">
+<button class="flex h-9 cursor-pointer items-center justify-center rounded-full bg-border-dark px-4 text-white text-sm font-bold hover:bg-white/10 transition-colors">
+                        Log In
+                    </button>
+<button class="flex h-9 cursor-pointer items-center justify-center rounded-full bg-primary px-4 text-white text-sm font-bold hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20">
+                        Sign Up
+                    </button>
+</div>
+</div>
+<button class="md:hidden text-white">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</header>
+<div class="flex flex-1 justify-center w-full">
+<div class="flex w-full max-w-7xl gap-10 px-4 py-8 md:px-10 lg:py-12">
+<aside class="hidden lg:flex flex-col w-64 shrink-0 gap-8 h-fit sticky top-28">
+<div class="flex flex-col gap-6">
+<h3 class="text-text-secondary text-xs font-bold uppercase tracking-wider pl-3">Jump to Date</h3>
+<div class="flex flex-col gap-1">
+<a class="flex items-center justify-between px-3 py-2 rounded-lg bg-border-dark text-white shadow-inner" href="#">
+<span class="text-sm font-medium">October 2023</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</a>
+<a class="flex items-center px-3 py-2 rounded-lg text-text-secondary hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="text-sm font-medium">September 2023</span>
+</a>
+</div>
+</div>
+</aside>
+<main class="flex-1 flex flex-col min-w-0">
+<div class="mb-10 flex flex-col gap-6 border-b border-border-dark pb-8">
+<div class="flex flex-wrap justify-between items-end gap-6">
+<div class="flex flex-col gap-3 max-w-2xl">
+<h1 class="text-white text-4xl md:text-5xl font-black leading-tight tracking-tight">Changelog</h1>
+<p class="text-text-secondary text-lg leading-relaxed">
+                                Follow our journey as we improve the KEYS Platform. We ship updates weekly to enhance your developer experience.
+                            </p>
+</div>
+<button class="flex h-11 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full bg-primary px-6 text-white text-sm font-bold hover:bg-primary/90 transition-all shadow-[0_0_20px_rgba(19,91,236,0.3)]">
+<span class="material-symbols-outlined text-[20px]">mail</span>
+<span>Subscribe to Updates</span>
+</button>
+</div>
+<div class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-white text-background-dark px-4 transition-colors font-semibold text-sm">
+                            All Updates
+                        </button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-card-dark border border-border-dark text-text-secondary hover:text-white hover:border-white/20 px-4 transition-colors text-sm font-medium">
+                            Major Versions
+                        </button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-card-dark border border-border-dark text-text-secondary hover:text-white hover:border-white/20 px-4 transition-colors text-sm font-medium">
+                            Improvements
+                        </button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-card-dark border border-border-dark text-text-secondary hover:text-white hover:border-white/20 px-4 transition-colors text-sm font-medium">
+                            Fixes Only
+                        </button>
+</div>
+</div>
+<div class="flex flex-col relative">
+<div class="absolute left-[19px] top-4 bottom-0 w-[2px] bg-border-dark/50"></div>
+<div class="group grid grid-cols-[40px_1fr] gap-x-6 pb-16 relative">
+<div class="flex flex-col items-center pt-2 relative z-10">
+<div class="size-10 rounded-full bg-background-dark border-2 border-primary flex items-center justify-center shadow-[0_0_15px_rgba(19,91,236,0.2)]">
+<span class="material-symbols-outlined text-primary text-[20px]">rocket_launch</span>
+</div>
+</div>
+<div class="flex flex-col gap-4 pt-1">
+<div class="flex flex-wrap items-center gap-3">
+<span class="version-glow px-3 py-1 rounded-full bg-primary text-white text-xs font-bold tracking-wide">v2.4.0</span>
+<span class="text-text-secondary text-sm font-medium">October 24, 2023</span>
+</div>
+<h2 class="text-white text-2xl font-bold">Enhanced API Rate Limiting &amp; Dashboard Refresh</h2>
+<div class="flex flex-col gap-3 mt-1 bg-card-dark/50 rounded-xl p-5 border border-border-dark/50 hover:border-border-dark transition-colors">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-emerald-400 text-[20px] mt-0.5">add_circle</span>
+<div>
+<span class="text-white font-semibold text-sm block mb-1">New Features</span>
+<ul class="list-disc list-inside text-text-secondary text-sm space-y-1 marker:text-emerald-400/50">
+<li>Introduced customizable rate limiting per project via the dashboard settings.</li>
+<li>Added <code class="bg-black/30 px-1.5 py-0.5 rounded text-xs font-mono text-emerald-200">X-RateLimit-Reset</code> headers to all API responses.</li>
+</ul>
+</div>
+</div>
+<div class="h-px bg-border-dark/50 w-full my-1"></div>
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-amber-400 text-[20px] mt-0.5">trending_up</span>
+<div>
+<span class="text-white font-semibold text-sm block mb-1">Improvements</span>
+<p class="text-text-secondary text-sm">Reduced dashboard main view load latency by ~40% through optimized caching strategies.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="group grid grid-cols-[40px_1fr] gap-x-6 pb-16 relative">
+<div class="flex flex-col items-center pt-2 relative z-10">
+<div class="size-10 rounded-full bg-background-dark border-2 border-border-dark group-hover:border-primary/50 transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-text-secondary group-hover:text-primary transition-colors text-[20px]">bolt</span>
+</div>
+</div>
+<div class="flex flex-col gap-4 pt-1">
+<div class="flex flex-wrap items-center gap-3">
+<span class="px-3 py-1 rounded-full bg-border-dark text-text-secondary text-xs font-bold tracking-wide border border-white/5">v2.3.1</span>
+<span class="text-text-secondary text-sm font-medium">October 10, 2023</span>
+</div>
+<h2 class="text-white text-2xl font-bold">Webhook Security &amp; Performance Patch</h2>
+<div class="flex flex-col gap-3 mt-1 bg-card-dark/50 rounded-xl p-5 border border-border-dark/50 hover:border-border-dark transition-colors">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-amber-400 text-[20px] mt-0.5">trending_up</span>
+<div>
+<span class="text-white font-semibold text-sm block mb-1">Improvements</span>
+<p class="text-text-secondary text-sm">Optimized signature verification for incoming webhooks.</p>
+</div>
+</div>
+<div class="h-px bg-border-dark/50 w-full my-1"></div>
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-rose-400 text-[20px] mt-0.5">bug_report</span>
+<div>
+<span class="text-white font-semibold text-sm block mb-1">Fixes</span>
+<ul class="list-disc list-inside text-text-secondary text-sm space-y-1 marker:text-rose-400/50">
+<li>Resolved timeout issues for legacy hooks operating on slower networks.</li>
+<li>Fixed a UI bug where the "Regenerate Key" modal wouldn't close on Esc key press.</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="group grid grid-cols-[40px_1fr] gap-x-6 pb-16 relative">
+<div class="flex flex-col items-center pt-2 relative z-10">
+<div class="size-10 rounded-full bg-background-dark border-2 border-border-dark group-hover:border-primary/50 transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-text-secondary group-hover:text-primary transition-colors text-[20px]">layers</span>
+</div>
+</div>
+<div class="flex flex-col gap-4 pt-1">
+<div class="flex flex-wrap items-center gap-3">
+<span class="version-glow px-3 py-1 rounded-full bg-primary text-white text-xs font-bold tracking-wide">v2.3.0</span>
+<span class="text-text-secondary text-sm font-medium">September 28, 2023</span>
+</div>
+<h2 class="text-white text-2xl font-bold">Project Environments &amp; Team Roles</h2>
+<div class="flex flex-col gap-3 mt-1 bg-card-dark/50 rounded-xl p-5 border border-border-dark/50 hover:border-border-dark transition-colors">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-emerald-400 text-[20px] mt-0.5">add_circle</span>
+<div>
+<span class="text-white font-semibold text-sm block mb-1">New Features</span>
+<ul class="list-disc list-inside text-text-secondary text-sm space-y-1 marker:text-emerald-400/50">
+<li><strong>Environments:</strong> Separate keys for Development, Staging, and Production.</li>
+<li><strong>RBAC:</strong> New "Viewer" and "Billing Manager" roles for team members.</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="absolute left-[19px] bottom-0 h-16 w-[2px] bg-gradient-to-b from-border-dark/50 to-transparent"></div>
+</div>
+</main>
+</div>
+</div>
+
+</body></html>

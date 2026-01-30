@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KEYS Billing and Usage Dashboard</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "primary-dark": "#0f4bc4",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                        "surface-dark": "#1A2230",
+                        "border-dark": "#2A3441",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "sans": ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for better dark mode aesthetic */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #101622; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2A3441; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3b4758; 
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white antialiased selection:bg-primary selection:text-white">
+<div class="relative flex h-screen w-full flex-row overflow-hidden">
+<!-- Sidebar -->
+<aside class="flex w-64 flex-col border-r border-border-dark bg-background-dark hidden md:flex shrink-0">
+<div class="flex h-full flex-col justify-between p-4">
+<div class="flex flex-col gap-6">
+<!-- User Profile / App Switcher -->
+<div class="flex gap-3 items-center px-2">
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-10 shrink-0 border border-white/10" data-alt="Abstract geometric gradient representing the company logo" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB1yjMgH-n6r4cPGCZbu3HuzzvheMlaFD0qoI_v7AOwOWVr2BuHhPEh1RWlWXXeczxq0pOWUx8mUVf3OXDRGb7YwNQGTC-LGRuGlfSpsfPIreMmjlbN6joPDtiDFV6081QNOa8o3TeJSaxvLjObgZlKiftK6cdjykeYLcxa4NurLJ4wUnTi8p0FF14Mc_qzB3BIgWARZltGF4XO3U_GlFwaHyZKfHNEpx3aJVPTeQZQXJa1_R5PlAPjeMVah-xMdLzhRgV2pbQNaG3Q");'></div>
+<div class="flex flex-col overflow-hidden">
+<h1 class="text-white text-base font-bold truncate">KEYS Cloud</h1>
+<p class="text-slate-400 text-xs font-medium truncate">Enterprise Plan</p>
+</div>
+</div>
+<!-- Navigation -->
+<nav class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:bg-white/5 hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">dashboard</span>
+<p class="text-sm font-medium">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:bg-white/5 hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">folder</span>
+<p class="text-sm font-medium">Projects</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:bg-white/5 hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">group</span>
+<p class="text-sm font-medium">Team</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-white border border-primary/20" href="#">
+<span class="material-symbols-outlined text-[20px] text-primary fill">settings</span>
+<p class="text-sm font-medium">Settings</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:bg-white/5 hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">verified_user</span>
+<p class="text-sm font-medium">Audit Logs</p>
+</a>
+</nav>
+</div>
+<!-- Bottom Nav -->
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:bg-white/5 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">help</span>
+<p class="text-sm font-medium">Support</p>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col h-full overflow-y-auto overflow-x-hidden relative">
+<div class="max-w-[1200px] w-full mx-auto p-6 md:p-8 lg:p-10 flex flex-col gap-8">
+<!-- Breadcrumbs -->
+<div class="flex items-center gap-2 text-sm text-slate-400">
+<a class="hover:text-white transition-colors" href="#">App</a>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<a class="hover:text-white transition-colors" href="#">Settings</a>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span class="text-white font-medium">Billing</span>
+</div>
+<!-- Page Header -->
+<div class="flex flex-col gap-6">
+<div class="flex flex-wrap justify-between items-end gap-4">
+<div class="flex flex-col gap-2">
+<h2 class="text-3xl md:text-4xl font-black text-white tracking-tight">Billing &amp; Usage</h2>
+<p class="text-slate-400 text-base max-w-2xl">Manage your plan, payment methods, and view detailed usage history for your organization.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-4 py-2 bg-surface-dark border border-border-dark rounded-lg text-sm font-medium text-white hover:bg-white/5 transition-colors">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                            Export Data
+                        </button>
+</div>
+</div>
+<!-- Tabs -->
+<div class="border-b border-border-dark">
+<div class="flex gap-8">
+<a class="pb-3 border-b-2 border-transparent text-slate-400 hover:text-white text-sm font-medium transition-colors" href="#">General</a>
+<a class="pb-3 border-b-2 border-transparent text-slate-400 hover:text-white text-sm font-medium transition-colors" href="#">Team</a>
+<a class="pb-3 border-b-2 border-primary text-primary text-sm font-bold" href="#">Billing</a>
+<a class="pb-3 border-b-2 border-transparent text-slate-400 hover:text-white text-sm font-medium transition-colors" href="#">Notifications</a>
+</div>
+</div>
+</div>
+<!-- Stats Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
+<!-- Card 1 -->
+<div class="bg-surface-dark border border-border-dark rounded-xl p-6 flex flex-col justify-between gap-4 hover:border-white/10 transition-colors">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-slate-400 text-sm font-medium mb-1">Current Plan</p>
+<h3 class="text-2xl font-bold text-white tracking-tight">Managed Cloud</h3>
+</div>
+<span class="bg-primary/20 text-primary text-xs font-bold px-2 py-1 rounded uppercase tracking-wider">Active</span>
+</div>
+<div class="flex items-center justify-between mt-2 pt-4 border-t border-white/5">
+<p class="text-slate-400 text-sm">Renews on <span class="text-white font-medium">Nov 01, 2023</span></p>
+<a class="text-primary text-sm font-medium hover:text-primary-dark transition-colors" href="#">Manage Plan</a>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-dark border border-border-dark rounded-xl p-6 flex flex-col justify-between gap-4 hover:border-white/10 transition-colors">
+<div>
+<p class="text-slate-400 text-sm font-medium mb-1">Estimated Next Invoice</p>
+<div class="flex items-baseline gap-2">
+<h3 class="text-2xl font-bold text-white tracking-tight">$182.40</h3>
+<span class="text-green-500 text-xs font-medium bg-green-500/10 px-1.5 py-0.5 rounded flex items-center">
+<span class="material-symbols-outlined text-[14px] mr-0.5">trending_up</span> 12%
+                            </span>
+</div>
+</div>
+<div class="flex flex-col gap-2 mt-2">
+<div class="flex justify-between text-xs text-slate-400">
+<span>Progress</span>
+<span>21 days left</span>
+</div>
+<div class="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 35%"></div>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-dark border border-border-dark rounded-xl p-6 flex flex-col justify-between gap-4 hover:border-white/10 transition-colors">
+<div>
+<p class="text-slate-400 text-sm font-medium mb-1">Total Secrets Managed</p>
+<div class="flex items-baseline gap-2">
+<h3 class="text-2xl font-bold text-white tracking-tight">14,205</h3>
+<span class="text-green-500 text-xs font-medium bg-green-500/10 px-1.5 py-0.5 rounded flex items-center">
+<span class="material-symbols-outlined text-[14px] mr-0.5">arrow_upward</span> 5%
+                            </span>
+</div>
+</div>
+<div class="flex items-center gap-2 mt-2 text-sm text-slate-400">
+<span class="material-symbols-outlined text-[18px] text-slate-500">info</span>
+<span>Based on daily average</span>
+</div>
+</div>
+</div>
+<!-- Usage Chart Section -->
+<div class="bg-surface-dark border border-border-dark rounded-xl p-6 flex flex-col gap-6">
+<div class="flex flex-wrap justify-between items-center gap-4">
+<div>
+<h3 class="text-lg font-bold text-white">Usage Over Time</h3>
+<p class="text-slate-400 text-sm">Secret operations and API calls over the last 30 days.</p>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-2">
+<div class="flex items-center gap-1.5">
+<div class="w-3 h-3 rounded-full bg-primary"></div>
+<span class="text-xs text-slate-300 font-medium">Operations</span>
+</div>
+<div class="flex items-center gap-1.5">
+<div class="w-3 h-3 rounded-full bg-cyan-400"></div>
+<span class="text-xs text-slate-300 font-medium">API Calls</span>
+</div>
+</div>
+<div class="h-4 w-px bg-border-dark mx-1"></div>
+<select class="bg-background-dark border border-border-dark text-slate-300 text-sm rounded-lg px-2 py-1 focus:ring-1 focus:ring-primary focus:border-primary outline-none">
+<option>Last 30 Days</option>
+<option>Last 90 Days</option>
+<option>This Year</option>
+</select>
+</div>
+</div>
+<!-- CSS Chart Container -->
+<div class="relative w-full h-64 mt-4">
+<!-- Grid Lines -->
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none">
+<div class="border-b border-dashed border-white/5 w-full h-px"></div>
+<div class="border-b border-dashed border-white/5 w-full h-px"></div>
+<div class="border-b border-dashed border-white/5 w-full h-px"></div>
+<div class="border-b border-dashed border-white/5 w-full h-px"></div>
+<div class="border-b border-dashed border-white/5 w-full h-px"></div>
+</div>
+<!-- Chart SVG -->
+<svg class="w-full h-full overflow-visible" preserveaspectratio="none" viewbox="0 0 1200 300">
+<defs>
+<lineargradient id="gradientPrimary" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#135bec" stop-opacity="0.3"></stop>
+<stop offset="100%" stop-color="#135bec" stop-opacity="0"></stop>
+</lineargradient>
+<lineargradient id="gradientCyan" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#22d3ee" stop-opacity="0.3"></stop>
+<stop offset="100%" stop-color="#22d3ee" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<!-- Line 1: Operations (Primary Blue) -->
+<path d="M0,250 C100,240 200,180 300,200 C400,220 500,100 600,120 C700,140 800,80 900,100 C1000,120 1100,50 1200,60 L1200,300 L0,300 Z" fill="url(#gradientPrimary)" stroke="none"></path>
+<path d="M0,250 C100,240 200,180 300,200 C400,220 500,100 600,120 C700,140 800,80 900,100 C1000,120 1100,50 1200,60" fill="none" stroke="#135bec" stroke-width="3"></path>
+<!-- Line 2: API Calls (Cyan) -->
+<path d="M0,280 C150,270 300,260 450,220 C600,180 750,200 900,180 C1050,160 1150,180 1200,170 L1200,300 L0,300 Z" fill="url(#gradientCyan)" stroke="none"></path>
+<path d="M0,280 C150,270 300,260 450,220 C600,180 750,200 900,180 C1050,160 1150,180 1200,170" fill="none" stroke="#22d3ee" stroke-dasharray="6 4" stroke-width="3"></path>
+</svg>
+<!-- Tooltip approximation (Static) -->
+<div class="absolute top-[30%] left-[65%] bg-surface-dark border border-white/10 rounded-lg p-2 shadow-xl transform -translate-x-1/2 -translate-y-1/2 pointer-events-none hidden md:block">
+<div class="text-xs text-slate-400 mb-1">Oct 12, 2023</div>
+<div class="flex items-center justify-between gap-4 text-xs font-bold text-white">
+<span class="flex items-center gap-1"><div class="w-1.5 h-1.5 rounded-full bg-primary"></div> 12,402 Ops</span>
+</div>
+</div>
+</div>
+<!-- X Axis Labels -->
+<div class="flex justify-between text-xs text-slate-500 px-1">
+<span>Oct 01</span>
+<span>Oct 05</span>
+<span>Oct 10</span>
+<span>Oct 15</span>
+<span>Oct 20</span>
+<span>Oct 25</span>
+<span>Oct 30</span>
+</div>
+</div>
+<!-- Bottom Section: Billing History & Payment -->
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+<!-- Billing History Table (2/3 width on XL) -->
+<div class="xl:col-span-2 bg-surface-dark border border-border-dark rounded-xl flex flex-col overflow-hidden">
+<div class="p-6 border-b border-border-dark flex justify-between items-center">
+<h3 class="text-lg font-bold text-white">Billing History</h3>
+<button class="text-primary text-sm font-medium hover:text-primary-dark transition-colors">View All</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-background-dark/50 border-b border-border-dark">
+<th class="px-6 py-4 text-xs font-medium text-slate-400 uppercase tracking-wider">Date</th>
+<th class="px-6 py-4 text-xs font-medium text-slate-400 uppercase tracking-wider">Invoice ID</th>
+<th class="px-6 py-4 text-xs font-medium text-slate-400 uppercase tracking-wider">Amount</th>
+<th class="px-6 py-4 text-xs font-medium text-slate-400 uppercase tracking-wider">Status</th>
+<th class="px-6 py-4 text-xs font-medium text-slate-400 uppercase tracking-wider text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-dark">
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-6 py-4 text-sm text-white">Oct 01, 2023</td>
+<td class="px-6 py-4 text-sm text-slate-300 font-mono">INV-2023-001</td>
+<td class="px-6 py-4 text-sm text-white font-medium">$249.00</td>
+<td class="px-6 py-4 text-sm">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-500/10 text-green-500 border border-green-500/20">
+                                            Paid
+                                        </span>
+</td>
+<td class="px-6 py-4 text-sm text-right">
+<button class="text-slate-400 hover:text-primary transition-colors p-1 rounded hover:bg-white/5">
+<span class="material-symbols-outlined text-[20px]">download</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-6 py-4 text-sm text-white">Sep 01, 2023</td>
+<td class="px-6 py-4 text-sm text-slate-300 font-mono">INV-2023-002</td>
+<td class="px-6 py-4 text-sm text-white font-medium">$249.00</td>
+<td class="px-6 py-4 text-sm">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-500/10 text-green-500 border border-green-500/20">
+                                            Paid
+                                        </span>
+</td>
+<td class="px-6 py-4 text-sm text-right">
+<button class="text-slate-400 hover:text-primary transition-colors p-1 rounded hover:bg-white/5">
+<span class="material-symbols-outlined text-[20px]">download</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-6 py-4 text-sm text-white">Aug 01, 2023</td>
+<td class="px-6 py-4 text-sm text-slate-300 font-mono">INV-2023-003</td>
+<td class="px-6 py-4 text-sm text-white font-medium">$212.50</td>
+<td class="px-6 py-4 text-sm">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-500/10 text-green-500 border border-green-500/20">
+                                            Paid
+                                        </span>
+</td>
+<td class="px-6 py-4 text-sm text-right">
+<button class="text-slate-400 hover:text-primary transition-colors p-1 rounded hover:bg-white/5">
+<span class="material-symbols-outlined text-[20px]">download</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Payment Method (1/3 width on XL) -->
+<div class="bg-surface-dark border border-border-dark rounded-xl p-6 flex flex-col justify-between">
+<div class="flex justify-between items-start mb-6">
+<h3 class="text-lg font-bold text-white">Payment Method</h3>
+<span class="material-symbols-outlined text-slate-400">credit_card</span>
+</div>
+<!-- Card Visual -->
+<div class="relative w-full aspect-[1.586/1] rounded-xl overflow-hidden mb-6 group select-none">
+<!-- Card Background -->
+<div class="absolute inset-0 bg-gradient-to-br from-slate-700 to-slate-900 border border-white/10 p-6 flex flex-col justify-between z-10 group-hover:scale-105 transition-transform duration-500">
+<div class="flex justify-between items-start">
+<!-- Chip -->
+<div class="w-10 h-8 rounded bg-yellow-500/20 border border-yellow-500/40 relative overflow-hidden">
+<div class="absolute inset-0 opacity-40" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 2px, #fbbf24 2px, #fbbf24 4px);"></div>
+</div>
+<!-- Visa Logo (Text substitute for generic) -->
+<span class="text-white font-black italic text-xl tracking-tighter opacity-80">VISA</span>
+</div>
+<div class="space-y-4">
+<div class="flex gap-4 items-center">
+<div class="flex gap-1">
+<div class="w-1.5 h-1.5 rounded-full bg-white/50"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-white/50"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-white/50"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-white/50"></div>
+</div>
+<div class="flex gap-1">
+<div class="w-1.5 h-1.5 rounded-full bg-white/50"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-white/50"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-white/50"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-white/50"></div>
+</div>
+<div class="flex gap-1">
+<div class="w-1.5 h-1.5 rounded-full bg-white/50"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-white/50"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-white/50"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-white/50"></div>
+</div>
+<span class="text-white font-mono text-lg tracking-widest">4242</span>
+</div>
+<div class="flex justify-between items-end">
+<div class="flex flex-col">
+<span class="text-[10px] text-slate-400 uppercase tracking-widest mb-0.5">Card Holder</span>
+<span class="text-sm font-medium text-slate-200">KEYS Admin</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] text-slate-400 uppercase tracking-widest mb-0.5">Expires</span>
+<span class="text-sm font-medium text-slate-200">12/25</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Blurred backing for glow effect -->
+<div class="absolute inset-0 bg-primary/20 blur-xl z-0 transform translate-y-4 scale-90"></div>
+</div>
+<div class="flex flex-col gap-3">
+<div class="flex items-center gap-2 text-sm text-slate-400">
+<span class="material-symbols-outlined text-[18px] text-green-500">check_circle</span>
+<span>Primary payment method</span>
+</div>
+<button class="w-full py-2.5 px-4 bg-primary hover:bg-primary-dark text-white text-sm font-medium rounded-lg transition-colors shadow-lg shadow-primary/20 flex justify-center items-center gap-2">
+                            Update Payment Method
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

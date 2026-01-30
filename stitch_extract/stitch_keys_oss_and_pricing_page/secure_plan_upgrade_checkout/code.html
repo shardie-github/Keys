@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Secure Plan Upgrade Checkout</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Config -->
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#135bec",
+              "background-light": "#f6f6f8",
+              "background-dark": "#101622",
+              "surface-dark": "#1c2333", // Slightly lighter than background-dark for cards
+              "border-dark": "#2d3648",
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        /* Custom scrollbar for a cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #101622;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2d3648;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3b4354;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display min-h-screen flex flex-col items-center justify-center p-4 md:p-8">
+<div class="w-full max-w-6xl flex flex-col gap-8">
+<!-- Header Section -->
+<div class="flex flex-col gap-2 px-4">
+<h1 class="text-3xl md:text-4xl font-black tracking-tight text-slate-900 dark:text-white">Upgrade to Pro</h1>
+<p class="text-slate-500 dark:text-slate-400 text-base">Complete your secure purchase to unlock all features instantly.</p>
+</div>
+<!-- Main Content Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12">
+<!-- Left Column: Order Summary -->
+<div class="lg:col-span-5 flex flex-col gap-6 order-2 lg:order-1">
+<div class="bg-white dark:bg-surface-dark rounded-xl border border-slate-200 dark:border-border-dark p-6 shadow-sm">
+<div class="flex flex-col gap-6">
+<div class="flex flex-col gap-2">
+<h2 class="text-xl font-bold text-slate-900 dark:text-white">Order Summary</h2>
+<p class="text-sm text-slate-500 dark:text-slate-400">You are upgrading to the KEYS Pro Cloud plan.</p>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Plan Item -->
+<div class="flex gap-4 rounded-lg border border-slate-200 dark:border-border-dark bg-slate-50 dark:bg-[#151a25] p-4 items-start">
+<div class="text-primary mt-1">
+<span class="material-symbols-outlined">cloud_done</span>
+</div>
+<div class="flex flex-col flex-1 gap-1">
+<div class="flex justify-between items-start">
+<h3 class="text-sm font-bold text-slate-900 dark:text-white">KEYS Pro Cloud (Annual)</h3>
+<span class="text-sm font-bold text-slate-900 dark:text-white">$348.00</span>
+</div>
+<p class="text-xs text-slate-500 dark:text-slate-400">Billed annually at $29.00/mo</p>
+</div>
+</div>
+<!-- Discount Item -->
+<div class="flex gap-4 rounded-lg border border-green-900/30 bg-green-900/10 p-4 items-start">
+<div class="text-green-500 mt-1">
+<span class="material-symbols-outlined">local_offer</span>
+</div>
+<div class="flex flex-col flex-1 gap-1">
+<div class="flex justify-between items-start">
+<h3 class="text-sm font-bold text-green-500">Discount Applied</h3>
+<span class="text-sm font-bold text-green-500">-$69.60</span>
+</div>
+<p class="text-xs text-green-400/70">Save 20% on annual billing</p>
+</div>
+</div>
+<hr class="border-slate-200 dark:border-border-dark my-2"/>
+<!-- Total Item -->
+<div class="flex gap-4 rounded-lg border border-primary/30 bg-primary/10 p-4 items-center">
+<div class="text-primary">
+<span class="material-symbols-outlined text-3xl">paid</span>
+</div>
+<div class="flex flex-col flex-1 gap-0">
+<p class="text-xs text-primary/80 uppercase tracking-wide font-semibold">Total due today</p>
+<h3 class="text-2xl font-black text-white">$278.40</h3>
+</div>
+</div>
+</div>
+<!-- Trust / Info -->
+<div class="flex items-center gap-2 mt-2 text-xs text-slate-500 dark:text-slate-500">
+<span class="material-symbols-outlined text-[16px]">verified_user</span>
+<span>30-day money-back guarantee included.</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Payment Form -->
+<div class="lg:col-span-7 flex flex-col order-1 lg:order-2">
+<div class="bg-white dark:bg-surface-dark rounded-xl border border-slate-200 dark:border-border-dark p-6 md:p-8 shadow-lg">
+<div class="flex flex-col gap-6">
+<!-- Form Header -->
+<div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 dark:border-border-dark pb-6">
+<h2 class="text-xl font-bold text-slate-900 dark:text-white">Payment Details</h2>
+<div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/10 border border-green-500/20">
+<span class="material-symbols-outlined text-green-500 text-[16px]">lock</span>
+<span class="text-xs font-semibold text-green-500">Secure Transaction</span>
+</div>
+</div>
+<!-- Form Inputs -->
+<div class="flex flex-col gap-5">
+<!-- Cardholder Name -->
+<label class="flex flex-col gap-2">
+<span class="text-sm font-medium text-slate-700 dark:text-slate-300">Cardholder Name</span>
+<input class="w-full rounded-lg bg-slate-50 dark:bg-[#151a25] border border-slate-200 dark:border-border-dark text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all h-12 px-4" placeholder="e.g. John Doe" type="text"/>
+</label>
+<!-- Card Number -->
+<label class="flex flex-col gap-2">
+<span class="text-sm font-medium text-slate-700 dark:text-slate-300">Card Number</span>
+<div class="relative flex items-center">
+<input class="w-full rounded-lg bg-slate-50 dark:bg-[#151a25] border border-slate-200 dark:border-border-dark text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all h-12 pl-4 pr-12" placeholder="0000 0000 0000 0000" type="text"/>
+<div class="absolute right-4 text-slate-400 flex items-center pointer-events-none">
+<span class="material-symbols-outlined">credit_card</span>
+</div>
+</div>
+</label>
+<!-- Expiry & CVC -->
+<div class="flex flex-row gap-4">
+<label class="flex flex-col gap-2 flex-1">
+<span class="text-sm font-medium text-slate-700 dark:text-slate-300">Expiry Date</span>
+<input class="w-full rounded-lg bg-slate-50 dark:bg-[#151a25] border border-slate-200 dark:border-border-dark text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all h-12 px-4" placeholder="MM / YY" type="text"/>
+</label>
+<label class="flex flex-col gap-2 flex-1">
+<div class="flex justify-between items-center">
+<span class="text-sm font-medium text-slate-700 dark:text-slate-300">CVC</span>
+<span class="material-symbols-outlined text-slate-500 text-[18px] cursor-help" title="3-digit code on back of card">help</span>
+</div>
+<input class="w-full rounded-lg bg-slate-50 dark:bg-[#151a25] border border-slate-200 dark:border-border-dark text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all h-12 px-4" placeholder="123" type="text"/>
+</label>
+</div>
+</div>
+<!-- Actions -->
+<div class="mt-4 flex flex-col gap-4">
+<button class="w-full bg-primary hover:bg-blue-600 text-white font-bold h-14 rounded-lg shadow-lg shadow-primary/20 transition-all active:scale-[0.99] flex items-center justify-center gap-2 text-lg">
+<span>Complete Payment</span>
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+<a class="text-center text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-white transition-colors" href="#">
+                                Go Back
+                            </a>
+</div>
+<!-- Footer Trust -->
+<div class="pt-4 border-t border-slate-200 dark:border-border-dark flex justify-center gap-4 opacity-50 grayscale hover:grayscale-0 transition-all duration-300">
+<!-- Using placeholders for payment logos with material icons for abstract representation if needed, but here simple text/icons work -->
+<span class="material-symbols-outlined">payments</span>
+<span class="material-symbols-outlined">lock</span>
+<span class="material-symbols-outlined">shield</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body></html>

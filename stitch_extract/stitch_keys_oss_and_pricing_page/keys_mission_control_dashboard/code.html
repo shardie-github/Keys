@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KEYS Mission Control Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2bbdee",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101d22",
+                        "surface-dark": "#16262d",
+                        "surface-highlight": "#1c2e36"
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "body": ["Noto Sans", "sans-serif"]
+                    },
+                    boxShadow: {
+                        "neon": "0 0 10px rgba(43, 189, 238, 0.2), 0 0 20px rgba(43, 189, 238, 0.1)",
+                        "neon-strong": "0 0 15px rgba(43, 189, 238, 0.4), 0 0 30px rgba(43, 189, 238, 0.2)"
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #101d22; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2bbdee; 
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #1faad6; 
+        }
+
+        /* Glassmorphism utility */
+        .glass-panel {
+            background: rgba(22, 38, 45, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .glass-panel:hover {
+            border-color: rgba(43, 189, 238, 0.3);
+            background: rgba(22, 38, 45, 0.7);
+        }
+
+        .active-nav-item {
+            background: rgba(43, 189, 238, 0.15);
+            color: #2bbdee;
+            border-left: 3px solid #2bbdee;
+        }
+
+        /* Grid Background Pattern */
+        .bg-grid-pattern {
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        
+        .animate-pulse-slow {
+            animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+    </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-slate-900 dark:text-white h-screen overflow-hidden flex flex-col">
+<!-- Top Status Ticker -->
+<div class="h-8 bg-[#0c161a] border-b border-white/5 flex items-center justify-center overflow-hidden shrink-0 relative z-20">
+<div class="flex items-center gap-4 text-[10px] tracking-widest font-mono text-primary/70 animate-pulse-slow">
+<span class="w-2 h-2 rounded-full bg-primary inline-block"></span>
+            SYSTEM STATUS: ALL SYSTEMS OPERATIONAL // LAST SYNC: 00:02:45 AGO // THREAT LEVEL: LOW // ACTIVE NODES: 342 // ENCRYPTION: AES-256-GCM
+            <span class="w-2 h-2 rounded-full bg-primary inline-block"></span>
+</div>
+</div>
+<!-- Main Layout -->
+<div class="flex flex-1 overflow-hidden relative">
+<!-- Sidebar Navigation -->
+<nav class="w-16 lg:w-20 bg-[#0d181c] border-r border-white/5 flex flex-col items-center py-6 gap-8 shrink-0 z-20">
+<!-- Logo / Home -->
+<div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center shadow-neon cursor-pointer group">
+<span class="material-symbols-outlined text-white text-xl group-hover:scale-110 transition-transform">encrypted</span>
+</div>
+<!-- Nav Items -->
+<div class="flex flex-col gap-4 w-full">
+<div class="h-10 w-full flex items-center justify-center cursor-pointer active-nav-item" title="Overview">
+<span class="material-symbols-outlined text-2xl">dashboard</span>
+</div>
+<div class="h-10 w-full flex items-center justify-center cursor-pointer text-slate-400 hover:text-white transition-colors" title="Secrets">
+<span class="material-symbols-outlined text-2xl">vpn_key</span>
+</div>
+<div class="h-10 w-full flex items-center justify-center cursor-pointer text-slate-400 hover:text-white transition-colors" title="Team">
+<span class="material-symbols-outlined text-2xl">group</span>
+</div>
+<div class="h-10 w-full flex items-center justify-center cursor-pointer text-slate-400 hover:text-white transition-colors" title="Audit">
+<span class="material-symbols-outlined text-2xl">history_edu</span>
+</div>
+<div class="h-10 w-full flex items-center justify-center cursor-pointer text-slate-400 hover:text-white transition-colors" title="Settings">
+<span class="material-symbols-outlined text-2xl">settings</span>
+</div>
+</div>
+<div class="mt-auto mb-4">
+<div class="w-8 h-8 rounded-full overflow-hidden border border-white/20 cursor-pointer hover:border-primary transition-colors">
+<img alt="User Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDO9x8Eg4muPd6czC0o94Fg6tPzlwHmbFGqM5RDAJKR3plvV7KEawfBSjHoWSmjX2HsW8DJmrFXjmkW87r5uzNybHFwpgAxMXcJ6lrc_cQiZulCYYbv9QRohrM_gXRbZgVGG7r9Hs0c_hIPen4BSXxh6yBEFgtC1aDa0cKoM3HpiDacMomPczSFMZZizRQSjG7QrpwR5Nkopvh-BViFj21R9syG7tYt6HAgrTV44QMLmC6LvJeG1Ombqd2aGVIw2O1fXsAB8ujTjtkD"/>
+</div>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col relative bg-grid-pattern">
+<!-- Header -->
+<header class="px-6 py-5 flex justify-between items-end shrink-0">
+<div>
+<div class="flex items-center gap-2 text-primary/60 text-xs font-mono mb-1 tracking-wider">
+<span>KEYS COMMAND</span>
+<span class="material-symbols-outlined text-[10px]">chevron_right</span>
+<span>OVERVIEW</span>
+</div>
+<h1 class="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
+                        GLOBAL OPERATIONS
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-primary/20 text-primary border border-primary/30 align-middle">LIVE</span>
+</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="text-right hidden md:block">
+<p class="text-xs text-slate-400 font-mono">SERVER TIME</p>
+<p class="text-sm font-bold text-white tracking-widest">14:22:09 UTC</p>
+</div>
+</div>
+</header>
+<!-- Dashboard Grid -->
+<div class="flex-1 px-6 pb-24 overflow-y-auto">
+<div class="grid grid-cols-1 lg:grid-cols-4 gap-6 h-full min-h-[600px]">
+<!-- Main Map Component (Spans 3 columns) -->
+<div class="lg:col-span-3 h-full flex flex-col glass-panel rounded-2xl relative overflow-hidden group">
+<!-- Map Overlay Header -->
+<div class="absolute top-0 left-0 w-full p-4 z-10 flex justify-between items-start pointer-events-none">
+<div class="flex flex-col gap-1 pointer-events-auto">
+<label class="flex items-center gap-2 bg-black/40 backdrop-blur-sm border border-white/10 rounded-lg px-3 py-2 transition-colors hover:border-primary/50 focus-within:border-primary">
+<span class="material-symbols-outlined text-primary text-sm">search</span>
+<input class="bg-transparent border-none text-xs text-white placeholder-slate-500 focus:ring-0 w-48 p-0" placeholder="Search active nodes..." type="text"/>
+</label>
+</div>
+<div class="flex gap-2 pointer-events-auto">
+<button class="p-2 rounded-lg bg-black/40 border border-white/10 text-white hover:bg-primary/20 hover:text-primary hover:border-primary/50 transition-all">
+<span class="material-symbols-outlined text-lg">layers</span>
+</button>
+<button class="p-2 rounded-lg bg-black/40 border border-white/10 text-white hover:bg-primary/20 hover:text-primary hover:border-primary/50 transition-all">
+<span class="material-symbols-outlined text-lg">filter_alt</span>
+</button>
+</div>
+</div>
+<!-- Map Visualization Background -->
+<div class="absolute inset-0 z-0 bg-background-dark">
+<div class="w-full h-full bg-cover bg-center opacity-40 mix-blend-screen" data-alt="Futuristic world map wireframe with connecting data lines" data-location="Global Map" style="background-image: url('https://placeholder.pics/svg/300');">
+</div>
+<!-- Decorative Grid Overlay -->
+<div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgNDBMMCAwTDQwIDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSg0MywgMTg5LCAyMzgsIDAuMSkiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] opacity-30"></div>
+<!-- Animated Map Markers (CSS Simulation) -->
+<div class="absolute top-[30%] left-[20%] w-3 h-3 bg-primary rounded-full shadow-[0_0_15px_#2bbdee] animate-pulse"></div>
+<div class="absolute top-[30%] left-[20%] w-3 h-3 bg-primary rounded-full animate-ping opacity-75"></div>
+<div class="absolute top-[45%] left-[60%] w-2 h-2 bg-purple-500 rounded-full shadow-[0_0_10px_#a855f7]"></div>
+<div class="absolute top-[60%] left-[75%] w-3 h-3 bg-primary rounded-full shadow-[0_0_15px_#2bbdee] animate-pulse delay-700"></div>
+<div class="absolute top-[60%] left-[75%] w-3 h-3 bg-primary rounded-full animate-ping opacity-75 delay-700"></div>
+<!-- Connecting Lines SVG -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none opacity-40">
+<path class="animate-pulse-slow" d="M 250 250 Q 550 150 850 450" fill="none" stroke="#2bbdee" stroke-dasharray="5,5" stroke-width="1"></path>
+</svg>
+</div>
+<!-- Map Stats Overlay Bottom -->
+<div class="absolute bottom-0 left-0 w-full p-6 z-10 bg-gradient-to-t from-background-dark via-background-dark/80 to-transparent">
+<div class="flex items-end justify-between">
+<div class="flex gap-8">
+<div>
+<p class="text-xs text-slate-400 font-mono mb-1">ACTIVE TUNNELS</p>
+<p class="text-2xl font-bold text-white">342</p>
+</div>
+<div>
+<p class="text-xs text-slate-400 font-mono mb-1">LATENCY (AVG)</p>
+<p class="text-2xl font-bold text-white flex items-center gap-1">
+                                            24<span class="text-xs text-slate-500 font-normal mt-2">ms</span>
+</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[10px] text-primary bg-primary/10 px-2 py-1 rounded border border-primary/20">SYNCING</span>
+<div class="h-1 w-24 bg-surface-highlight rounded-full overflow-hidden">
+<div class="h-full bg-primary w-2/3 animate-pulse"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Pulse Metrics (Stacked Cards) -->
+<div class="lg:col-span-1 flex flex-col gap-6">
+<!-- Metric 1: System Health -->
+<div class="flex-1 glass-panel rounded-2xl p-5 flex flex-col justify-between group hover:shadow-neon transition-all duration-300">
+<div class="flex justify-between items-start">
+<div class="flex flex-col gap-1">
+<p class="text-xs text-slate-400 font-mono uppercase tracking-wider">System Health</p>
+<div class="flex items-baseline gap-2">
+<h3 class="text-3xl font-bold text-white">99.9%</h3>
+<span class="text-xs text-emerald-400 font-medium">+0.1%</span>
+</div>
+</div>
+<div class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
+<span class="material-symbols-outlined text-emerald-400 text-lg">ecg_heart</span>
+</div>
+</div>
+<!-- Visualizer -->
+<div class="mt-4 h-16 flex items-end justify-between gap-1">
+<div class="w-1 bg-primary/20 h-[40%] rounded-t-sm"></div>
+<div class="w-1 bg-primary/30 h-[60%] rounded-t-sm"></div>
+<div class="w-1 bg-primary/50 h-[30%] rounded-t-sm"></div>
+<div class="w-1 bg-primary h-[80%] rounded-t-sm shadow-[0_0_8px_#2bbdee]"></div>
+<div class="w-1 bg-primary/60 h-[50%] rounded-t-sm"></div>
+<div class="w-1 bg-primary/40 h-[70%] rounded-t-sm"></div>
+<div class="w-1 bg-primary/20 h-[45%] rounded-t-sm"></div>
+<div class="w-1 bg-primary/20 h-[30%] rounded-t-sm"></div>
+<div class="w-1 bg-primary/20 h-[55%] rounded-t-sm"></div>
+<div class="w-1 bg-primary/20 h-[40%] rounded-t-sm"></div>
+</div>
+<p class="text-[10px] text-slate-500 mt-2 font-mono text-right">LAST 24 HOURS</p>
+</div>
+<!-- Metric 2: Keys Rotated -->
+<div class="flex-1 glass-panel rounded-2xl p-5 flex flex-col justify-between group hover:shadow-neon transition-all duration-300">
+<div class="flex justify-between items-start">
+<div class="flex flex-col gap-1">
+<p class="text-xs text-slate-400 font-mono uppercase tracking-wider">Keys Rotated</p>
+<div class="flex items-baseline gap-2">
+<h3 class="text-3xl font-bold text-white">1,204</h3>
+<span class="text-xs text-primary font-medium">↑ 12%</span>
+</div>
+</div>
+<div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20">
+<span class="material-symbols-outlined text-primary text-lg">sync_lock</span>
+</div>
+</div>
+<div class="mt-4 relative h-2 bg-surface-highlight rounded-full overflow-hidden">
+<div class="absolute top-0 left-0 h-full bg-gradient-to-r from-primary to-blue-500 w-[75%] rounded-full shadow-[0_0_10px_rgba(43,189,238,0.5)]"></div>
+</div>
+<p class="text-[10px] text-slate-500 mt-2 font-mono">75% OF DAILY TARGET REACHED</p>
+</div>
+<!-- Metric 3: Threats -->
+<div class="flex-1 glass-panel rounded-2xl p-5 flex flex-col justify-between group hover:shadow-neon transition-all duration-300 border-l-4 border-l-transparent hover:border-l-red-500/50">
+<div class="flex justify-between items-start">
+<div class="flex flex-col gap-1">
+<p class="text-xs text-slate-400 font-mono uppercase tracking-wider">Threats Blocked</p>
+<div class="flex items-baseline gap-2">
+<h3 class="text-3xl font-bold text-white">0</h3>
+<span class="text-xs text-slate-500 font-medium">Stable</span>
+</div>
+</div>
+<div class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center border border-white/10 group-hover:border-red-500/30 group-hover:bg-red-500/10 transition-colors">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-red-400 text-lg transition-colors">gpp_maybe</span>
+</div>
+</div>
+<div class="mt-4 grid grid-cols-5 gap-1">
+<div class="h-1 bg-slate-700 rounded-sm"></div>
+<div class="h-1 bg-slate-700 rounded-sm"></div>
+<div class="h-1 bg-slate-700 rounded-sm"></div>
+<div class="h-1 bg-slate-700 rounded-sm"></div>
+<div class="h-1 bg-slate-700 rounded-sm"></div>
+</div>
+<p class="text-[10px] text-slate-500 mt-2 font-mono">NO ANOMALIES DETECTED</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Launch Dock -->
+<div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-50">
+<div class="glass-panel p-2 rounded-2xl flex items-center gap-2 shadow-2xl border border-white/10">
+<button class="flex flex-col items-center justify-center w-16 h-14 rounded-xl hover:bg-white/5 group transition-all relative overflow-hidden">
+<span class="material-symbols-outlined text-white mb-1 group-hover:scale-110 transition-transform">add_circle</span>
+<span class="text-[10px] font-medium text-slate-400 group-hover:text-white">New Secret</span>
+<div class="absolute bottom-0 left-0 w-full h-[2px] bg-primary scale-x-0 group-hover:scale-x-100 transition-transform"></div>
+</button>
+<div class="w-[1px] h-8 bg-white/10"></div>
+<button class="flex flex-col items-center justify-center w-16 h-14 rounded-xl hover:bg-white/5 group transition-all relative overflow-hidden">
+<span class="material-symbols-outlined text-white mb-1 group-hover:rotate-180 transition-transform duration-500">autorenew</span>
+<span class="text-[10px] font-medium text-slate-400 group-hover:text-white">Rotate</span>
+<div class="absolute bottom-0 left-0 w-full h-[2px] bg-primary scale-x-0 group-hover:scale-x-100 transition-transform"></div>
+</button>
+<div class="w-[1px] h-8 bg-white/10"></div>
+<button class="flex flex-col items-center justify-center w-16 h-14 rounded-xl hover:bg-white/5 group transition-all relative overflow-hidden">
+<span class="material-symbols-outlined text-white mb-1 group-hover:scale-110 transition-transform">dns</span>
+<span class="text-[10px] font-medium text-slate-400 group-hover:text-white">Envs</span>
+<div class="absolute bottom-0 left-0 w-full h-[2px] bg-primary scale-x-0 group-hover:scale-x-100 transition-transform"></div>
+</button>
+<div class="w-[1px] h-8 bg-white/10"></div>
+<button class="flex flex-col items-center justify-center w-16 h-14 rounded-xl bg-primary/20 hover:bg-primary/30 border border-primary/30 group transition-all relative overflow-hidden shadow-[0_0_15px_rgba(43,189,238,0.1)] hover:shadow-[0_0_20px_rgba(43,189,238,0.3)]">
+<span class="material-symbols-outlined text-primary mb-1 group-hover:scale-110 transition-transform">terminal</span>
+<span class="text-[10px] font-bold text-primary">CLI</span>
+</button>
+</div>
+</div>
+</main>
+</div>
+</body></html>

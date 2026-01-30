@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KEYS Developer API Reference</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2b8dee",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #283039;
+            border-radius: 10px;
+        }
+        .code-syntax {
+            font-family: 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white min-h-screen">
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 z-50 w-full border-b border-solid border-slate-200 dark:border-[#283039] bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md px-6 py-3">
+<div class="max-w-[1600px] mx-auto flex items-center justify-between gap-4">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3">
+<div class="size-8 text-primary">
+<svg fill="currentColor" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z"></path>
+</svg>
+</div>
+<h2 class="text-xl font-black leading-tight tracking-tight">KEYS <span class="text-primary">Dev</span></h2>
+</div>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Docs</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Changelog</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Community</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Support</a>
+</nav>
+</div>
+<div class="flex flex-1 justify-end items-center gap-4">
+<div class="relative w-full max-w-sm hidden sm:block">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 material-symbols-outlined text-xl">search</span>
+<input class="w-full h-10 pl-10 pr-4 rounded-lg border-none bg-slate-200/50 dark:bg-[#283039] text-sm focus:ring-2 focus:ring-primary" placeholder="Search documentation (Cmd + K)"/>
+</div>
+<button class="whitespace-nowrap flex items-center justify-center rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold hover:bg-primary/90 transition-all">
+                    Request API Key
+                </button>
+<div class="size-8 rounded-full border border-slate-200 dark:border-slate-700 overflow-hidden">
+<img alt="User avatar" class="w-full h-full object-cover" data-alt="User profile avatar placeholder" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD23a7XirbZTzwjIMY2-cqpmkddbesJ_9fzStI_ZOKAqPGLycBFW0X-bchF2Jl0cKCggqelMNlsqbUz25dr9hvilkxPJQSfxBF7VYwmhjxUMXn91XxXmLiVpGbRvv5cOxpT-EP2lv8vVt4dgELFCATZsqDUqB1EVAW0S6-8B4cLw82hpFjDvefUJZS3CJ2KD3YrES4r72hDEU2bM2r793my11uPhQpnhrzyc9fR8El8xBpW1IsHcYfKX71tg6D0CL9uCggnRqFY3E4Q"/>
+</div>
+</div>
+</div>
+</header>
+<div class="max-w-[1600px] mx-auto flex h-[calc(100vh-65px)]">
+<!-- Left Sidebar: Navigation -->
+<aside class="w-64 flex-shrink-0 border-r border-slate-200 dark:border-[#283039] overflow-y-auto custom-scrollbar p-6 space-y-8 hidden lg:block">
+<section>
+<div class="mb-4">
+<h1 class="text-sm font-bold uppercase tracking-widest text-slate-500">Introduction</h1>
+</div>
+<div class="space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-200/20 transition-all" href="#">
+<span class="material-symbols-outlined text-lg">info</span>
+<span class="text-sm font-medium">Getting Started</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-white bg-primary/20 transition-all" href="#">
+<span class="material-symbols-outlined text-lg text-primary">lock</span>
+<span class="text-sm font-bold">Authentication</span>
+</a>
+</div>
+</section>
+<section>
+<div class="mb-4">
+<h1 class="text-sm font-bold uppercase tracking-widest text-slate-500">API Reference</h1>
+<p class="text-[10px] text-primary/80 font-mono mt-1">v1.2.0-stable</p>
+</div>
+<div class="space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-200/20 transition-all" href="#">
+<span class="material-symbols-outlined text-lg">database</span>
+<span class="text-sm font-medium">Vaults</span>
+</a>
+<div class="pl-8 space-y-1 mt-1 border-l border-slate-800 ml-5">
+<a class="block py-1 text-xs text-slate-400 hover:text-primary" href="#">List all Vaults</a>
+<a class="block py-1 text-xs text-primary font-bold" href="#">Retrieve a Vault</a>
+<a class="block py-1 text-xs text-slate-400 hover:text-primary" href="#">Create Vault</a>
+<a class="block py-1 text-xs text-slate-400 hover:text-primary" href="#">Update Vault</a>
+</div>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-200/20 transition-all" href="#">
+<span class="material-symbols-outlined text-lg">key</span>
+<span class="text-sm font-medium">Secrets</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-200/20 transition-all" href="#">
+<span class="material-symbols-outlined text-lg">extension</span>
+<span class="text-sm font-medium">Integrations</span>
+</a>
+</div>
+</section>
+<section class="pt-8 border-t border-slate-800">
+<div class="space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-white" href="#">
+<span class="material-symbols-outlined text-lg">help</span>
+<span class="text-sm font-medium">Support</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-white" href="#">
+<span class="material-symbols-outlined text-lg">chat</span>
+<span class="text-sm font-medium">Feedback</span>
+</a>
+</div>
+</section>
+</aside>
+<!-- Main Content Area: Divided into Middle (Doc) and Right (Code) -->
+<main class="flex-1 flex overflow-hidden">
+<!-- Middle Column: Documentation -->
+<div class="flex-1 overflow-y-auto custom-scrollbar bg-white dark:bg-background-dark/50">
+<div class="max-w-3xl mx-auto px-8 py-12">
+<!-- Breadcrumbs -->
+<nav class="flex items-center gap-2 mb-8 text-xs font-semibold uppercase tracking-widest text-slate-500">
+<a class="hover:text-primary" href="#">API Reference</a>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<a class="hover:text-primary" href="#">Vaults</a>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="text-slate-900 dark:text-white">Retrieve a Vault</span>
+</nav>
+<!-- Page Heading -->
+<div class="mb-10">
+<div class="flex items-center gap-3 mb-2">
+<span class="px-2 py-1 bg-green-500/10 text-green-500 text-[10px] font-black rounded uppercase tracking-wider">GET</span>
+<code class="text-primary font-mono text-sm">/v1/vaults/{vault_id}</code>
+</div>
+<h1 class="text-4xl font-black mb-4 leading-tight tracking-tight">Retrieve a Vault</h1>
+<p class="text-slate-600 dark:text-[#9dabb9] text-lg leading-relaxed">
+                            Returns a vault object if a valid identifier was provided. When retrieving a vault, you'll get the metadata and status of the container, but not the individual secrets within.
+                        </p>
+</div>
+<hr class="border-slate-200 dark:border-[#283039] mb-10"/>
+<!-- Parameters Table -->
+<section class="mb-12">
+<h2 class="text-xl font-bold mb-6">Path Parameters</h2>
+<div class="border border-slate-200 dark:border-[#283039] rounded-xl overflow-hidden">
+<table class="w-full text-left text-sm">
+<thead class="bg-slate-50 dark:bg-[#1a232e] text-slate-500 uppercase text-[10px] font-bold">
+<tr>
+<th class="px-6 py-4">Parameter</th>
+<th class="px-6 py-4">Type</th>
+<th class="px-6 py-4">Description</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-200 dark:divide-[#283039]">
+<tr>
+<td class="px-6 py-5 font-mono text-primary">vault_id</td>
+<td class="px-6 py-5 text-slate-500 italic">string <span class="text-red-500 not-italic font-bold ml-1 text-[10px] uppercase">Required</span></td>
+<td class="px-6 py-5 dark:text-slate-300">The unique identifier for the vault container.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section class="mb-12">
+<h2 class="text-xl font-bold mb-6">Query Parameters</h2>
+<div class="border border-slate-200 dark:border-[#283039] rounded-xl overflow-hidden">
+<table class="w-full text-left text-sm">
+<thead class="bg-slate-50 dark:bg-[#1a232e] text-slate-500 uppercase text-[10px] font-bold">
+<tr>
+<th class="px-6 py-4">Parameter</th>
+<th class="px-6 py-4">Type</th>
+<th class="px-6 py-4">Description</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-200 dark:divide-[#283039]">
+<tr>
+<td class="px-6 py-5 font-mono text-primary">expand</td>
+<td class="px-6 py-5 text-slate-500 italic">array</td>
+<td class="px-6 py-5 dark:text-slate-300">Expand nested objects. Valid values: <code class="bg-slate-100 dark:bg-slate-800 px-1 rounded">owner</code>, <code class="bg-slate-100 dark:bg-slate-800 px-1 rounded">metadata</code>.</td>
+</tr>
+<tr>
+<td class="px-6 py-5 font-mono text-primary">include_tags</td>
+<td class="px-6 py-5 text-slate-500 italic">boolean</td>
+<td class="px-6 py-5 dark:text-slate-300">Whether to include custom tags in the response. Default is <code class="text-primary">false</code>.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section>
+<h2 class="text-xl font-bold mb-4">Errors</h2>
+<p class="text-slate-600 dark:text-[#9dabb9] mb-6">
+                            Common error status codes for this endpoint:
+                        </p>
+<div class="space-y-4">
+<div class="flex gap-4 p-4 rounded-lg bg-red-500/5 border border-red-500/20">
+<span class="font-mono font-bold text-red-500">404</span>
+<div>
+<p class="font-bold text-sm">Not Found</p>
+<p class="text-xs text-slate-500">The requested vault ID does not exist in your organization.</p>
+</div>
+</div>
+<div class="flex gap-4 p-4 rounded-lg bg-red-500/5 border border-red-500/20">
+<span class="font-mono font-bold text-red-500">401</span>
+<div>
+<p class="font-bold text-sm">Unauthorized</p>
+<p class="text-xs text-slate-500">Your API key is invalid or has expired.</p>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+<!-- Right Column: Code Sandbox -->
+<div class="w-[450px] flex-shrink-0 bg-slate-900 overflow-y-auto border-l border-[#283039] custom-scrollbar p-6">
+<div class="sticky top-0 space-y-6">
+<!-- Code Samples -->
+<div class="rounded-xl overflow-hidden border border-[#283039] bg-background-dark">
+<!-- Tabs -->
+<div class="flex border-b border-[#283039] px-2 bg-slate-900/50">
+<button class="flex items-center gap-2 px-4 py-3 border-b-2 border-primary text-white text-xs font-bold tracking-wider uppercase">
+<span class="material-symbols-outlined text-sm">terminal</span> cURL
+                            </button>
+<button class="flex items-center gap-2 px-4 py-3 border-b-2 border-transparent text-slate-500 hover:text-white transition-colors text-xs font-bold tracking-wider uppercase">
+<span class="material-symbols-outlined text-sm">javascript</span> Node.js
+                            </button>
+<button class="flex items-center gap-2 px-4 py-3 border-b-2 border-transparent text-slate-500 hover:text-white transition-colors text-xs font-bold tracking-wider uppercase">
+<span class="material-symbols-outlined text-sm">code</span> Python
+                            </button>
+</div>
+<!-- Editor Area -->
+<div class="p-6 bg-[#0a0f14] relative group">
+<button class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-800 hover:bg-slate-700 p-2 rounded-lg text-white">
+<span class="material-symbols-outlined text-lg">content_copy</span>
+</button>
+<pre class="code-syntax text-xs leading-relaxed overflow-x-auto"><span class="text-slate-500"># Retrieve a vault by ID</span>
+<span class="text-primary">curl</span> -X GET \
+  https://api.keys.dev/v1/vaults/vlt_47k291 \
+  -H <span class="text-green-400">'Authorization: Bearer YOUR_API_KEY'</span> \
+  -H <span class="text-green-400">'Content-Type: application/json'</span></pre>
+</div>
+</div>
+<!-- Response Preview -->
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<h3 class="text-xs font-bold uppercase tracking-widest text-slate-500">Response Body</h3>
+<span class="text-[10px] font-mono text-green-500 bg-green-500/10 px-2 py-0.5 rounded">200 OK</span>
+</div>
+<div class="rounded-xl overflow-hidden border border-[#283039] bg-[#0a0f14] p-6">
+<pre class="code-syntax text-xs leading-relaxed text-blue-300">{
+  <span class="text-slate-400">"id"</span>: <span class="text-green-400">"vlt_47k291"</span>,
+  <span class="text-slate-400">"object"</span>: <span class="text-green-400">"vault"</span>,
+  <span class="text-slate-400">"name"</span>: <span class="text-green-400">"Production Core"</span>,
+  <span class="text-slate-400">"created_at"</span>: <span class="text-orange-400">1683921000</span>,
+  <span class="text-slate-400">"metadata"</span>: {
+    <span class="text-slate-400">"env"</span>: <span class="text-green-400">"prod"</span>,
+    <span class="text-slate-400">"region"</span>: <span class="text-green-400">"us-east-1"</span>
+  },
+  <span class="text-slate-400">"status"</span>: <span class="text-green-400">"active"</span>
+}</pre>
+</div>
+</div>
+<!-- CTA Section -->
+<div class="p-6 rounded-xl bg-primary/10 border border-primary/30">
+<h4 class="text-sm font-bold text-white mb-2">Need a test vault?</h4>
+<p class="text-xs text-slate-400 mb-4 leading-relaxed">You can create temporary vaults for development using our sandbox environment.</p>
+<button class="w-full py-2 bg-primary hover:bg-primary/90 rounded text-xs font-bold text-white transition-colors">
+                            Launch Sandbox
+                        </button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

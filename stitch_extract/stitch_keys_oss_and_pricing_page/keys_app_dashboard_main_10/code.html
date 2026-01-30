@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KEYS - Developer Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "primary-hover": "#1d64f0",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#0f172a", 
+                        "surface-dark": "#1e293b", 
+                        "border-dark": "#334155",
+                        "text-secondary": "#94a3b8",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"],
+                    },
+                    borderRadius: {"DEFAULT": "0.375rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style type="text/tailwindcss">
+        @layer utilities {
+            .status-pulse {
+                @apply relative flex h-2 w-2;
+            }
+            .status-pulse-dot {
+                @apply absolute inline-flex h-full w-full animate-ping rounded-full opacity-75;
+            }
+            .status-dot-inner {
+                @apply relative inline-flex h-2 w-2 rounded-full;
+            }
+        }::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569; 
+        }
+        .masked-value {
+            filter: blur(4px);
+            transition: filter 0.2s;
+            user-select: none;
+        }
+        .group:hover .masked-value {
+            filter: blur(0);
+        }.sparkline-path {
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white antialiased overflow-hidden">
+<div class="flex h-screen w-full">
+<aside class="flex w-64 flex-col border-r border-border-dark bg-surface-dark/50 backdrop-blur-xl">
+<div class="flex h-16 items-center px-6 border-b border-border-dark">
+<div class="flex items-center gap-2">
+<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-white">
+<span class="material-symbols-outlined text-xl">key</span>
+</div>
+<span class="text-lg font-bold tracking-tight text-white">KEYS</span>
+</div>
+</div>
+<div class="flex flex-1 flex-col justify-between p-4">
+<nav class="flex flex-col gap-1">
+<div class="mb-4 px-2">
+<p class="text-xs font-semibold uppercase tracking-wider text-text-secondary">Platform</p>
+</div>
+<a class="flex items-center gap-3 rounded-lg bg-primary/10 px-3 py-2 text-primary" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-text-secondary hover:bg-white/5 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">lock</span>
+<span class="text-sm font-medium">Vault</span>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-text-secondary hover:bg-white/5 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">hub</span>
+<span class="text-sm font-medium">Integrations</span>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-text-secondary hover:bg-white/5 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">history</span>
+<span class="text-sm font-medium">Audit Logs</span>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-text-secondary hover:bg-white/5 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">group</span>
+<span class="text-sm font-medium">Team</span>
+</a>
+</nav>
+<div class="flex flex-col gap-1 border-t border-border-dark pt-4">
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-text-secondary hover:bg-white/5 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-text-secondary hover:bg-white/5 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">menu_book</span>
+<span class="text-sm font-medium">Docs</span>
+</a>
+</div>
+</div>
+</aside>
+<div class="flex flex-1 flex-col min-w-0 overflow-hidden bg-background-dark">
+<header class="flex h-16 items-center justify-between border-b border-border-dark bg-background-dark px-6 lg:px-8">
+<div class="flex flex-1 items-center max-w-2xl">
+<div class="relative w-full max-w-md">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</span>
+<input class="w-full rounded-lg border border-border-dark bg-surface-dark py-2 pl-10 pr-4 text-sm text-white placeholder-text-secondary focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Search secrets, projects... (Cmd+K)" type="text"/>
+<div class="absolute right-2 top-1/2 -translate-y-1/2 rounded border border-border-dark bg-background-dark px-1.5 py-0.5 text-xs text-text-secondary">
+                        ⌘K
+                    </div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="flex items-center justify-center rounded-lg p-2 text-text-secondary hover:bg-white/5 hover:text-white">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="h-6 w-px bg-border-dark"></div>
+<button class="flex items-center gap-3 rounded-full pl-1 pr-2 hover:bg-white/5">
+<div class="h-8 w-8 rounded-full bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAhu9xVi1_9YDbgFgXnmvVUzxcxluKPThAZ8C1ovpzkX216tf_Nd8bXXAYE81DojVHj3G7CODr_C2RrRhRHSH8hJXdumFP4xc8naboasgLz5q_mFCN0Grj00DML07xhtZjRwLg2xqIM-IaJKtqUGzxIU8DhI0FPTNbOUANDYgw1noRwOoNDEr4y8nOwo3mjbeypsjW4790FpYGVRIbM3vubcnqxOMmI6iIY-4D7gpevoNkvA834V3Ifoaew0h1WiQxaFX4t2Fa7pYxR');"></div>
+<div class="hidden text-left md:block">
+<p class="text-xs font-medium text-white">Alex Dev</p>
+<p class="text-[10px] text-text-secondary">Admin</p>
+</div>
+<span class="material-symbols-outlined text-text-secondary text-sm">expand_more</span>
+</button>
+</div>
+</header>
+<main class="flex-1 overflow-y-auto p-6 lg:p-8">
+<div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+<div>
+<h1 class="text-2xl font-bold tracking-tight text-white">Dashboard</h1>
+<p class="text-sm text-text-secondary mt-1">Overview of your secrets security posture.</p>
+</div>
+<button class="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary transition-all">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                    Create Secret
+                </button>
+</div>
+<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mb-8">
+<div class="rounded-xl border border-border-dark bg-surface-dark/40 p-6 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-8xl text-emerald-500">health_and_safety</span>
+</div>
+<div class="flex flex-col gap-4 relative z-10">
+<div class="flex items-center justify-between">
+<p class="text-sm font-medium text-text-secondary">Secrets Health</p>
+<span class="inline-flex items-center rounded-full bg-emerald-500/10 px-2 py-1 text-xs font-medium text-emerald-400 ring-1 ring-inset ring-emerald-500/20">Secure</span>
+</div>
+<div class="flex items-end gap-3">
+<span class="text-3xl font-bold text-white">98%</span>
+<span class="mb-1 text-sm text-emerald-400 font-medium">+2%</span>
+</div>
+<div class="w-full rounded-full bg-border-dark h-2 mt-2">
+<div class="bg-emerald-500 h-2 rounded-full" style="width: 98%"></div>
+</div>
+<p class="text-xs text-text-secondary">342 secrets analyzed. No critical leaks found.</p>
+</div>
+</div>
+<div class="rounded-xl border border-border-dark bg-surface-dark/40 p-6 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-8xl text-primary">api</span>
+</div>
+<div class="flex flex-col gap-4 relative z-10">
+<div class="flex items-center justify-between">
+<p class="text-sm font-medium text-text-secondary">API Usage (24h)</p>
+</div>
+<div class="flex items-end gap-3">
+<span class="text-3xl font-bold text-white">12,450</span>
+<span class="mb-1 text-sm text-text-secondary">requests</span>
+</div>
+<div class="flex items-center gap-2 mt-auto pt-4">
+<div class="flex -space-x-2">
+<div class="h-6 w-6 rounded-full border border-surface-dark bg-blue-500"></div>
+<div class="h-6 w-6 rounded-full border border-surface-dark bg-purple-500"></div>
+<div class="h-6 w-6 rounded-full border border-surface-dark bg-pink-500"></div>
+</div>
+<span class="text-xs text-text-secondary ml-1">Top services: Stripe, AWS, Auth0</span>
+</div>
+</div>
+</div>
+<div class="rounded-xl border border-border-dark bg-surface-dark/40 p-6 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-8xl text-indigo-500">key</span>
+</div>
+<div class="flex flex-col gap-4 relative z-10">
+<div class="flex items-center justify-between">
+<p class="text-sm font-medium text-text-secondary">Active Secrets</p>
+<button class="text-xs text-primary hover:text-primary-hover font-medium">View all</button>
+</div>
+<div class="flex items-end gap-3">
+<span class="text-3xl font-bold text-white">42</span>
+<span class="mb-1 text-sm text-text-secondary">active keys</span>
+</div>
+<div class="mt-auto pt-3">
+<div class="flex flex-wrap gap-2">
+<span class="inline-flex items-center rounded-md bg-blue-400/10 px-2 py-1 text-xs font-medium text-blue-400 ring-1 ring-inset ring-blue-400/30">Prod: 12</span>
+<span class="inline-flex items-center rounded-md bg-yellow-400/10 px-2 py-1 text-xs font-medium text-yellow-400 ring-1 ring-inset ring-yellow-400/30">Staging: 8</span>
+<span class="inline-flex items-center rounded-md bg-purple-400/10 px-2 py-1 text-xs font-medium text-purple-400 ring-1 ring-inset ring-purple-400/30">Dev: 22</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<div class="lg:col-span-2 rounded-xl border border-border-dark bg-surface-dark/40 overflow-hidden h-fit">
+<div class="flex items-center justify-between border-b border-border-dark px-6 py-4">
+<h3 class="text-base font-semibold text-white">Recently Accessed Secrets</h3>
+<div class="flex gap-2">
+<button class="p-1 text-text-secondary hover:text-white rounded hover:bg-white/5">
+<span class="material-symbols-outlined text-[20px]">filter_list</span>
+</button>
+<button class="p-1 text-text-secondary hover:text-white rounded hover:bg-white/5">
+<span class="material-symbols-outlined text-[20px]">more_horiz</span>
+</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left text-sm">
+<thead class="bg-surface-dark/50 text-xs uppercase text-text-secondary">
+<tr>
+<th class="px-6 py-3 font-medium" scope="col">Name</th>
+<th class="px-6 py-3 font-medium" scope="col">Environment</th>
+<th class="px-6 py-3 font-medium w-48" scope="col">Value</th>
+<th class="px-6 py-3 font-medium" scope="col">Last Accessed</th>
+<th class="px-6 py-3 font-medium text-right" scope="col">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-dark">
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="rounded bg-indigo-500/20 p-2 text-indigo-400">
+<span class="material-symbols-outlined text-[20px]">credit_card</span>
+</div>
+<div>
+<div class="font-medium text-white font-mono">STRIPE_SECRET_KEY</div>
+<div class="text-xs text-text-secondary">Payments Infrastructure</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center rounded-full bg-red-400/10 px-2.5 py-0.5 text-xs font-medium text-red-400 ring-1 ring-inset ring-red-400/20">Production</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2 font-mono text-xs text-text-secondary bg-black/20 rounded px-2 py-1.5 w-fit border border-border-dark group/value cursor-pointer">
+<span class="text-primary mr-1">sk_live_</span>
+<span class="masked-value transition-all duration-300 group-hover/value:blur-none">51M...x8L9</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="h-6 w-6 rounded-full bg-cover" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAS5xCozDsE1nJPn5XBl6quUm-eA9T1lXfwhccCY110U8IbdP5yUglEW-m5zoYJ74VLT1VsE9liar7tjAIZdy85282hCVUAwshg3IkOHSfAx-cLnl_frQqeR1PlgeKofOW9X6Z_H1m72kzcgvp7cIqLHEyKC4fMVd5lY0JgcZlCRhuBk0HGU9Q2aRVaCTFjEmJCYm_HgkFRPDXH2AzO9_3wHXub6Tsy9-D-nvfTnvVmNOIeIx9dn53kCfCeBevtddI5O_lROgshAdT6');"></div>
+<div class="flex flex-col">
+<span class="text-white text-xs">Mike R.</span>
+<span class="text-text-secondary text-[10px]">2 mins ago</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="rounded p-1.5 text-text-secondary hover:bg-white/10 hover:text-white" title="Copy">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+<button class="rounded p-1.5 text-text-secondary hover:bg-white/10 hover:text-white" title="Edit">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="rounded bg-orange-500/20 p-2 text-orange-400">
+<span class="material-symbols-outlined text-[20px]">database</span>
+</div>
+<div>
+<div class="font-medium text-white font-mono">DB_PASSWORD_MAIN</div>
+<div class="text-xs text-text-secondary">PostgreSQL Cluster</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center rounded-full bg-yellow-400/10 px-2.5 py-0.5 text-xs font-medium text-yellow-400 ring-1 ring-inset ring-yellow-400/20">Staging</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2 font-mono text-xs text-text-secondary bg-black/20 rounded px-2 py-1.5 w-fit border border-border-dark group/value cursor-pointer">
+<span class="masked-value transition-all duration-300 group-hover/value:blur-none">p...93#kL</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="h-6 w-6 rounded-full bg-cover" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCWuZSi9n6CauvUvmIQsnWtlNJAUQOHTF8ZtpMBLpXp0FS-AJq4-gIMhKY4vi75G9vgQo4G-57Dzes7_VICRVX58rNVbfF66C0HJgjuneubBqVVSTU51-Uv-6PfdfC_8iPLh4-BQcRobLg7UVLaM0UgMY2SqgYFKBVhGFs5ppFlPEQj2XWrfbo3K5q5qvsujLkULuQwwyRdGhRKfdcoRqVs7m2ssWr8knjebESK1R5mXVj9PCRhnm_9bQlq7cS8L9wBsERXh_E2mcRq');"></div>
+<div class="flex flex-col">
+<span class="text-white text-xs">Sarah J.</span>
+<span class="text-text-secondary text-[10px]">1 hour ago</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="rounded p-1.5 text-text-secondary hover:bg-white/10 hover:text-white" title="Copy">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+<button class="rounded p-1.5 text-text-secondary hover:bg-white/10 hover:text-white" title="Edit">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="flex items-center justify-between border-t border-border-dark px-6 py-4">
+<p class="text-sm text-text-secondary">Showing <span class="font-medium text-white">1</span> to <span class="font-medium text-white">4</span> of <span class="font-medium text-white">42</span></p>
+<div class="flex gap-2">
+<button class="px-3 py-1 rounded border border-border-dark text-xs font-medium text-text-secondary hover:bg-white/5 hover:text-white transition-colors">Previous</button>
+<button class="px-3 py-1 rounded border border-border-dark text-xs font-medium text-text-secondary hover:bg-white/5 hover:text-white transition-colors">Next</button>
+</div>
+</div>
+</div>
+<div class="rounded-xl border border-border-dark bg-surface-dark/40 overflow-hidden flex flex-col h-fit">
+<div class="flex items-center justify-between border-b border-border-dark px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">hub</span>
+<h3 class="text-base font-semibold text-white">Integrations Health</h3>
+</div>
+<a class="text-xs font-medium text-primary hover:text-primary-hover transition-colors" href="#">Manage</a>
+</div>
+<div class="p-6 flex flex-col gap-6">
+<div class="flex items-start justify-between">
+<div class="flex gap-3">
+<div class="p-2 rounded-lg bg-white/5 border border-border-dark">
+<svg class="h-5 w-5 fill-white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523A2.528 2.528 0 0 1 0 15.165a2.527 2.527 0 0 1 2.522-2.52h2.52v2.52zM6.313 15.165a2.527 2.527 0 0 1 2.521-2.52h6.313a2.528 2.528 0 0 1 2.521 2.52v2.523a2.528 2.528 0 0 1-2.521 2.523H8.834a2.528 2.528 0 0 1-2.521-2.523v-2.52zM8.834 5.042a2.528 2.528 0 0 1-2.521-2.52A2.528 2.528 0 0 1 8.834 0a2.528 2.528 0 0 1 2.521 2.522v2.52h-2.521zM8.834 6.313a2.527 2.527 0 0 1 2.521 2.521v6.313a2.528 2.528 0 0 1-2.521 2.521H6.313a2.528 2.528 0 0 1-2.521-2.521V8.834a2.528 2.528 0 0 1 2.521-2.521h2.521zM18.958 8.834a2.528 2.528 0 0 1 2.522-2.521A2.528 2.528 0 0 1 24 8.834a2.527 2.527 0 0 1-2.52 2.521h-2.522v-2.521zM17.687 8.834a2.527 2.527 0 0 1-2.521 2.521H8.854a2.528 2.528 0 0 1-2.521-2.521V6.313a2.528 2.528 0 0 1 2.521-2.521h6.312a2.528 2.528 0 0 1 2.521 2.521v2.521zM15.165 18.958a2.528 2.528 0 0 1 2.521 2.522A2.528 2.528 0 0 1 15.165 24a2.527 2.527 0 0 1-2.52-2.52v-2.522h2.52zM15.165 17.687a2.527 2.527 0 0 1-2.52-2.521V8.854a2.528 2.528 0 0 1 2.52-2.521h2.523a2.528 2.528 0 0 1 2.522 2.521v6.312a2.528 2.528 0 0 1-2.522 2.521h-2.523z"></path></svg>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-semibold text-white">Slack Notifications</span>
+<span class="text-[10px] text-text-secondary">Sync 2m ago</span>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1.5">
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-medium text-emerald-400 uppercase tracking-wider">Healthy</span>
+<div class="status-pulse">
+<span class="status-pulse-dot bg-emerald-400"></span>
+<span class="status-dot-inner bg-emerald-500"></span>
+</div>
+</div>
+<div class="w-16 h-4 opacity-70">
+<svg class="w-full h-full overflow-visible" viewBox="0 0 100 20">
+<path class="sparkline-path stroke-emerald-500 fill-none" d="M0 15 L10 12 L20 16 L30 8 L40 10 L50 4 L60 9 L70 5 L80 7 L90 2 L100 3"></path>
+</svg>
+</div>
+<span class="text-[10px] text-text-secondary">99.9% Success</span>
+</div>
+</div>
+<div class="flex items-start justify-between">
+<div class="flex gap-3">
+<div class="p-2 rounded-lg bg-white/5 border border-border-dark">
+<svg class="h-5 w-5 fill-white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.042-1.416-4.042-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"></path></svg>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-semibold text-white">GitHub Repo Sync</span>
+<span class="text-[10px] text-text-secondary">Sync 14m ago</span>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1.5">
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-medium text-amber-400 uppercase tracking-wider">Latency</span>
+<div class="status-pulse">
+<span class="status-pulse-dot bg-amber-400"></span>
+<span class="status-dot-inner bg-amber-500"></span>
+</div>
+</div>
+<div class="w-16 h-4 opacity-70">
+<svg class="w-full h-full overflow-visible" viewBox="0 0 100 20">
+<path class="sparkline-path stroke-amber-500 fill-none" d="M0 5 L10 8 L20 4 L30 18 L40 16 L50 14 L60 19 L70 17 L80 15 L90 18 L100 16"></path>
+</svg>
+</div>
+<span class="text-[10px] text-text-secondary">94.2% Success</span>
+</div>
+</div>
+<div class="flex items-start justify-between">
+<div class="flex gap-3">
+<div class="p-2 rounded-lg bg-white/5 border border-border-dark">
+<span class="material-symbols-outlined text-[20px] text-white">cloud</span>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-semibold text-white">AWS Secrets Manager</span>
+<span class="text-[10px] text-text-secondary">Sync 45m ago</span>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1.5">
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-medium text-red-400 uppercase tracking-wider">Disconnected</span>
+<div class="status-pulse">
+<span class="status-pulse-dot bg-red-400"></span>
+<span class="status-dot-inner bg-red-500"></span>
+</div>
+</div>
+<div class="w-16 h-4 opacity-70">
+<svg class="w-full h-full overflow-visible" viewBox="0 0 100 20">
+<path class="sparkline-path stroke-red-500 fill-none" d="M0 18 L10 18 L20 19 L30 18 L40 19 L50 20 L60 19 L70 20 L80 19 L90 20 L100 20"></path>
+</svg>
+</div>
+<span class="text-[10px] text-text-secondary">0.0% Success</span>
+</div>
+</div>
+<div class="flex items-start justify-between">
+<div class="flex gap-3">
+<div class="p-2 rounded-lg bg-white/5 border border-border-dark">
+<span class="material-symbols-outlined text-[20px] text-white">verified_user</span>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-semibold text-white">Auth0 Identity</span>
+<span class="text-[10px] text-text-secondary">Sync 5m ago</span>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1.5">
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-medium text-emerald-400 uppercase tracking-wider">Healthy</span>
+<div class="status-pulse">
+<span class="status-pulse-dot bg-emerald-400"></span>
+<span class="status-dot-inner bg-emerald-500"></span>
+</div>
+</div>
+<div class="w-16 h-4 opacity-70">
+<svg class="w-full h-full overflow-visible" viewBox="0 0 100 20">
+<path class="sparkline-path stroke-emerald-500 fill-none" d="M0 10 L15 8 L30 12 L45 5 L60 7 L75 3 L90 5 L100 2"></path>
+</svg>
+</div>
+<span class="text-[10px] text-text-secondary">100% Success</span>
+</div>
+</div>
+</div>
+<div class="mt-auto border-t border-border-dark p-4 bg-white/5">
+<div class="flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-[10px] font-medium text-text-secondary uppercase">Global Uptime</span>
+<span class="text-xs font-bold text-white">99.85%</span>
+</div>
+<div class="h-6 w-px bg-border-dark"></div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] font-medium text-text-secondary uppercase">API Latency</span>
+<span class="text-xs font-bold text-white">124ms</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+
+</body></html>

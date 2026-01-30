@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KEYS - Detailed Security Audit Logs</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#0f172a", 
+                        "surface-dark": "#1e293b",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"],
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-panel-active {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(19, 91, 236, 0.5);
+            box-shadow: 0 0 30px -10px rgba(19, 91, 236, 0.3);
+        }
+        .bg-grid-pattern {
+            background-image: linear-gradient(to right, #1e293b 1px, transparent 1px),
+                              linear-gradient(to bottom, #1e293b 1px, transparent 1px);
+            background-size: 40px 40px;
+            mask-image: radial-gradient(circle at center, black, transparent 80%);
+        }::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.5); 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(51, 65, 85, 0.5); 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(71, 85, 105, 0.8); 
+        }
+    </style>
+</head>
+<body class="bg-background-dark text-slate-200 font-display antialiased selection:bg-primary/30 flex flex-col h-screen overflow-hidden">
+<div class="fixed inset-0 z-0 pointer-events-none">
+<div class="absolute inset-0 bg-grid-pattern opacity-[0.15]"></div>
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-primary/10 blur-[120px] rounded-full"></div>
+</div>
+<header class="relative z-20 flex-none flex items-center justify-between whitespace-nowrap border-b border-white/5 px-6 py-4 lg:px-10 glass-panel">
+<div class="flex items-center gap-3 text-white">
+<div class="flex items-center justify-center size-8 rounded bg-primary/20 text-primary">
+<span class="material-symbols-outlined text-[20px]">lock</span>
+</div>
+<h2 class="text-white text-lg font-bold tracking-tight">KEYS</h2>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-400 hover:text-white transition-colors text-sm font-medium">Documentation</button>
+<button class="flex items-center gap-2 cursor-pointer h-9 px-3 rounded-lg hover:bg-white/5 transition-colors text-white text-sm font-medium border border-transparent hover:border-white/10">
+<div class="size-6 rounded-full bg-gradient-to-tr from-primary to-purple-500"></div>
+<span class="hidden sm:inline">johndoe</span>
+<span class="material-symbols-outlined text-[18px] text-slate-400">expand_more</span>
+</button>
+</div>
+</header>
+<div class="flex flex-1 overflow-hidden relative z-10">
+<aside class="w-64 flex-none hidden lg:flex flex-col border-r border-white/5 bg-background-dark/50 backdrop-blur-sm">
+<nav class="flex-1 p-4 space-y-1 overflow-y-auto">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">key</span>
+<span class="text-sm font-medium">Secrets</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">cloud</span>
+<span class="text-sm font-medium">Environments</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 bg-primary/10 text-primary rounded-lg transition-colors border border-primary/20 shadow-[0_0_15px_-5px_rgba(19,91,236,0.3)]" href="#">
+<span class="material-symbols-outlined text-[20px]">history</span>
+<span class="text-sm font-medium">Audit Logs</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">group</span>
+<span class="text-sm font-medium">Members</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+</nav>
+<div class="p-4 border-t border-white/5">
+<div class="p-4 rounded-lg bg-gradient-to-br from-surface-dark to-slate-900 border border-white/5 relative overflow-hidden group cursor-pointer">
+<div class="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="relative z-10">
+<div class="flex items-center justify-between mb-2">
+<h4 class="text-white text-xs font-bold">Pro Plan</h4>
+<span class="text-[10px] bg-primary/20 text-primary px-1.5 py-0.5 rounded font-bold">ACTIVE</span>
+</div>
+<p class="text-slate-400 text-[10px] leading-relaxed mb-3">Your audit logs are retained for 90 days. Upgrade for unlimited retention.</p>
+<div class="text-[10px] font-bold text-primary flex items-center gap-1">
+                            Upgrade to Enterprise 
+                            <span class="material-symbols-outlined text-[12px]">arrow_forward</span>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<main class="flex-1 overflow-y-auto min-w-0 bg-background-dark/30">
+<div class="max-w-[1400px] mx-auto p-6 lg:p-10 space-y-8">
+<div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+<div>
+<h1 class="text-2xl lg:text-3xl font-bold text-white tracking-tight">Audit Logs</h1>
+<p class="text-slate-400 text-sm mt-2 max-w-2xl">
+                            Monitor and analyze all security events within your organization. Track secret access, key rotations, and user activities in real-time.
+                        </p>
+</div>
+<div class="flex gap-3">
+<button class="h-9 px-4 flex items-center gap-2 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white text-sm font-medium border border-white/10 transition-colors">
+<span class="material-symbols-outlined text-[18px]">settings</span>
+<span>Configure</span>
+</button>
+<button class="h-9 px-4 flex items-center gap-2 rounded-lg bg-primary hover:bg-primary/90 text-white text-sm font-medium shadow-[0_0_20px_-5px_rgba(19,91,236,0.5)] transition-all">
+<span class="material-symbols-outlined text-[18px]">download</span>
+<span>Export CSV</span>
+</button>
+</div>
+</div>
+<div class="flex flex-col gap-4">
+<div class="p-1 rounded-xl glass-panel flex flex-col xl:flex-row gap-4 xl:items-center justify-between p-4">
+<div class="relative flex-1 min-w-[280px] max-w-lg group">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-slate-500 group-focus-within:text-primary transition-colors text-[20px]">search</span>
+</div>
+<input class="block w-full pl-10 pr-3 py-2.5 bg-black/40 border border-white/10 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all" placeholder="Search by resource, IP, or Request ID..." type="text"/>
+<div class="absolute inset-y-0 right-0 pr-2 flex items-center">
+<kbd class="hidden sm:inline-block px-1.5 py-0.5 border border-white/10 rounded text-[10px] font-mono text-slate-500">⌘K</kbd>
+</div>
+</div>
+<div class="flex flex-wrap items-center gap-3">
+<div class="relative">
+<button class="flex items-center justify-between gap-3 px-3 py-2.5 bg-black/40 hover:bg-white/5 border border-white/10 rounded-lg text-sm text-slate-300 min-w-[160px] transition-colors group">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-slate-500 group-hover:text-primary transition-colors">calendar_today</span>
+<span>Last 30 Days</span>
+</div>
+<span class="material-symbols-outlined text-[18px] text-slate-600">arrow_drop_down</span>
+</button>
+</div>
+<div class="relative">
+<button class="flex items-center justify-between gap-3 px-3 py-2.5 bg-black/40 hover:bg-white/5 border border-white/10 rounded-lg text-sm text-slate-300 min-w-[150px] transition-colors group">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-slate-500 group-hover:text-primary transition-colors">account_circle</span>
+<span>All Actors</span>
+</div>
+<span class="material-symbols-outlined text-[18px] text-slate-600">arrow_drop_down</span>
+</button>
+</div>
+<div class="relative">
+<button class="flex items-center justify-between gap-3 px-3 py-2.5 bg-black/40 hover:bg-white/5 border border-white/10 rounded-lg text-sm text-slate-300 min-w-[160px] transition-colors group">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-slate-500 group-hover:text-primary transition-colors">filter_list</span>
+<span>All Events</span>
+</div>
+<span class="material-symbols-outlined text-[18px] text-slate-600">arrow_drop_down</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="rounded-xl border border-white/10 overflow-hidden bg-surface-dark/40 backdrop-blur-md shadow-xl">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-dark border-b border-white/10">
+<th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400 w-[240px]">Event</th>
+<th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400 w-[200px]">Actor</th>
+<th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400">Resource</th>
+<th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400 w-[200px]">Timestamp</th>
+<th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400">Location / IP</th>
+<th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-400 text-right">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5 text-sm">
+<tr class="hover:bg-white/[0.02] transition-colors group">
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-lg flex items-center justify-center bg-blue-500/10 text-blue-400 border border-blue-500/20 shadow-[0_0_10px_-3px_rgba(59,130,246,0.3)]">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</div>
+<div>
+<div class="font-medium text-slate-200">Secret Accessed</div>
+<div class="text-[10px] text-slate-500 mt-0.5">READ_ACTION</div>
+</div>
+</div>
+</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-2.5">
+<div class="size-6 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 ring-2 ring-background-dark"></div>
+<span class="text-slate-300 font-medium">Jane Doe</span>
+</div>
+</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-slate-600">database</span>
+<code class="px-1.5 py-0.5 rounded bg-white/5 text-xs font-mono text-slate-300 border border-white/5">prod-db-creds</code>
+</div>
+</td>
+<td class="py-4 px-6 text-slate-400 font-mono text-xs">Oct 24, 14:32:01</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-2 text-slate-400">
+<img alt="US" class="w-4 h-auto opacity-70" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWpVsZXS7g_O9KDre9ZPrIgt6-ENFsfCYe5vBvmAjaix87HYPMun_u-ANG7iPVw5QRWCGVUUKh1zU5OxL8QFwLnkKyHXjrkrGvsvTrYjB6ZU6OQRt70LwKVCGBYum0SdiU17RLJleUrqqU09k0wdQZibZAJIZenzLlIAGgdjqj4gMhZt4J770suNBn9mkQw3tJfGW85LxHVN4OSgyhWFgHVt27MUzG0ZbrdVAp8LQ4UuhyB230VOyVMJZzdKCTdh-2h82s9UEK7I_H"/>
+<span class="font-mono text-xs">192.168.1.1</span>
+</div>
+</td>
+<td class="py-4 px-6 text-right">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-[0_0_10px_-4px_rgba(16,185,129,0.4)]">
+                                            Success
+                                        </span>
+</td>
+</tr>
+<tr class="hover:bg-white/[0.02] transition-colors group">
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-lg flex items-center justify-center bg-amber-500/10 text-amber-400 border border-amber-500/20 shadow-[0_0_10px_-3px_rgba(245,158,11,0.3)]">
+<span class="material-symbols-outlined text-[18px]">key</span>
+</div>
+<div>
+<div class="font-medium text-slate-200">Key Rotated</div>
+<div class="text-[10px] text-slate-500 mt-0.5">UPDATE_ACTION</div>
+</div>
+</div>
+</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-2.5">
+<div class="size-6 rounded-full bg-slate-700 flex items-center justify-center ring-2 ring-background-dark border border-white/10">
+<span class="material-symbols-outlined text-[14px] text-slate-400">smart_toy</span>
+</div>
+<span class="text-slate-300 font-medium">System (Auto)</span>
+</div>
+</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-slate-600">vpn_key</span>
+<code class="px-1.5 py-0.5 rounded bg-white/5 text-xs font-mono text-slate-300 border border-white/5">master-key-01</code>
+</div>
+</td>
+<td class="py-4 px-6 text-slate-400 font-mono text-xs">Oct 24, 12:15:00</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-2 text-slate-400">
+<span class="material-symbols-outlined text-[16px] text-slate-600">lan</span>
+<span class="font-mono text-xs">10.0.0.5</span>
+<span class="text-[10px] uppercase text-slate-600 border border-white/5 px-1 rounded">Internal</span>
+</div>
+</td>
+<td class="py-4 px-6 text-right">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-[0_0_10px_-4px_rgba(16,185,129,0.4)]">
+                                            Success
+                                        </span>
+</td>
+</tr>
+<tr class="bg-red-500/[0.02] hover:bg-red-500/[0.04] transition-colors group border-l-2 border-l-red-500/50">
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-lg flex items-center justify-center bg-red-500/10 text-red-400 border border-red-500/20 shadow-[0_0_10px_-3px_rgba(239,68,68,0.3)]">
+<span class="material-symbols-outlined text-[18px]">gpp_bad</span>
+</div>
+<div>
+<div class="font-medium text-slate-200">Access Denied</div>
+<div class="text-[10px] text-red-400/70 mt-0.5">UNAUTHORIZED</div>
+</div>
+</div>
+</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-2.5">
+<div class="size-6 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 ring-2 ring-background-dark"></div>
+<span class="text-slate-300 font-medium">Bob Smith</span>
+</div>
+</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-slate-600">api</span>
+<code class="px-1.5 py-0.5 rounded bg-white/5 text-xs font-mono text-slate-300 border border-white/5">payment-api-key</code>
+</div>
+</td>
+<td class="py-4 px-6 text-slate-400 font-mono text-xs">Oct 23, 09:45:22</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-2 text-slate-400">
+<img alt="CN" class="w-4 h-auto opacity-70" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxTx6bKmll-wg-GWZ0iPMKcZzqL33pvlDTZXRkzlfwNG4SNNiYSKaQgZLxzpNeJTyYGz8ZONBaVa2qvmKi0y8XhuPl-6MMixCZjrzw0JrUjYiHGJaPNyEZRlA1hdwBfHfA0fagVvQ308OLXT1rU9OhdIUWzmHcQqg_pi3d77S1pqpXIscu0pAm8lR0Pao6j4wv8cappWsXqHJiTznO6weBcvi_JnQWG7zvvoC-8SoVafLhNzrMu_C3te1IQ69Sja59advHexHD5b3f"/>
+<span class="font-mono text-xs">203.0.113.4</span>
+</div>
+</td>
+<td class="py-4 px-6 text-right">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-red-500/10 text-red-400 border border-red-500/20 shadow-[0_0_10px_-4px_rgba(239,68,68,0.4)]">
+                                            Failure
+                                        </span>
+</td>
+</tr>
+<tr class="hover:bg-white/[0.02] transition-colors group">
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-lg flex items-center justify-center bg-purple-500/10 text-purple-400 border border-purple-500/20 shadow-[0_0_10px_-3px_rgba(168,85,247,0.3)]">
+<span class="material-symbols-outlined text-[18px]">person_add</span>
+</div>
+<div>
+<div class="font-medium text-slate-200">User Invited</div>
+<div class="text-[10px] text-slate-500 mt-0.5">ADMIN_ACTION</div>
+</div>
+</div>
+</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-2.5">
+<div class="size-6 rounded-full bg-gradient-to-br from-cyan-500 to-blue-500 ring-2 ring-background-dark"></div>
+<span class="text-slate-300 font-medium">Mark Admin</span>
+</div>
+</td>
+<td class="py-4 px-6">
+<span class="text-slate-500 text-sm italic">--</span>
+</td>
+<td class="py-4 px-6 text-slate-400 font-mono text-xs">Oct 22, 16:20:11</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-2 text-slate-400">
+<img alt="GB" class="w-4 h-auto opacity-70" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKK7zVGdg7anzaGyQHjJ96cLZWll3WRX9Z5v-W1OQk1xEZNYZ7zmZAd9t62n4PoqUDJWike1YkXue6rJIMxnZHaF2AadUmzKkjUiVuNPE6AE4HSLzUn-Xhn7CyusqsU-Yn8pzFUVfekf_3Dc99t0iCFx94Sz2H3yRPvyL8WWEQc53_yGg_cFwcCX8fZxoYXoln9RvKtgMZ5IbiDUBt6El9i2ASuCVx9I8CELVBdwva5sGWZ4IpPGRGBUSGvZVIz54M1mxnCz3DaMt3"/>
+<span class="font-mono text-xs">172.16.0.1</span>
+</div>
+</td>
+<td class="py-4 px-6 text-right">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-[0_0_10px_-4px_rgba(16,185,129,0.4)]">
+                                            Success
+                                        </span>
+</td>
+</tr>
+<tr class="hover:bg-white/[0.02] transition-colors group">
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-lg flex items-center justify-center bg-teal-500/10 text-teal-400 border border-teal-500/20 shadow-[0_0_10px_-3px_rgba(20,184,166,0.3)]">
+<span class="material-symbols-outlined text-[18px]">add_circle</span>
+</div>
+<div>
+<div class="font-medium text-slate-200">Env Created</div>
+<div class="text-[10px] text-slate-500 mt-0.5">CREATE_ACTION</div>
+</div>
+</div>
+</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-2.5">
+<div class="size-6 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 ring-2 ring-background-dark"></div>
+<span class="text-slate-300 font-medium">Jane Doe</span>
+</div>
+</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-slate-600">deployed_code</span>
+<code class="px-1.5 py-0.5 rounded bg-white/5 text-xs font-mono text-slate-300 border border-white/5">Staging-v2</code>
+</div>
+</td>
+<td class="py-4 px-6 text-slate-400 font-mono text-xs">Oct 21, 10:11:05</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-2 text-slate-400">
+<img alt="US" class="w-4 h-auto opacity-70" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSlnbz_d466WqW5QzCdvlfLw3kyb5o1xN1VSpZqYUQZt8Pp-h1WzCvDbFAY6i7VX04biIIoeb6t_PywW_HZKvrFHUtVff_eiATHIjrELC6f9zo0RZx_lCRHJa7j8C673zl_yxlBhXMEAEH90_WWDX_J64-Fi8icSC1XR5q_XL0h_FmeM3HQV6Y0FJLaT8JAaNM5naGGrzBSGR9kXrh4BEc0v58xWfHpx-Y8NVuJ4N2PmVg1t6H0q25Hr5j48VVX1RCd5Af9zaTcxig"/>
+<span class="font-mono text-xs">192.168.1.1</span>
+</div>
+</td>
+<td class="py-4 px-6 text-right">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-[0_0_10px_-4px_rgba(16,185,129,0.4)]">
+                                            Success
+                                        </span>
+</td>
+</tr>
+<tr class="hover:bg-white/[0.02] transition-colors group">
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-lg flex items-center justify-center bg-slate-500/10 text-slate-400 border border-slate-500/20 shadow-[0_0_10px_-3px_rgba(148,163,184,0.3)]">
+<span class="material-symbols-outlined text-[18px]">edit_document</span>
+</div>
+<div>
+<div class="font-medium text-slate-200">Policy Updated</div>
+<div class="text-[10px] text-slate-500 mt-0.5">CONFIG_CHANGE</div>
+</div>
+</div>
+</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-2.5">
+<div class="size-6 rounded-full bg-gradient-to-br from-cyan-500 to-blue-500 ring-2 ring-background-dark"></div>
+<span class="text-slate-300 font-medium">Mark Admin</span>
+</div>
+</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-slate-600">policy</span>
+<code class="px-1.5 py-0.5 rounded bg-white/5 text-xs font-mono text-slate-300 border border-white/5">Global Policy</code>
+</div>
+</td>
+<td class="py-4 px-6 text-slate-400 font-mono text-xs">Oct 20, 08:30:15</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-2 text-slate-400">
+<img alt="GB" class="w-4 h-auto opacity-70" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYDiMvnjKuTGOsSbUp8M9U0T1VaMVQcDdlPyPmY0kjgRCDTXJIJGE-tGxz7gYHEPsvGU0pphW4pQDvM9d8FW_lGa_ep2FUch1SDtNfdpqXscFWy8v6Arh-e6IlMAMkwG5MzT3cpzw9jbCVZFyLBWtZFp8UpY24mfBwRA9enctSY0vc-QjNm0SQTZV-zW112jgw6PzUvOJ8Upuj12BBInZRgr7ZtLyy1CkCpKIejS0y9M4oOnLdMvBjOPDZIcukTNAbCU3d4zlcla7g"/>
+<span class="font-mono text-xs">172.16.0.1</span>
+</div>
+</td>
+<td class="py-4 px-6 text-right">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-[0_0_10px_-4px_rgba(16,185,129,0.4)]">
+                                            Success
+                                        </span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="flex items-center justify-between p-4 border-t border-white/10 bg-surface-dark/80">
+<span class="text-sm text-slate-400">Showing <span class="text-white font-medium">1-6</span> of <span class="text-white font-medium">128</span> events</span>
+<div class="flex gap-2">
+<button class="h-8 px-3 rounded flex items-center gap-1 text-slate-400 hover:text-white hover:bg-white/10 text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled="">
+<span class="material-symbols-outlined text-[16px]">chevron_left</span>
+                                Previous
+                            </button>
+<button class="h-8 px-3 rounded flex items-center gap-1 text-slate-400 hover:text-white hover:bg-white/10 text-sm font-medium transition-colors">
+                                Next
+                                <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<div class="flex justify-center pb-8 opacity-50">
+<p class="text-xs text-slate-500">Security Audit Logs • Generated in 0.04s • UTC Timezone</p>
+</div>
+</div>
+</main>
+</div>
+
+</body></html>

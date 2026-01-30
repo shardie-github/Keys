@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KEYS - Upgrade Plan</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "primary-glow": "rgba(19, 91, 236, 0.4)",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#0f1116",
+                        "surface-dark": "#1a1d24",
+                        "glass-dark": "rgba(26, 29, 36, 0.7)",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px" },
+                    backdropBlur: {
+                        'xs': '2px',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111318;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3b4354;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4b5563;
+        }
+        
+        .glass-panel {
+            background: rgba(22, 25, 31, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .pro-glow {
+            box-shadow: 0 0 40px -10px rgba(19, 91, 236, 0.15);
+        }
+        
+        .pro-border {
+             border: 1px solid rgba(19, 91, 236, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-background-dark font-display antialiased overflow-hidden">
+<!-- Background Simulation (Dashboard behind modal) -->
+<div aria-hidden="true" class="fixed inset-0 z-0 opacity-20 pointer-events-none select-none overflow-hidden">
+<div class="absolute top-0 left-0 w-64 h-full border-r border-white/10 bg-surface-dark"></div>
+<div class="absolute top-0 left-64 right-0 h-16 border-b border-white/10 bg-surface-dark"></div>
+<div class="absolute top-24 left-72 right-8 h-64 rounded-xl bg-surface-dark border border-white/5"></div>
+<div class="absolute top-[26rem] left-72 w-1/3 h-48 rounded-xl bg-surface-dark border border-white/5"></div>
+<div class="absolute top-[26rem] left-[45%] right-8 h-48 rounded-xl bg-surface-dark border border-white/5"></div>
+</div>
+<!-- Modal Overlay Wrapper -->
+<div class="relative z-10 flex min-h-screen w-full items-center justify-center p-4">
+<!-- Modal Container -->
+<div class="glass-panel relative flex w-full max-w-6xl flex-col rounded-2xl shadow-2xl overflow-hidden max-h-[95vh] animate-fade-in-up">
+<!-- Close Button -->
+<button class="absolute right-4 top-4 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-white/5 text-gray-400 transition-colors hover:bg-white/10 hover:text-white">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+<!-- Header Section -->
+<div class="flex flex-col items-center justify-center border-b border-white/5 px-6 pb-6 pt-10 text-center">
+<h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">Unlock the full power of KEYS</h2>
+<p class="mt-3 max-w-2xl text-base text-gray-400">
+                    Scale your development workflow with advanced security, dedicated support, and enterprise-grade compliance.
+                </p>
+<!-- Billing Toggle -->
+<div class="mt-8 flex items-center gap-4 rounded-full bg-black/20 p-1 pr-6 ring-1 ring-white/10">
+<div class="flex items-center">
+<button class="rounded-full px-4 py-1.5 text-sm font-medium text-gray-400 transition-colors hover:text-white">
+                            Monthly
+                        </button>
+<button class="rounded-full bg-surface-dark px-4 py-1.5 text-sm font-semibold text-white shadow-sm ring-1 ring-white/10">
+                            Annual
+                        </button>
+</div>
+<span class="inline-flex items-center rounded-full bg-primary/20 px-2.5 py-0.5 text-xs font-medium text-primary-400 ring-1 ring-inset ring-primary/30">
+                        Save 20%
+                    </span>
+</div>
+</div>
+<!-- Pricing Grid -->
+<div class="overflow-y-auto px-6 py-8 sm:px-10">
+<div class="grid grid-cols-1 gap-6 lg:grid-cols-3 lg:gap-8">
+<!-- Community Plan -->
+<div class="relative flex flex-col rounded-xl border border-white/10 bg-surface-dark/40 p-6 transition-transform hover:-translate-y-1">
+<div class="mb-4">
+<h3 class="text-lg font-semibold text-white">Community (OSS)</h3>
+<p class="mt-1 text-sm text-gray-400">Perfect for side projects &amp; hobbies.</p>
+</div>
+<div class="mb-6 flex items-baseline gap-1">
+<span class="text-4xl font-bold tracking-tight text-white">Free</span>
+<span class="text-sm font-semibold text-gray-400">/ forever</span>
+</div>
+<button class="mb-8 flex w-full cursor-not-allowed items-center justify-center rounded-lg bg-white/5 px-4 py-2.5 text-sm font-semibold text-gray-400 ring-1 ring-inset ring-white/10 transition-colors" disabled="">
+                            Current Plan
+                        </button>
+<div class="flex flex-1 flex-col gap-4">
+<p class="text-xs font-semibold uppercase tracking-wider text-gray-500">Includes</p>
+<ul class="flex flex-col gap-3">
+<li class="flex items-start gap-3 text-sm text-gray-300">
+<span class="material-symbols-outlined text-gray-500" style="font-size: 20px;">check_circle</span>
+<span>Public Repositories</span>
+</li>
+<li class="flex items-start gap-3 text-sm text-gray-300">
+<span class="material-symbols-outlined text-gray-500" style="font-size: 20px;">check_circle</span>
+<span>Basic Encryption</span>
+</li>
+<li class="flex items-start gap-3 text-sm text-gray-300">
+<span class="material-symbols-outlined text-gray-500" style="font-size: 20px;">check_circle</span>
+<span>Up to 3 Users</span>
+</li>
+<li class="flex items-start gap-3 text-sm text-gray-300">
+<span class="material-symbols-outlined text-gray-500" style="font-size: 20px;">check_circle</span>
+<span>Community Support</span>
+</li>
+</ul>
+</div>
+</div>
+<!-- Pro Plan (Recommended) -->
+<div class="pro-glow pro-border relative flex flex-col rounded-xl bg-surface-dark/80 p-6 ring-1 ring-primary/50 transition-transform hover:-translate-y-1 lg:-mt-4 lg:mb-4 lg:pb-10">
+<div class="absolute -top-4 left-0 right-0 flex justify-center">
+<span class="inline-flex items-center rounded-full bg-primary px-3 py-1 text-xs font-bold uppercase tracking-wider text-white shadow-lg shadow-primary/40">
+                                Recommended
+                            </span>
+</div>
+<div class="mb-4 mt-2">
+<h3 class="text-lg font-bold text-white">Pro (Cloud)</h3>
+<p class="mt-1 text-sm text-primary-200/70">For scaling teams and production apps.</p>
+</div>
+<div class="mb-6 flex items-baseline gap-1">
+<span class="text-4xl font-bold tracking-tight text-white">$12</span>
+<span class="text-sm font-semibold text-gray-400">/ user / mo</span>
+</div>
+<button class="mb-8 flex w-full items-center justify-center rounded-lg bg-primary px-4 py-2.5 text-sm font-bold text-white shadow-lg shadow-primary/20 transition-all hover:bg-blue-600 hover:shadow-primary/40">
+                            Upgrade Now
+                        </button>
+<div class="flex flex-1 flex-col gap-4">
+<p class="text-xs font-semibold uppercase tracking-wider text-primary">Everything in Community, plus:</p>
+<ul class="flex flex-col gap-3">
+<li class="flex items-start gap-3 text-sm font-medium text-white">
+<span class="material-symbols-outlined text-primary" style="font-size: 20px;">check_circle</span>
+<span>Unlimited Secrets</span>
+</li>
+<li class="flex items-start gap-3 text-sm font-medium text-white">
+<span class="material-symbols-outlined text-primary" style="font-size: 20px;">check_circle</span>
+<span>Team Management</span>
+</li>
+<li class="flex items-start gap-3 text-sm font-medium text-white">
+<span class="material-symbols-outlined text-primary" style="font-size: 20px;">check_circle</span>
+<span>Detailed Audit Logs</span>
+</li>
+<li class="flex items-start gap-3 text-sm font-medium text-white">
+<span class="material-symbols-outlined text-primary" style="font-size: 20px;">check_circle</span>
+<span>Environment variables sync</span>
+</li>
+<li class="flex items-start gap-3 text-sm font-medium text-white">
+<span class="material-symbols-outlined text-primary" style="font-size: 20px;">check_circle</span>
+<span>Priority Email Support</span>
+</li>
+</ul>
+</div>
+</div>
+<!-- Enterprise Plan -->
+<div class="relative flex flex-col rounded-xl border border-white/10 bg-surface-dark/40 p-6 transition-transform hover:-translate-y-1">
+<div class="mb-4">
+<h3 class="text-lg font-semibold text-white">Enterprise</h3>
+<p class="mt-1 text-sm text-gray-400">Advanced security &amp; control.</p>
+</div>
+<div class="mb-6 flex items-baseline gap-1">
+<span class="text-4xl font-bold tracking-tight text-white">Custom</span>
+</div>
+<button class="mb-8 flex w-full items-center justify-center rounded-lg bg-white px-4 py-2.5 text-sm font-bold text-black shadow-sm hover:bg-gray-100 transition-colors">
+                            Contact Sales
+                        </button>
+<div class="flex flex-1 flex-col gap-4">
+<p class="text-xs font-semibold uppercase tracking-wider text-gray-500">Everything in Pro, plus:</p>
+<ul class="flex flex-col gap-3">
+<li class="flex items-start gap-3 text-sm text-gray-300">
+<span class="material-symbols-outlined text-gray-500" style="font-size: 20px;">check_circle</span>
+<span>SAML SSO</span>
+</li>
+<li class="flex items-start gap-3 text-sm text-gray-300">
+<span class="material-symbols-outlined text-gray-500" style="font-size: 20px;">check_circle</span>
+<span>On-premise Deployment</span>
+</li>
+<li class="flex items-start gap-3 text-sm text-gray-300">
+<span class="material-symbols-outlined text-gray-500" style="font-size: 20px;">check_circle</span>
+<span>Dedicated Account Manager</span>
+</li>
+<li class="flex items-start gap-3 text-sm text-gray-300">
+<span class="material-symbols-outlined text-gray-500" style="font-size: 20px;">check_circle</span>
+<span>Custom SLA</span>
+</li>
+<li class="flex items-start gap-3 text-sm text-gray-300">
+<span class="material-symbols-outlined text-gray-500" style="font-size: 20px;">check_circle</span>
+<span>Advanced Role-Based Access</span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer / Trust Badges Area (Optional Polish) -->
+<div class="border-t border-white/5 bg-black/20 px-6 py-4 sm:px-10">
+<div class="flex flex-col items-center justify-between gap-4 text-xs text-gray-500 sm:flex-row">
+<p>Prices exclude VAT where applicable.</p>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">lock</span>
+<span>Secure Payment</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+<span>SOC2 Compliant</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body></html>

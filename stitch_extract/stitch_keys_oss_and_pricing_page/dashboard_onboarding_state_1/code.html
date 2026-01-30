@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KEYS - Dashboard Onboarding</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#0f172a", // Deep slate for better glassmorphism contrast
+                        "surface-dark": "#1e293b",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"],
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'glow-pulse': 'glow-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'slide-up': 'slide-up 0.5s ease-out forwards',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-5px)' },
+                        },
+                        'glow-pulse': {
+                            '0%, 100%': { opacity: '1' },
+                            '50%': { opacity: '0.5' },
+                        },
+                        'slide-up': {
+                            '0%': { transform: 'translateY(100%)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
+                    }
+                },
+            },
+        }
+    </script>
+<style>.glass-panel {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-panel-active {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(19, 91, 236, 0.5);
+            box-shadow: 0 0 30px -10px rgba(19, 91, 236, 0.3);
+        }
+        .bg-grid-pattern {
+            background-image: linear-gradient(to right, #1e293b 1px, transparent 1px),
+                              linear-gradient(to bottom, #1e293b 1px, transparent 1px);
+            background-size: 40px 40px;
+            mask-image: radial-gradient(circle at center, black, transparent 80%);
+        }
+        .glass-toast {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5), 0 0 15px rgba(19, 91, 236, 0.2);
+        }.particle {
+            position: absolute;
+            background: radial-gradient(circle, rgba(19,91,236,1) 0%, rgba(19,91,236,0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="bg-background-dark text-slate-200 font-display antialiased selection:bg-primary/30">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<div class="fixed inset-0 z-0 pointer-events-none">
+<div class="absolute inset-0 bg-grid-pattern opacity-[0.15]"></div>
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-primary/10 blur-[120px] rounded-full"></div>
+</div>
+<header class="relative z-10 flex items-center justify-between whitespace-nowrap border-b border-white/5 px-6 py-4 lg:px-10 glass-panel sticky top-0">
+<div class="flex items-center gap-3 text-white">
+<div class="flex items-center justify-center size-8 rounded bg-primary/20 text-primary">
+<span class="material-symbols-outlined text-[20px]">lock</span>
+</div>
+<h2 class="text-white text-lg font-bold tracking-tight">KEYS</h2>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-400 hover:text-white transition-colors text-sm font-medium">Documentation</button>
+<button class="flex items-center gap-2 cursor-pointer h-9 px-3 rounded-lg hover:bg-white/5 transition-colors text-white text-sm font-medium border border-transparent hover:border-white/10">
+<div class="size-6 rounded-full bg-gradient-to-tr from-primary to-purple-500"></div>
+<span class="hidden sm:inline">johndoe</span>
+<span class="material-symbols-outlined text-[18px] text-slate-400">expand_more</span>
+</button>
+</div>
+</header>
+<main class="relative z-10 flex flex-col items-center flex-1 px-4 py-10 lg:py-16">
+<div class="w-full max-w-[720px] flex flex-col gap-10">
+<div class="flex flex-col items-center text-center gap-6 animate-fade-in-up">
+<div class="relative group">
+<div class="absolute -inset-4 bg-primary/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+<div class="relative size-32 md:size-40 bg-center bg-no-repeat bg-contain z-10 drop-shadow-2xl" data-alt="3D isometric illustration of a metallic dark digital vault with a glowing blue lock interface" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAsgzK1KG6twIDCsEeAFZYWsnuZOduYJFA0kse0IbM1umoXEVc_nceKwEOQj2GTnp7p-0357EKJOpcWcim_r_lCDB8NQLxnJqyujfPClEGMCNrHJQ9KF0Il3X72iPN-sD2dN1bZhHUfemyYU4RBcgXj49BBB63XADYHgbrSHFDBbIiaZ0jkWYswJnLfqoUSXVzHnzYPRz5bkOtm5dfOpvKDU9qUr7TDO-ygMTM_C6vXaRpLFwysbcNqXNSbaRFmOPamSAXWT6NB51fU");'>
+</div>
+</div>
+<div class="flex flex-col gap-3 max-w-[480px]">
+<h1 class="text-white text-2xl md:text-3xl font-bold tracking-tight">
+                            Welcome to KEYS.<br/>Let's secure your secrets.
+                        </h1>
+<p class="text-slate-400 text-base font-normal leading-relaxed">
+                            Your vault is currently locked. Complete the steps below to initialize your secure workspace and start managing environments.
+                        </p>
+</div>
+</div>
+<div class="flex flex-col gap-6">
+<div class="flex items-end justify-between px-1">
+<div>
+<p class="text-white text-sm font-semibold">Setup Progress</p>
+<p class="text-slate-500 text-xs mt-1">Estimated time: 2 mins</p>
+</div>
+<p class="text-primary text-sm font-bold bg-primary/10 px-2 py-1 rounded">0/3 Complete</p>
+</div>
+<div class="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-primary shadow-[0_0_10px_rgba(19,91,236,0.5)] rounded-full transition-all duration-500" style="width: 5%"></div>
+</div>
+<div class="flex flex-col gap-4">
+<div class="group relative rounded-xl glass-panel-active p-6 transition-all duration-300">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-l-xl"></div>
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-5">
+<div class="flex flex-col gap-2 flex-1 min-w-0">
+<div class="flex items-center gap-2 mb-1">
+<div class="flex items-center justify-center size-5 rounded-full bg-primary text-white text-[10px] font-bold">1</div>
+<h3 class="text-white text-base font-bold">Install the CLI</h3>
+</div>
+<p class="text-slate-400 text-sm pl-7">Run this command in your terminal to install the KEYS toolkit.</p>
+<div class="mt-2 ml-0 md:ml-7 relative flex items-center bg-black/50 rounded-lg border border-white/10 p-1 pr-2 group/code">
+<div class="px-3 py-2 font-mono text-sm text-primary overflow-x-auto whitespace-nowrap scrollbar-hide flex-1">
+<span class="text-purple-400 select-none">$</span> curl -sL keys.sh/install | bash
+                                        </div>
+<button class="p-1.5 rounded-md text-slate-400 hover:text-white hover:bg-white/10 transition-colors" title="Copy to clipboard">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="group relative rounded-xl glass-panel p-5 opacity-70 hover:opacity-100 transition-all duration-300">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<div class="flex items-center justify-center size-5 rounded-full bg-slate-700 text-slate-400 text-[10px] font-bold border border-slate-600">2</div>
+<h3 class="text-slate-200 text-base font-semibold">Connect your first environment</h3>
+</div>
+<p class="text-slate-500 text-sm pl-7">Link your workspace to GitHub or Vercel to sync secrets.</p>
+</div>
+<button class="flex items-center gap-2 h-9 px-4 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-sm font-medium rounded-lg border border-slate-700 transition-colors md:ml-auto whitespace-nowrap disabled:cursor-not-allowed">
+<span class="material-symbols-outlined text-[18px]">link</span>
+<span>Connect</span>
+</button>
+</div>
+</div>
+<div class="group relative rounded-xl glass-panel p-5 opacity-60 hover:opacity-100 transition-all duration-300">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<div class="flex items-center justify-center size-5 rounded-full bg-slate-700 text-slate-400 text-[10px] font-bold border border-slate-600">3</div>
+<h3 class="text-slate-200 text-base font-semibold">Import existing secrets</h3>
+</div>
+<p class="text-slate-500 text-sm pl-7">Upload a local .env file to populate your vault instantly.</p>
+</div>
+<button class="flex items-center gap-2 h-9 px-4 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-sm font-medium rounded-lg border border-slate-700 transition-colors md:ml-auto whitespace-nowrap">
+<span class="material-symbols-outlined text-[18px]">upload_file</span>
+<span>Import .env</span>
+</button>
+</div>
+</div>
+</div>
+<div class="mt-4 flex justify-center">
+<a class="text-slate-500 hover:text-slate-300 text-sm font-medium transition-colors" href="#">Skip onboarding and go to dashboard</a>
+</div>
+</div>
+</div>
+</main>
+<div class="fixed bottom-6 right-6 z-50 animate-slide-up">
+<div class="relative glass-toast rounded-xl p-5 w-[320px] overflow-hidden group">
+<div class="absolute -top-10 -right-10 w-24 h-24 bg-primary/40 blur-3xl rounded-full"></div>
+<div class="absolute top-1/2 left-8 w-20 h-20 bg-blue-500/20 blur-2xl rounded-full -translate-y-1/2"></div>
+<div class="particle w-1.5 h-1.5 top-4 left-4 opacity-60 animate-float" style="animation-delay: 0.2s"></div>
+<div class="particle w-1 h-1 bottom-6 right-12 opacity-40 animate-float" style="animation-delay: 1.5s"></div>
+<div class="particle w-2 h-2 top-10 right-4 opacity-30 animate-float" style="animation-delay: 0.8s"></div>
+<div class="flex items-start gap-4 relative z-10">
+<div class="relative flex-shrink-0">
+<div class="absolute inset-0 bg-primary/50 blur-lg rounded-full animate-glow-pulse"></div>
+<div class="relative flex items-center justify-center size-10 rounded-full bg-gradient-to-b from-slate-700 to-slate-800 border border-slate-600 shadow-lg">
+<span class="material-symbols-outlined text-yellow-400 text-[20px] drop-shadow-[0_0_8px_rgba(250,204,21,0.6)]">emoji_events</span>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<h4 class="text-white font-bold text-sm tracking-wide">Achievement Unlocked</h4>
+<p class="text-slate-400 text-xs">Vault Initialized &amp; Secured</p>
+<div class="flex items-center gap-3 mt-2">
+<button class="flex items-center gap-1.5 text-[11px] font-medium text-slate-300 hover:text-white transition-colors group/share">
+<span class="relative flex size-3">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full size-3 bg-transparent">
+<svg class="w-3 h-3 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+</span>
+</span>
+<span class="group-hover/share:underline decoration-slate-500 underline-offset-2">Share on X</span>
+</button>
+<button class="text-[11px] font-medium text-primary hover:text-primary/80 transition-colors">View Details</button>
+</div>
+</div>
+<button class="absolute top-2 right-2 text-slate-500 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+<div class="absolute bottom-0 left-0 h-[2px] bg-gradient-to-r from-primary to-transparent w-full"></div>
+</div>
+</div>
+</div>
+</body></html>

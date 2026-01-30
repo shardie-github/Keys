@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Slack Connection Success - KEYS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#9213ec",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#1a1022",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display min-h-screen text-slate-900 dark:text-white transition-colors duration-300">
+<div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<!-- TopNavBar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-[#322839] px-4 md:px-40 py-3 bg-white dark:bg-background-dark/50 backdrop-blur-md sticky top-0 z-50">
+<div class="flex items-center gap-4">
+<div class="size-6 text-primary">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M24 4H42V17.3333V30.6667H24V44H6V30.6667V17.3333H24V4Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">KEYS</h2>
+</div>
+<div class="flex flex-1 justify-end gap-8">
+<div class="hidden md:flex items-center gap-9">
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary text-sm font-medium leading-normal transition-colors" href="#">Dashboard</a>
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary text-sm font-medium leading-normal transition-colors" href="#">Integrations</a>
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary text-sm font-medium leading-normal transition-colors" href="#">Secrets</a>
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary text-sm font-medium leading-normal transition-colors" href="#">Settings</a>
+</div>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-primary/20" data-alt="User avatar profile picture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuABr6kit5kqBfcClQ3huxxsVa6w8HXGE7B2sm_eBzyVIghasHyRElQZt6TWhBaOej4WcwWyIVfbh_-EdC3Ko6nhvmNbeQ_vM9B0aWnMYZdmQ2BsyvRTNjN0FMM05qVC92SBAJPRzSOb7lYUbtIGawVvBJINyiCYzzP07Cef7EJc0XlX6Spme29dQgxhZrcSAhj6bovh0neqBhHLVQo2XXmnEMGxUhB5MbRBTOL4UF9aE1sckLdksBjazqPylO2MVrixOcDhMRKXsrtb");'></div>
+</div>
+</header>
+<main class="flex-1 flex justify-center py-10 px-4">
+<div class="layout-content-container flex flex-col max-w-[800px] flex-1">
+<!-- Breadcrumbs -->
+<nav class="flex flex-wrap gap-2 pb-6 items-center">
+<a class="text-slate-500 dark:text-[#ad9db9] text-sm font-medium leading-normal hover:text-primary" href="#">App</a>
+<span class="text-slate-400 dark:text-[#ad9db9] text-sm font-medium leading-normal">/</span>
+<a class="text-slate-500 dark:text-[#ad9db9] text-sm font-medium leading-normal hover:text-primary" href="#">Settings</a>
+<span class="text-slate-400 dark:text-[#ad9db9] text-sm font-medium leading-normal">/</span>
+<a class="text-slate-500 dark:text-[#ad9db9] text-sm font-medium leading-normal hover:text-primary" href="#">Integrations</a>
+<span class="text-slate-400 dark:text-[#ad9db9] text-sm font-medium leading-normal">/</span>
+<span class="text-slate-900 dark:text-white text-sm font-medium leading-normal">Slack</span>
+</nav>
+<!-- Success State Hero -->
+<div class="flex flex-col items-center justify-center text-center py-8">
+<div class="relative mb-6">
+<div class="absolute inset-0 bg-primary/20 blur-3xl rounded-full scale-150"></div>
+<div class="relative flex items-center justify-center bg-white dark:bg-slate-800 p-6 rounded-full shadow-2xl border border-slate-100 dark:border-slate-700">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 flex items-center justify-center">
+<svg class="w-10 h-10" fill="none" viewbox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<path d="M22.5 50C22.5 54.1 19.1 57.5 15 57.5C10.9 57.5 7.5 54.1 7.5 50C7.5 45.9 10.9 42.5 15 42.5H22.5V50ZM27.5 50C27.5 45.9 30.9 42.5 35 42.5C39.1 42.5 42.5 45.9 42.5 50V72.5C42.5 76.6 39.1 80 35 80C30.9 80 27.5 76.6 27.5 72.5V50Z" fill="#36C5F0"></path>
+<path d="M50 22.5C45.9 22.5 42.5 19.1 42.5 15C42.5 10.9 45.9 7.5 50 7.5C54.1 7.5 57.5 10.9 57.5 15V22.5H50ZM50 27.5C54.1 27.5 57.5 30.9 57.5 35C57.5 39.1 54.1 42.5 50 42.5H27.5C23.4 42.5 20 39.1 20 35C20 30.9 23.4 27.5 27.5 27.5H50Z" fill="#2EB67D"></path>
+<path d="M77.5 50C77.5 45.9 80.9 42.5 85 42.5C89.1 42.5 92.5 45.9 92.5 50C92.5 54.1 89.1 57.5 85 57.5H77.5V50ZM72.5 50C72.5 54.1 69.1 57.5 65 57.5C60.9 57.5 57.5 54.1 57.5 50V27.5C57.5 23.4 60.9 20 65 20C69.1 20 72.5 23.4 72.5 27.5V50Z" fill="#ECB22E"></path>
+<path d="M50 77.5C54.1 77.5 57.5 80.9 57.5 85C57.5 89.1 54.1 92.5 50 92.5C45.9 92.5 42.5 89.1 42.5 85V77.5H50ZM50 72.5C45.9 72.5 42.5 69.1 42.5 65C42.5 60.9 45.9 57.5 50 57.5H72.5C76.6 57.5 80 60.9 80 65C80 69.1 76.6 72.5 72.5 72.5H50Z" fill="#E01E5A"></path>
+</svg>
+</div>
+<span class="material-symbols-outlined text-4xl text-primary">link</span>
+<div class="size-10 bg-primary rounded flex items-center justify-center text-white">
+<svg class="size-6" fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M24 4H42V17.3333V30.6667H24V44H6V30.6667V17.3333H24V4Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</div>
+</div>
+<div class="absolute -top-2 -right-2 bg-emerald-500 text-white rounded-full p-1.5 shadow-lg border-2 border-white dark:border-background-dark">
+<span class="material-symbols-outlined text-sm font-bold block">check</span>
+</div>
+</div>
+<!-- HeadlineText -->
+<h1 class="text-slate-900 dark:text-white tracking-tight text-[32px] md:text-[40px] font-bold leading-tight px-4 pb-3">Slack Connected!</h1>
+<!-- BodyText -->
+<p class="text-slate-600 dark:text-slate-300 text-base md:text-lg font-normal leading-relaxed max-w-[600px] px-4">
+                            Your workspace is now synced. <span class="text-primary font-semibold">KEYS</span> will now post security events to your designated channels.
+                        </p>
+</div>
+<!-- Preview Section -->
+<div class="mt-8 mb-12">
+<!-- SectionHeader -->
+<div class="flex items-center justify-center gap-2 mb-4">
+<span class="material-symbols-outlined text-sm text-[#ad9db9]">visibility</span>
+<h4 class="text-slate-500 dark:text-[#ad9db9] text-xs font-bold leading-normal tracking-widest uppercase">Live Preview</h4>
+</div>
+<!-- Slack Message Card Mockup -->
+<div class="bg-white dark:bg-[#1a1a1b] border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl overflow-hidden max-w-lg mx-auto">
+<div class="bg-slate-50 dark:bg-[#222223] px-4 py-2 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="size-3 rounded-full bg-red-400"></div>
+<div class="size-3 rounded-full bg-yellow-400"></div>
+<div class="size-3 rounded-full bg-green-400"></div>
+</div>
+<span class="text-[10px] text-slate-400 dark:text-slate-500 font-mono">#security-alerts</span>
+</div>
+<div class="p-5 flex gap-4">
+<div class="flex-shrink-0">
+<div class="size-10 bg-primary rounded flex items-center justify-center text-white shadow-inner">
+<svg class="size-6" fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M24 4H42V17.3333V30.6667H24V44H6V30.6667V17.3333H24V4Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</div>
+<div class="flex-1">
+<div class="flex items-baseline gap-2 mb-1">
+<span class="font-bold text-slate-900 dark:text-white text-sm">KEYS Bot</span>
+<span class="bg-slate-100 dark:bg-slate-800 text-[10px] text-slate-500 dark:text-slate-400 px-1 rounded uppercase font-bold tracking-tighter">APP</span>
+<span class="text-xs text-slate-400 dark:text-slate-500 ml-1">11:42 AM</span>
+</div>
+<div class="text-sm text-slate-700 dark:text-slate-300 leading-normal">
+<span class="mr-1">🔑</span>
+<span class="font-semibold text-slate-900 dark:text-white">Secret Rotated</span> in 
+                                        <span class="bg-primary/10 text-primary px-1 rounded font-mono text-[13px]">Production-DB</span>
+</div>
+<div class="mt-2 text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">person</span>
+                                        Admin: <span class="text-sky-500 dark:text-sky-400 hover:underline cursor-pointer">@sarah_dev</span>
+</div>
+<div class="mt-3 flex gap-2">
+<div class="h-1 w-24 bg-primary/30 rounded-full overflow-hidden">
+<div class="h-full w-2/3 bg-primary"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex flex-col sm:flex-row items-center justify-center gap-4 mt-4">
+<button class="w-full sm:w-auto px-8 py-3 bg-primary text-white font-bold rounded-lg shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all active:scale-[0.98]">
+                            Go to Dashboard
+                        </button>
+<button class="w-full sm:w-auto px-8 py-3 bg-white dark:bg-transparent border-2 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-white font-bold rounded-lg hover:border-primary/50 hover:bg-slate-50 dark:hover:bg-white/5 transition-all flex items-center justify-center gap-2 group">
+<span class="material-symbols-outlined text-[20px] group-hover:rotate-12 transition-transform">send</span>
+                            Send Test Notification
+                        </button>
+</div>
+<!-- Footer Help -->
+<p class="text-center text-slate-500 dark:text-[#ad9db9] text-xs mt-12">
+                        Not seeing notifications? <a class="text-primary hover:underline" href="#">Check your channel permissions</a> or 
+                        <a class="text-primary hover:underline" href="#">contact support</a>.
+                    </p>
+</div>
+</main>
+</div>
+</div>
+</body></html>

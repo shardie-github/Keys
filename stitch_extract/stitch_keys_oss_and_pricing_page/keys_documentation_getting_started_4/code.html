@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KEYS Documentation Getting Started</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0d7ff2",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#0B1120",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "mono": ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", "monospace"],
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>.sidebar-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .sidebar-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .sidebar-scroll::-webkit-scrollbar-thumb {
+            background-color: #334155;border-radius: 20px;
+        }
+        .sidebar-scroll:hover::-webkit-scrollbar-thumb {
+            background-color: #475569;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-200 font-display antialiased flex flex-col min-h-screen overflow-hidden">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 px-6 py-3 sticky top-0 z-50 h-16">
+<div class="flex items-center gap-4 text-slate-900 dark:text-white">
+<div class="size-8 text-primary drop-shadow-[0_0_8px_rgba(13,127,242,0.5)]">
+<svg class="w-full h-full" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M42.1739 20.1739L27.8261 5.82609C29.1366 7.13663 28.3989 10.1876 26.2002 13.7654C24.8538 15.9564 22.9595 18.3449 20.6522 20.6522C18.3449 22.9595 15.9564 24.8538 13.7654 26.2002C10.1876 28.3989 7.13663 29.1366 5.82609 27.8261L20.1739 42.1739C21.4845 43.4845 24.5355 42.7467 28.1133 40.548C30.3042 39.2016 32.6927 37.3073 35 35C37.3073 32.6927 39.2016 30.3042 40.548 28.1133C42.7467 24.5355 43.4845 21.4845 42.1739 20.1739Z" fill="currentColor"></path>
+<path clip-rule="evenodd" d="M7.24189 26.4066C7.31369 26.4411 7.64204 26.5637 8.52504 26.3738C9.59462 26.1438 11.0343 25.5311 12.7183 24.4963C14.7583 23.2426 17.0256 21.4503 19.238 19.238C21.4503 17.0256 23.2426 14.7583 24.4963 12.7183C25.5311 11.0343 26.1438 9.59463 26.3738 8.52504C26.5637 7.64204 26.4411 7.31369 26.4066 7.24189C26.345 7.21246 26.143 7.14535 25.6664 7.1918C24.9745 7.25925 23.9954 7.5498 22.7699 8.14278C20.3369 9.32007 17.3369 11.4915 14.4142 14.4142C11.4915 17.3369 9.32007 20.3369 8.14278 22.7699C7.5498 23.9954 7.25925 24.9745 7.1918 25.6664C7.14534 26.143 7.21246 26.345 7.24189 26.4066ZM29.9001 10.7285C29.4519 12.0322 28.7617 13.4172 27.9042 14.8126C26.465 17.1544 24.4686 19.6641 22.0664 22.0664C19.6641 24.4686 17.1544 26.465 14.8126 27.9042C13.4172 28.7617 12.0322 29.4519 10.7285 29.9001L21.5754 40.747C21.6001 40.7606 21.8995 40.931 22.8729 40.7217C23.9424 40.4916 25.3821 39.879 27.0661 38.8441C29.1062 37.5904 31.3734 35.7982 33.5858 33.5858C35.7982 31.3734 37.5904 29.1062 38.8441 27.0661C39.879 25.3821 40.4916 23.9425 40.7216 22.8729C40.931 21.8995 40.7606 21.6001 40.747 21.5754L29.9001 10.7285ZM29.2403 4.41187L43.5881 18.7597C44.9757 20.1473 44.9743 22.1235 44.6322 23.7139C44.2714 25.3919 43.4158 27.2666 42.252 29.1604C40.8128 31.5022 38.8165 34.012 36.4142 36.4142C34.012 38.8165 31.5022 40.8128 29.1604 42.252C27.2666 43.4158 25.3919 44.2714 23.7139 44.6322C22.1235 44.9743 20.1473 44.9757 18.7597 43.5881L4.41187 29.2403C3.29027 28.1187 3.08209 26.5973 3.21067 25.2783C3.34099 23.9415 3.8369 22.4852 4.54214 21.0277C5.96129 18.0948 8.43335 14.7382 11.5858 11.5858C14.7382 8.43335 18.0948 5.9613 21.0277 4.54214C22.4852 3.8369 23.9415 3.34099 25.2783 3.21067C26.5973 3.08209 28.1187 3.29028 29.2403 4.41187Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-lg font-bold leading-tight tracking-tight">KEYS <span class="text-slate-500 font-medium ml-1">Docs</span></h2>
+</div>
+<div class="flex items-center gap-6">
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Home</a>
+<a class="text-primary text-sm font-medium drop-shadow-[0_0_5px_rgba(13,127,242,0.3)]" href="#">Documentation</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Support</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">GitHub</a>
+</nav>
+<div class="h-5 w-px bg-slate-200 dark:bg-slate-800 mx-2 hidden md:block"></div>
+<div class="flex items-center gap-3">
+<button aria-label="Toggle theme" class="flex items-center justify-center w-8 h-8 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px] dark:hidden">dark_mode</span>
+<span class="material-symbols-outlined text-[20px] hidden dark:block">light_mode</span>
+</button>
+<button class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-white dark:bg-slate-900 text-xs font-medium text-slate-600 dark:text-slate-300 transition-colors">
+<span>v2.4.0</span>
+<span class="material-symbols-outlined text-sm">expand_more</span>
+</button>
+</div>
+</div>
+</header>
+<div class="flex flex-1 overflow-hidden">
+<aside class="hidden lg:flex flex-col w-72 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 flex-shrink-0">
+<div class="p-4 sticky top-0 bg-white dark:bg-slate-950 z-10 border-b border-slate-100 dark:border-slate-900">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 group-focus-within:text-primary transition-colors text-[20px]">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-sm text-slate-800 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all shadow-sm dark:shadow-none" placeholder="Search documentation..." type="text"/>
+<div class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
+<kbd class="hidden xl:inline-flex h-5 items-center gap-1 rounded border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-800/50 px-1.5 font-mono text-[10px] font-medium text-slate-500 dark:text-slate-500">
+<span class="text-xs">⌘</span>K
+                        </kbd>
+</div>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto sidebar-scroll p-4 pt-2">
+<div class="space-y-6">
+<div>
+<h3 class="text-xs font-semibold text-slate-900 dark:text-slate-200 uppercase tracking-wider mb-3 px-2">Getting Started</h3>
+<div class="space-y-1">
+<a class="flex items-center justify-between px-2 py-1.5 text-sm font-medium rounded-md bg-primary/10 text-primary border border-primary/20 shadow-[0_0_15px_-3px_rgba(13,127,242,0.4)] relative overflow-hidden group" href="#">
+<span class="relative z-10">Introduction</span>
+</a>
+<a class="flex items-center justify-between px-2 py-1.5 text-sm font-medium rounded-md text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-white transition-colors" href="#">
+<span>Installation</span>
+</a>
+<a class="flex items-center justify-between px-2 py-1.5 text-sm font-medium rounded-md text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-white transition-colors" href="#">
+<span>Configuration</span>
+</a>
+<a class="flex items-center justify-between px-2 py-1.5 text-sm font-medium rounded-md text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-white transition-colors" href="#">
+<span>Editor Setup</span>
+<span class="text-[10px] bg-green-100 text-green-700 dark:bg-green-500/10 dark:text-green-400 px-1.5 py-0.5 rounded font-bold border border-green-200 dark:border-green-500/20">New</span>
+</a>
+</div>
+</div>
+<div>
+<h3 class="text-xs font-semibold text-slate-900 dark:text-slate-200 uppercase tracking-wider mb-3 px-2">Core Concepts</h3>
+<div class="space-y-1">
+<a class="flex items-center justify-between px-2 py-1.5 text-sm font-medium rounded-md text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-white transition-colors" href="#">
+<span>Design Tokens</span>
+</a>
+<details class="group">
+<summary class="flex cursor-pointer items-center justify-between px-2 py-1.5 text-sm font-medium rounded-md text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-white transition-colors list-none">
+<span>Theming</span>
+<span class="material-symbols-outlined text-base transition-transform group-open:rotate-180">expand_more</span>
+</summary>
+<div class="pl-4 mt-1 space-y-1 border-l border-slate-100 dark:border-slate-800 ml-2">
+<a class="block px-2 py-1.5 text-sm text-slate-500 hover:text-slate-900 dark:text-slate-500 dark:hover:text-white transition-colors" href="#">Colors</a>
+<a class="block px-2 py-1.5 text-sm text-slate-500 hover:text-slate-900 dark:text-slate-500 dark:hover:text-white transition-colors" href="#">Typography</a>
+<a class="block px-2 py-1.5 text-sm text-slate-500 hover:text-slate-900 dark:text-slate-500 dark:hover:text-white transition-colors" href="#">Shadows</a>
+</div>
+</details>
+<a class="flex items-center justify-between px-2 py-1.5 text-sm font-medium rounded-md text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-white transition-colors" href="#">
+<span>Dark Mode</span>
+</a>
+</div>
+</div>
+<div>
+<h3 class="text-xs font-semibold text-slate-900 dark:text-slate-200 uppercase tracking-wider mb-3 px-2">Components</h3>
+<div class="space-y-1">
+<a class="flex items-center justify-between px-2 py-1.5 text-sm font-medium rounded-md text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-white transition-colors" href="#">
+<span>Buttons</span>
+</a>
+<a class="flex items-center justify-between px-2 py-1.5 text-sm font-medium rounded-md text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-white transition-colors" href="#">
+<span>Cards</span>
+</a>
+<a class="flex items-center justify-between px-2 py-1.5 text-sm font-medium rounded-md text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-white transition-colors" href="#">
+<span>Forms</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+<div class="p-4 border-t border-slate-200 dark:border-slate-800">
+<a class="flex items-center gap-3 p-2 rounded-lg bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group border border-transparent hover:border-slate-200 dark:hover:border-slate-800" href="#">
+<div class="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-500/20 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+<span class="material-symbols-outlined text-lg">chat</span>
+</div>
+<div class="flex flex-col">
+<span class="text-xs font-semibold text-slate-900 dark:text-white">Need help?</span>
+<span class="text-[10px] text-slate-500 dark:text-slate-400 group-hover:text-primary transition-colors">Contact Support →</span>
+</div>
+</a>
+</div>
+</aside>
+<main class="flex-1 overflow-y-auto scroll-smooth">
+<div class="flex max-w-[1440px] mx-auto">
+<div class="flex-1 min-w-0 py-10 px-6 xl:px-12">
+<div class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-6">
+<a class="hover:text-primary transition-colors" href="#">Docs</a>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<span class="text-slate-900 dark:text-white font-medium">Getting Started</span>
+</div>
+<div class="mb-10 border-b border-slate-100 dark:border-slate-800 pb-8">
+<h1 class="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-4">Getting Started</h1>
+<p class="text-lg text-slate-600 dark:text-slate-400 max-w-3xl leading-relaxed">
+                            Welcome to the KEYS documentation. This guide will help you integrate our standard visual identity across all your static pages, set up your development environment, and configure the core library.
+                        </p>
+</div>
+<div class="space-y-12 max-w-4xl">
+<section class="scroll-mt-24" id="installation">
+<h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4 group flex items-center gap-2">
+                                Installation
+                                <a class="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-primary transition-opacity" href="#installation">#</a>
+</h2>
+<p class="text-slate-600 dark:text-slate-400 mb-6 leading-relaxed">
+                                To get started with KEYS, you need to install the core package using your preferred package manager. We support npm, yarn, and pnpm.
+                            </p>
+<div class="relative rounded-xl overflow-hidden bg-[#282c34] text-[#abb2bf] shadow-xl ring-1 ring-white/10">
+<div class="flex items-center justify-between px-4 py-2 bg-[#21252b] border-b border-black/50">
+<div class="flex items-center gap-2">
+<div class="flex gap-1.5">
+<div class="w-2.5 h-2.5 rounded-full bg-[#e06c75]"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-[#d19a66]"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-[#98c379]"></div>
+</div>
+<span class="text-xs text-[#5c6370] font-mono ml-2">Terminal</span>
+</div>
+<button class="text-xs font-medium text-[#5c6370] hover:text-[#abb2bf] transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">content_copy</span>
+                                        Copy
+                                    </button>
+</div>
+<div class="p-4 font-mono text-sm overflow-x-auto">
+<div class="flex items-center gap-2">
+<span class="text-[#e06c75]">$</span>
+<span class="text-[#abb2bf]">npm install</span>
+<span class="text-[#61afef]">@keys-ui/core</span>
+<span class="text-[#61afef]">@keys-ui/icons</span>
+</div>
+</div>
+</div>
+<div class="mt-6 flex gap-3 p-4 rounded-lg bg-blue-50 dark:bg-blue-500/10 border border-blue-100 dark:border-blue-500/20 text-blue-900 dark:text-blue-100">
+<span class="material-symbols-outlined text-blue-600 dark:text-blue-400">info</span>
+<div class="text-sm">
+<strong class="font-semibold text-blue-700 dark:text-blue-300">Peer Dependencies:</strong>
+                                    Make sure you have React 18 or later installed in your project as KEYS relies on the new concurrent features.
+                                </div>
+</div>
+</section>
+<section class="scroll-mt-24" id="basic-usage">
+<h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4 group flex items-center gap-2">
+                                Basic Usage
+                                <a class="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-primary transition-opacity" href="#basic-usage">#</a>
+</h2>
+<p class="text-slate-600 dark:text-slate-400 mb-6 leading-relaxed">
+                                Import the styles at the root of your application, usually in <code class="bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded text-xs">main.tsx</code> or <code class="bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded text-xs">App.tsx</code>. Then wrap your application with the <code class="bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded text-xs">KeysProvider</code> to enable the theme context.
+                            </p>
+<div class="relative rounded-xl overflow-hidden bg-[#282c34] text-[#abb2bf] shadow-xl ring-1 ring-white/10 mb-6">
+<div class="flex items-center justify-between px-4 py-2 bg-[#21252b] border-b border-black/50">
+<span class="text-xs text-[#5c6370] font-mono">App.tsx</span>
+<button class="text-xs font-medium text-[#5c6370] hover:text-[#abb2bf] transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">content_copy</span>
+                                        Copy
+                                    </button>
+</div>
+<div class="p-4 font-mono text-sm overflow-x-auto whitespace-pre leading-relaxed"><span class="text-[#c678dd]">import</span> { <span class="text-[#e5c07b]">KeysProvider</span>, <span class="text-[#e5c07b]">Button</span> } <span class="text-[#c678dd]">from</span> <span class="text-[#98c379]">'@keys-ui/core'</span>;
+<span class="text-[#c678dd]">import</span> <span class="text-[#98c379]">'@keys-ui/core/dist/style.css'</span>;
+<span class="text-[#c678dd]">export default function</span> <span class="text-[#61afef]">App</span>() {
+  <span class="text-[#c678dd]">return</span> (
+    &lt;<span class="text-[#e5c07b]">KeysProvider</span>&gt;
+      &lt;<span class="text-[#e06c75]">div</span> <span class="text-[#d19a66]">className</span>=<span class="text-[#98c379]">"app-container"</span>&gt;
+        &lt;<span class="text-[#e06c75]">h1</span>&gt;Hello World&lt;/<span class="text-[#e06c75]">h1</span>&gt;
+        &lt;<span class="text-[#e5c07b]">Button</span> <span class="text-[#d19a66]">variant</span>=<span class="text-[#98c379]">"primary"</span>&gt;Get Started&lt;/<span class="text-[#e5c07b]">Button</span>&gt;
+      &lt;/<span class="text-[#e06c75]">div</span>&gt;
+    &lt;/<span class="text-[#e5c07b]">KeysProvider</span>&gt;
+  );
+}</div>
+</div>
+</section>
+<section class="border-t border-slate-200 dark:border-slate-800 pt-10 mt-10">
+<h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6">What's Next?</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<a class="group block p-6 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl hover:border-primary/50 hover:shadow-md hover:shadow-primary/5 dark:hover:shadow-primary/10 transition-all" href="#">
+<div class="flex items-center gap-3 mb-3">
+<span class="material-symbols-outlined text-primary p-2 bg-primary/10 rounded-lg">palette</span>
+<h4 class="font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">Theming Guide</h4>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400">Learn how to customize colors, fonts, and spacing to match your brand.</p>
+</a>
+<a class="group block p-6 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl hover:border-primary/50 hover:shadow-md hover:shadow-primary/5 dark:hover:shadow-primary/10 transition-all" href="#">
+<div class="flex items-center gap-3 mb-3">
+<span class="material-symbols-outlined text-primary p-2 bg-primary/10 rounded-lg">code</span>
+<h4 class="font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">Components</h4>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400">Explore our library of 40+ pre-built React components.</p>
+</a>
+<a class="group block p-6 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl hover:border-primary/50 hover:shadow-md hover:shadow-primary/5 dark:hover:shadow-primary/10 transition-all" href="#">
+<div class="flex items-center gap-3 mb-3">
+<span class="material-symbols-outlined text-primary p-2 bg-primary/10 rounded-lg">api</span>
+<h4 class="font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">API Reference</h4>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400">Detailed props documentation for every component and utility.</p>
+</a>
+</div>
+</section>
+</div>
+<footer class="mt-20 border-t border-slate-100 dark:border-slate-800 pt-8 pb-12">
+<div class="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-500 dark:text-slate-500">
+<p>© 2024 KEYS UI. All rights reserved.</p>
+<div class="flex gap-6">
+<a class="hover:text-slate-900 dark:hover:text-white transition-colors" href="#">Privacy</a>
+<a class="hover:text-slate-900 dark:hover:text-white transition-colors" href="#">Terms</a>
+<a class="hover:text-slate-900 dark:hover:text-white transition-colors" href="#">Twitter</a>
+</div>
+</div>
+</footer>
+</div>
+<aside class="hidden xl:block w-64 py-10 px-6 sticky top-16 self-start max-h-[calc(100vh-4rem)] overflow-y-auto">
+<h5 class="text-xs font-semibold text-slate-900 dark:text-white uppercase tracking-wider mb-4">On this page</h5>
+<ul class="space-y-3 text-sm border-l border-slate-100 dark:border-slate-800">
+<li>
+<a class="block pl-4 text-primary border-l-2 border-primary -ml-[1px] font-medium drop-shadow-[0_0_8px_rgba(13,127,242,0.4)]" href="#installation">Installation</a>
+</li>
+<li>
+<a class="block pl-4 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors" href="#basic-usage">Basic Usage</a>
+</li>
+<li>
+<a class="block pl-4 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors" href="#">Configuration</a>
+</li>
+<li>
+<a class="block pl-4 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors" href="#">Advanced Setup</a>
+</li>
+</ul>
+<div class="mt-8 p-4 bg-slate-50 dark:bg-slate-900 rounded-lg border border-slate-100 dark:border-slate-800 shadow-sm dark:shadow-none">
+<p class="text-xs font-semibold text-slate-900 dark:text-white mb-2">Community</p>
+<p class="text-xs text-slate-500 dark:text-slate-400 mb-3">Join our Discord server to chat with other developers.</p>
+<a class="inline-flex items-center justify-center w-full px-3 py-1.5 text-xs font-medium text-white bg-slate-900 dark:bg-primary rounded hover:bg-slate-800 dark:hover:bg-primary/90 transition-colors shadow-lg shadow-slate-900/10 dark:shadow-primary/20" href="#">
+                            Join Discord
+                        </a>
+</div>
+</aside>
+</div>
+</main>
+</div>
+</body></html>

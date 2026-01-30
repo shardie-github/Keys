@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KEYS Interactive API Playground</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2bbdee",
+                        "primary-dark": "#1fa8d6",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101d22",
+                        "surface-dark": "#1a262b",
+                        "surface-highlight": "#283539",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "mono": ["Fira Code", "monospace"],
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for code areas */
+        .code-scroll::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .code-scroll::-webkit-scrollbar-track {
+            background: #101d22; 
+        }
+        .code-scroll::-webkit-scrollbar-thumb {
+            background: #3b4d54; 
+            border-radius: 4px;
+        }
+        .code-scroll::-webkit-scrollbar-thumb:hover {
+            background: #536b74; 
+        }
+        
+        /* Syntax highlighting simulation classes */
+        .token-key { color: #2bbdee; }
+        .token-string { color: #a5d6ff; }
+        .token-number { color: #ff9e64; }
+        .token-boolean { color: #ff9e64; }
+        .token-null { color: #ff9e64; }
+    </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-[#111618] dark:text-white min-h-screen flex flex-col overflow-x-hidden">
+<!-- Top Navigation -->
+<header class="sticky top-0 z-50 flex items-center justify-between border-b border-[#283539] bg-background-dark px-6 py-4">
+<div class="flex items-center gap-4 text-white">
+<div class="flex items-center gap-2">
+<div class="flex items-center justify-center size-8 rounded bg-primary/20 text-primary">
+<span class="material-symbols-outlined">api</span>
+</div>
+<h2 class="text-xl font-bold tracking-tight">KEYS <span class="text-[#9db2b9] font-normal">Playground</span></h2>
+</div>
+<div class="h-6 w-px bg-[#283539] mx-2 hidden md:block"></div>
+<!-- Environment Switcher -->
+<div class="hidden md:flex items-center gap-3 bg-surface-dark px-3 py-1.5 rounded-full border border-[#283539]">
+<span class="text-xs font-medium text-[#9db2b9] uppercase tracking-wider">Env</span>
+<label class="relative inline-flex items-center cursor-pointer group">
+<input class="sr-only peer" type="checkbox" value=""/>
+<div class="w-24 h-7 bg-[#101d22] peer-focus:outline-none rounded-full peer dark:bg-[#101d22] border border-[#3b4d54] relative flex items-center justify-between px-2">
+<span class="z-10 text-[10px] font-bold text-white transition-opacity duration-300 peer-checked:opacity-50">SANDBOX</span>
+<span class="z-10 text-[10px] font-bold text-white opacity-50 transition-opacity duration-300 peer-checked:opacity-100">PROD</span>
+<div class="absolute left-[2px] top-[2px] bg-primary w-[44px] h-[22px] rounded-full transition-all peer-checked:left-[48px] shadow-[0_0_10px_rgba(43,189,238,0.4)]"></div>
+</div>
+</label>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<nav class="hidden lg:flex items-center gap-6">
+<a class="text-sm font-medium text-[#9db2b9] hover:text-white transition-colors" href="#">Documentation</a>
+<a class="text-sm font-medium text-[#9db2b9] hover:text-white transition-colors" href="#">Support</a>
+<a class="text-sm font-medium text-[#9db2b9] hover:text-white transition-colors" href="#">Dashboard</a>
+</nav>
+<div class="flex items-center gap-3">
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-9 border border-[#283539]" data-alt="User avatar with abstract colorful gradient" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCyLHWORX4TEbvmB1KQ1Ae4SvrmoMvBBBXnlnd6hTyajEm7Pl_UzaTzCYE1ITDeOhHL2-jHNzme5r9hl1QmagqVzY6_wLcOR0XNF-nzFyJs0E1uG0coPRuJroAn3MMi-_Kd4CUSQXRizYLnvp37ueHivOALzgjUFSm4KZKXWDsrPmbjNkjq_DCKGbgGnsvaaPKFyt7fLIeFY7Q1crP8sA6VQF_Ku9Yba2aow0Y3w8yOTSS6qhzm_r3DJrYycpk5W-91mPX-qA2VTlnP");'></div>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex flex-col lg:flex-row flex-1 h-[calc(100vh-73px)] overflow-hidden">
+<!-- Left Panel: Request Builder -->
+<section class="flex-1 flex flex-col border-r border-[#283539] min-w-0 bg-background-dark/50 overflow-y-auto lg:overflow-y-hidden">
+<!-- Header -->
+<div class="px-6 py-6 border-b border-[#283539]">
+<h1 class="text-2xl font-bold tracking-tight mb-1">API Request Builder</h1>
+<p class="text-[#9db2b9] text-sm">Construct and test your API calls in real-time.</p>
+</div>
+<!-- URL Bar -->
+<div class="px-6 py-6">
+<div class="flex flex-col gap-2">
+<label class="text-xs font-bold text-[#9db2b9] uppercase tracking-wider">Endpoint</label>
+<div class="flex items-stretch rounded-lg overflow-hidden border border-[#3b4d54] bg-[#1a262b] shadow-sm focus-within:ring-1 focus-within:ring-primary focus-within:border-primary transition-all">
+<div class="relative">
+<select class="h-12 bg-transparent border-none text-white text-sm font-bold pl-4 pr-8 focus:ring-0 cursor-pointer appearance-none uppercase">
+<option value="POST">POST</option>
+<option value="GET">GET</option>
+<option value="PUT">PUT</option>
+<option value="DELETE">DELETE</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-[#9db2b9] pointer-events-none text-lg">expand_more</span>
+</div>
+<div class="w-px bg-[#3b4d54] my-2"></div>
+<input class="flex-1 bg-transparent border-none text-white text-sm font-mono placeholder-[#536b74] focus:ring-0 h-12 px-4" placeholder="https://api.keys.platform/v1/..." type="text" value="https://api.keys.platform/v1/transactions"/>
+</div>
+</div>
+</div>
+<!-- Tabs -->
+<div class="flex-1 flex flex-col min-h-0">
+<div class="px-6 border-b border-[#283539]">
+<div class="flex gap-6">
+<button class="pb-3 border-b-2 border-transparent text-[#9db2b9] text-sm font-medium hover:text-white transition-colors">Params</button>
+<button class="pb-3 border-b-2 border-transparent text-[#9db2b9] text-sm font-medium hover:text-white transition-colors">Authorization</button>
+<button class="pb-3 border-b-2 border-transparent text-[#9db2b9] text-sm font-medium hover:text-white transition-colors">Headers <span class="ml-1 text-[10px] bg-[#283539] px-1.5 py-0.5 rounded-full text-white">2</span></button>
+<button class="pb-3 border-b-2 border-primary text-primary text-sm font-bold">Body <span class="ml-1 text-[10px] bg-primary/20 px-1.5 py-0.5 rounded-full text-primary">JSON</span></button>
+</div>
+</div>
+<!-- Code Editor Area -->
+<div class="flex-1 relative group bg-[#0d1518]">
+<!-- Line Numbers -->
+<div class="absolute left-0 top-0 bottom-0 w-10 bg-[#0d1518] border-r border-[#1e293b] flex flex-col items-end pt-4 pr-2 text-[#3b4d54] font-mono text-xs select-none">
+<div>1</div><div>2</div><div>3</div><div>4</div><div>5</div><div>6</div><div>7</div><div>8</div><div>9</div><div>10</div>
+</div>
+<!-- Editor -->
+<textarea class="w-full h-full bg-transparent border-none text-[#e2e8f0] font-mono text-sm resize-none focus:ring-0 pl-14 pt-4 leading-6 code-scroll" spellcheck="false">{
+  "amount": 5000,
+  "currency": "USD",
+  "recipient": {
+    "id": "usr_89234012",
+    "email": "customer@example.com"
+  },
+  "description": "Subscription charge for Pro Plan",
+  "metadata": {
+    "order_id": "ord_5521"
+  }
+}</textarea>
+</div>
+<!-- Action Footer -->
+<div class="p-6 border-t border-[#283539] bg-background-dark">
+<div class="flex justify-between items-center">
+<button class="text-sm text-[#9db2b9] hover:text-white underline underline-offset-4 decoration-[#3b4d54]">Reset to default</button>
+<button class="group relative flex items-center justify-center gap-2 bg-primary hover:bg-primary-dark text-[#111618] px-8 py-3 rounded-lg font-bold transition-all shadow-[0_0_20px_rgba(43,189,238,0.2)] hover:shadow-[0_0_30px_rgba(43,189,238,0.4)]">
+<span class="material-symbols-outlined text-lg group-hover:animate-pulse">play_arrow</span>
+<span>Run Request</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Right Panel: Terminal/Response -->
+<section class="flex-1 flex flex-col bg-[#0b1214] border-l border-[#283539] min-w-0">
+<!-- Response Header -->
+<div class="px-6 py-4 border-b border-[#283539] bg-[#0f191d] flex items-center justify-between">
+<div class="flex items-center gap-4">
+<h3 class="text-sm font-bold text-white uppercase tracking-wider">Terminal Output</h3>
+<div class="h-4 w-px bg-[#283539]"></div>
+<div class="flex items-center gap-4 text-xs font-mono">
+<div class="flex items-center gap-1.5 text-emerald-400">
+<div class="size-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]"></div>
+<span>201 Created</span>
+</div>
+<span class="text-[#536b74]">124ms</span>
+<span class="text-[#536b74]">1.42KB</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-1.5 rounded hover:bg-[#283539] text-[#9db2b9] hover:text-white transition-colors" title="Download JSON">
+<span class="material-symbols-outlined text-lg">download</span>
+</button>
+<button class="flex items-center gap-2 px-3 py-1.5 rounded hover:bg-[#283539] text-[#9db2b9] hover:text-white transition-colors border border-transparent hover:border-[#3b4d54]" title="Copy to Clipboard">
+<span class="material-symbols-outlined text-lg">content_copy</span>
+<span class="text-xs font-medium">Copy</span>
+</button>
+</div>
+</div>
+<!-- Terminal Body -->
+<div class="flex-1 overflow-auto code-scroll p-6 relative">
+<div class="font-mono text-sm leading-relaxed">
+<pre><code><span class="text-[#536b74]">// Request ID: req_9a8b7c6d5e4f</span>
+<span class="text-[#e2e8f0]">{</span>
+  <span class="token-key">"status"</span><span class="text-[#e2e8f0]">:</span> <span class="token-string">"success"</span><span class="text-[#e2e8f0]">,</span>
+  <span class="token-key">"data"</span><span class="text-[#e2e8f0]">: {</span>
+    <span class="token-key">"id"</span><span class="text-[#e2e8f0]">:</span> <span class="token-string">"txn_1234567890"</span><span class="text-[#e2e8f0]">,</span>
+    <span class="token-key">"object"</span><span class="text-[#e2e8f0]">:</span> <span class="token-string">"transaction"</span><span class="text-[#e2e8f0]">,</span>
+    <span class="token-key">"amount"</span><span class="text-[#e2e8f0]">:</span> <span class="token-number">5000</span><span class="text-[#e2e8f0]">,</span>
+    <span class="token-key">"currency"</span><span class="text-[#e2e8f0]">:</span> <span class="token-string">"usd"</span><span class="text-[#e2e8f0]">,</span>
+    <span class="token-key">"status"</span><span class="text-[#e2e8f0]">:</span> <span class="token-string">"pending"</span><span class="text-[#e2e8f0]">,</span>
+    <span class="token-key">"created_at"</span><span class="text-[#e2e8f0]">:</span> <span class="token-number">1678901234</span><span class="text-[#e2e8f0]">,</span>
+    <span class="token-key">"livemode"</span><span class="text-[#e2e8f0]">:</span> <span class="token-boolean">false</span><span class="text-[#e2e8f0]">,</span>
+    <span class="token-key">"metadata"</span><span class="text-[#e2e8f0]">: {</span>
+      <span class="token-key">"order_id"</span><span class="text-[#e2e8f0]">:</span> <span class="token-string">"ord_5521"</span>
+    <span class="text-[#e2e8f0]">},</span>
+    <span class="token-key">"payment_method"</span><span class="text-[#e2e8f0]">: {</span>
+      <span class="token-key">"type"</span><span class="text-[#e2e8f0]">:</span> <span class="token-string">"card"</span><span class="text-[#e2e8f0]">,</span>
+      <span class="token-key">"brand"</span><span class="text-[#e2e8f0]">:</span> <span class="token-string">"visa"</span><span class="text-[#e2e8f0]">,</span>
+      <span class="token-key">"last4"</span><span class="text-[#e2e8f0]">:</span> <span class="token-string">"4242"</span>
+    <span class="text-[#e2e8f0]">}</span>
+  <span class="text-[#e2e8f0]">}</span>
+<span class="text-[#e2e8f0]">}</span></code></pre>
+</div>
+</div>
+<!-- Snippets Section -->
+<div class="border-t border-[#283539] bg-[#0f191d]">
+<div class="px-6 py-3 flex items-center justify-between cursor-pointer hover:bg-[#1a262b] transition-colors group">
+<span class="text-xs font-bold text-[#9db2b9] uppercase tracking-wider group-hover:text-white">Export Snippet</span>
+<span class="material-symbols-outlined text-[#9db2b9] text-lg group-hover:text-white">expand_less</span>
+</div>
+<!-- Snippet Preview (Simulating expanded state for visual richness, or kept compact) -->
+<div class="px-6 pb-6 pt-2">
+<div class="flex items-center gap-2 mb-3">
+<button class="px-3 py-1 rounded bg-[#283539] text-white text-xs font-medium border border-[#3b4d54]">cURL</button>
+<button class="px-3 py-1 rounded hover:bg-[#1a262b] text-[#9db2b9] text-xs font-medium border border-transparent hover:border-[#3b4d54]">Node.js</button>
+<button class="px-3 py-1 rounded hover:bg-[#1a262b] text-[#9db2b9] text-xs font-medium border border-transparent hover:border-[#3b4d54]">Python</button>
+</div>
+<div class="bg-[#0b1214] rounded p-3 border border-[#283539]">
+<code class="font-mono text-xs text-[#9db2b9] block break-all">
+<span class="text-primary">curl</span> -X POST https://api.keys.platform/v1/transactions \<br/>
+                              -H <span class="text-emerald-400">"Content-Type: application/json"</span> \<br/>
+                              -d <span class="text-emerald-400">'{"amount": 5000, "currency": "USD"}'</span>
+</code>
+</div>
+</div>
+</div>
+</section>
+</main>
+</body></html>

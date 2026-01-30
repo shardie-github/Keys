@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KEYS - Developer Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "primary-hover": "#1d64f0",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#0f172a", // Darker slate for contrast
+                        "surface-dark": "#1e293b", // Slightly lighter for cards/sidebar
+                        "border-dark": "#334155",
+                        "text-secondary": "#94a3b8",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"],
+                    },
+                    borderRadius: {"DEFAULT": "0.375rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for dark theme */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569; 
+        }
+        .masked-value {
+            filter: blur(4px);
+            transition: filter 0.2s;
+            user-select: none;
+        }
+        .group:hover .masked-value {
+            filter: blur(0);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white antialiased overflow-hidden">
+<div class="flex h-screen w-full">
+<!-- Sidebar -->
+<aside class="flex w-64 flex-col border-r border-border-dark bg-surface-dark/50 backdrop-blur-xl">
+<div class="flex h-16 items-center px-6 border-b border-border-dark">
+<div class="flex items-center gap-2">
+<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-white">
+<span class="material-symbols-outlined text-xl">key</span>
+</div>
+<span class="text-lg font-bold tracking-tight text-white">KEYS</span>
+</div>
+</div>
+<div class="flex flex-1 flex-col justify-between p-4">
+<nav class="flex flex-col gap-1">
+<div class="mb-4 px-2">
+<p class="text-xs font-semibold uppercase tracking-wider text-text-secondary">Platform</p>
+</div>
+<a class="flex items-center gap-3 rounded-lg bg-primary/10 px-3 py-2 text-primary" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-text-secondary hover:bg-white/5 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">lock</span>
+<span class="text-sm font-medium">Vault</span>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-text-secondary hover:bg-white/5 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">hub</span>
+<span class="text-sm font-medium">Integrations</span>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-text-secondary hover:bg-white/5 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">history</span>
+<span class="text-sm font-medium">Audit Logs</span>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-text-secondary hover:bg-white/5 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">group</span>
+<span class="text-sm font-medium">Team</span>
+</a>
+</nav>
+<div class="flex flex-col gap-1 border-t border-border-dark pt-4">
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-text-secondary hover:bg-white/5 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-text-secondary hover:bg-white/5 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">menu_book</span>
+<span class="text-sm font-medium">Docs</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content Wrapper -->
+<div class="flex flex-1 flex-col min-w-0 overflow-hidden bg-background-dark">
+<!-- Top Navbar -->
+<header class="flex h-16 items-center justify-between border-b border-border-dark bg-background-dark px-6 lg:px-8">
+<div class="flex flex-1 items-center max-w-2xl">
+<div class="relative w-full max-w-md">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</span>
+<input class="w-full rounded-lg border border-border-dark bg-surface-dark py-2 pl-10 pr-4 text-sm text-white placeholder-text-secondary focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Search secrets, projects... (Cmd+K)" type="text"/>
+<div class="absolute right-2 top-1/2 -translate-y-1/2 rounded border border-border-dark bg-background-dark px-1.5 py-0.5 text-xs text-text-secondary">
+                            ⌘K
+                        </div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="flex items-center justify-center rounded-lg p-2 text-text-secondary hover:bg-white/5 hover:text-white">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="h-6 w-px bg-border-dark"></div>
+<button class="flex items-center gap-3 rounded-full pl-1 pr-2 hover:bg-white/5">
+<div class="h-8 w-8 rounded-full bg-cover bg-center" data-alt="User avatar showing a smiling person" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBdEHJ-7KZdos1YZ4eN1e3nU2xb4W86Q5Lise91-02QcPgigR2LkHmJeP76WuXtKkoRuscwBbYTBHIncHmUjRaSJ-MK4BQWBli4d-O42Bos04Nm3tNoGyjpvwUZmu9KJJLGPfhP8_mXNn1IPRdk6PWkLtlBY-J1EVScFgkcpHYlywWAv4bdF8GuQCz8a1yoD1kRHU1Quq_tgx3X_OXUT9DbI60BGX7V6jsBgIlna9ZYWASeUTHOTpU96iLRuk1FqEB6YfysrPR_2CuS');"></div>
+<div class="hidden text-left md:block">
+<p class="text-xs font-medium text-white">Alex Dev</p>
+<p class="text-[10px] text-text-secondary">Admin</p>
+</div>
+<span class="material-symbols-outlined text-text-secondary text-sm">expand_more</span>
+</button>
+</div>
+</header>
+<!-- Main Scrollable Area -->
+<main class="flex-1 overflow-y-auto p-6 lg:p-8">
+<!-- Page Heading & Actions -->
+<div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+<div>
+<h1 class="text-2xl font-bold tracking-tight text-white">Dashboard</h1>
+<p class="text-sm text-text-secondary mt-1">Overview of your secrets security posture.</p>
+</div>
+<button class="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary transition-all">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                        Create Secret
+                    </button>
+</div>
+<!-- Stats Grid -->
+<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mb-8">
+<!-- Health Score Card -->
+<div class="rounded-xl border border-border-dark bg-surface-dark/40 p-6 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-8xl text-emerald-500">health_and_safety</span>
+</div>
+<div class="flex flex-col gap-4 relative z-10">
+<div class="flex items-center justify-between">
+<p class="text-sm font-medium text-text-secondary">Secrets Health</p>
+<span class="inline-flex items-center rounded-full bg-emerald-500/10 px-2 py-1 text-xs font-medium text-emerald-400 ring-1 ring-inset ring-emerald-500/20">Secure</span>
+</div>
+<div class="flex items-end gap-3">
+<span class="text-3xl font-bold text-white">98%</span>
+<span class="mb-1 text-sm text-emerald-400 font-medium">+2%</span>
+</div>
+<div class="w-full rounded-full bg-border-dark h-2 mt-2">
+<div class="bg-emerald-500 h-2 rounded-full" style="width: 98%"></div>
+</div>
+<p class="text-xs text-text-secondary">342 secrets analyzed. No critical leaks found.</p>
+</div>
+</div>
+<!-- API Usage Card -->
+<div class="rounded-xl border border-border-dark bg-surface-dark/40 p-6 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-8xl text-primary">api</span>
+</div>
+<div class="flex flex-col gap-4 relative z-10">
+<div class="flex items-center justify-between">
+<p class="text-sm font-medium text-text-secondary">API Usage (24h)</p>
+</div>
+<div class="flex items-end gap-3">
+<span class="text-3xl font-bold text-white">12,450</span>
+<span class="mb-1 text-sm text-text-secondary">requests</span>
+</div>
+<div class="flex items-center gap-2 mt-auto pt-4">
+<div class="flex -space-x-2">
+<div class="h-6 w-6 rounded-full border border-surface-dark bg-blue-500"></div>
+<div class="h-6 w-6 rounded-full border border-surface-dark bg-purple-500"></div>
+<div class="h-6 w-6 rounded-full border border-surface-dark bg-pink-500"></div>
+</div>
+<span class="text-xs text-text-secondary ml-1">Top services: Stripe, AWS, Auth0</span>
+</div>
+</div>
+</div>
+<!-- Active Secrets Card -->
+<div class="rounded-xl border border-border-dark bg-surface-dark/40 p-6 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-8xl text-indigo-500">key</span>
+</div>
+<div class="flex flex-col gap-4 relative z-10">
+<div class="flex items-center justify-between">
+<p class="text-sm font-medium text-text-secondary">Active Secrets</p>
+<button class="text-xs text-primary hover:text-primary-hover">View all</button>
+</div>
+<div class="flex items-end gap-3">
+<span class="text-3xl font-bold text-white">42</span>
+<span class="mb-1 text-sm text-text-secondary">active keys</span>
+</div>
+<div class="mt-auto pt-3">
+<div class="flex flex-wrap gap-2">
+<span class="inline-flex items-center rounded-md bg-blue-400/10 px-2 py-1 text-xs font-medium text-blue-400 ring-1 ring-inset ring-blue-400/30">Prod: 12</span>
+<span class="inline-flex items-center rounded-md bg-yellow-400/10 px-2 py-1 text-xs font-medium text-yellow-400 ring-1 ring-inset ring-yellow-400/30">Staging: 8</span>
+<span class="inline-flex items-center rounded-md bg-purple-400/10 px-2 py-1 text-xs font-medium text-purple-400 ring-1 ring-inset ring-purple-400/30">Dev: 22</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Recent Activity Table Section -->
+<div class="rounded-xl border border-border-dark bg-surface-dark/40 overflow-hidden">
+<div class="flex items-center justify-between border-b border-border-dark px-6 py-4">
+<h3 class="text-base font-semibold text-white">Recently Accessed Secrets</h3>
+<div class="flex gap-2">
+<button class="p-1 text-text-secondary hover:text-white rounded hover:bg-white/5">
+<span class="material-symbols-outlined text-[20px]">filter_list</span>
+</button>
+<button class="p-1 text-text-secondary hover:text-white rounded hover:bg-white/5">
+<span class="material-symbols-outlined text-[20px]">more_horiz</span>
+</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left text-sm">
+<thead class="bg-surface-dark/50 text-xs uppercase text-text-secondary">
+<tr>
+<th class="px-6 py-3 font-medium" scope="col">Name</th>
+<th class="px-6 py-3 font-medium" scope="col">Environment</th>
+<th class="px-6 py-3 font-medium w-64" scope="col">Value</th>
+<th class="px-6 py-3 font-medium" scope="col">Last Accessed</th>
+<th class="px-6 py-3 font-medium text-right" scope="col">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-dark">
+<!-- Row 1 -->
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="rounded bg-indigo-500/20 p-2 text-indigo-400">
+<span class="material-symbols-outlined text-[20px]">credit_card</span>
+</div>
+<div>
+<div class="font-medium text-white font-mono">STRIPE_SECRET_KEY</div>
+<div class="text-xs text-text-secondary">Payments Infrastructure</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center rounded-full bg-red-400/10 px-2.5 py-0.5 text-xs font-medium text-red-400 ring-1 ring-inset ring-red-400/20">
+                                            Production
+                                        </span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2 font-mono text-xs text-text-secondary bg-black/20 rounded px-2 py-1.5 w-fit border border-border-dark group/value cursor-pointer">
+<span class="text-primary mr-1">sk_live_</span>
+<span class="masked-value transition-all duration-300 group-hover/value:blur-none">51M...x8L9</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="h-6 w-6 rounded-full bg-cover" data-alt="User avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAm6jJQeBJu7bX2cwf5j9oIlB4ZhCzmyaiJuxEZUoATwUw38k7NVv73-hiJENySUrkBbbt5jHZTofTjDsqhvK_IDeyyVs_SUTxSsByxJ8gV4HrjCMEAFi11hUBhScDqq2_wql2ms0Uq3QW3RtQtpL2cldOw0GU98lEct2_YFrKXm8Hm8AfmBbZALlnxmrhIb4DWD__0x2lnRTam2LBydb1DgQlIeTeR0HLroTAFa0zwLj8bgb0PcCO_eutsN8Jha74vUtEGYsUHc9N8');"></div>
+<div class="flex flex-col">
+<span class="text-white text-xs">Mike R.</span>
+<span class="text-text-secondary text-[10px]">2 mins ago</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="rounded p-1.5 text-text-secondary hover:bg-white/10 hover:text-white" title="Copy">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+<button class="rounded p-1.5 text-text-secondary hover:bg-white/10 hover:text-white" title="Edit">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="rounded bg-orange-500/20 p-2 text-orange-400">
+<span class="material-symbols-outlined text-[20px]">database</span>
+</div>
+<div>
+<div class="font-medium text-white font-mono">DB_PASSWORD_MAIN</div>
+<div class="text-xs text-text-secondary">PostgreSQL Cluster</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center rounded-full bg-yellow-400/10 px-2.5 py-0.5 text-xs font-medium text-yellow-400 ring-1 ring-inset ring-yellow-400/20">
+                                            Staging
+                                        </span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2 font-mono text-xs text-text-secondary bg-black/20 rounded px-2 py-1.5 w-fit border border-border-dark group/value cursor-pointer">
+<span class="masked-value transition-all duration-300 group-hover/value:blur-none">p...93#kL</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="h-6 w-6 rounded-full bg-cover" data-alt="User avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBgrX-5k9qtJZTp55Gl0EhuFA3K77dSkWn5dqLykWXwhT9phgLwNW_YxjtQNSjRsZama4UthU3PitzOpmz_VPHGOq6PVuhkHdTgyZE2L6UEQjq7qgyryYNwd0UL_FWmuSq3jLpJ2lnfbUiv9D0hr1YsDbjqQe8QqCEyJNiSkVxU66hb_Y-6FghXmAphD_tHtjBMbU05bSFp1vBr8bMC0R_MwIkh8NITlOHqfBfpzcbiCHO8Fpxwb2FkYpLO7clKDLCSY3d5LULjJxFo');"></div>
+<div class="flex flex-col">
+<span class="text-white text-xs">Sarah J.</span>
+<span class="text-text-secondary text-[10px]">1 hour ago</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="rounded p-1.5 text-text-secondary hover:bg-white/10 hover:text-white" title="Copy">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+<button class="rounded p-1.5 text-text-secondary hover:bg-white/10 hover:text-white" title="Edit">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="rounded bg-blue-500/20 p-2 text-blue-400">
+<span class="material-symbols-outlined text-[20px]">cloud</span>
+</div>
+<div>
+<div class="font-medium text-white font-mono">AWS_ACCESS_KEY</div>
+<div class="text-xs text-text-secondary">S3 Bucket Access</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center rounded-full bg-emerald-400/10 px-2.5 py-0.5 text-xs font-medium text-emerald-400 ring-1 ring-inset ring-emerald-400/20">
+                                            Development
+                                        </span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2 font-mono text-xs text-text-secondary bg-black/20 rounded px-2 py-1.5 w-fit border border-border-dark group/value cursor-pointer">
+<span class="text-primary mr-1">AKIA</span>
+<span class="masked-value transition-all duration-300 group-hover/value:blur-none">JK...92A</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="h-6 w-6 rounded-full bg-cover" data-alt="User avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBuSV4B8JJ_9NZtcc8ee6hO1RE2HE4uE6nZBTJ2Zgj-68eUBpFuxBrqdV7NeW7OibzpNAkK49mvBVrw2suD21480omFtBt_-RiKyXAwP400yV47Frff84lM7vP9owwZJUksnOd8a4wV7EICa86b2ZrC3B1uLN5utiKFDdBBdWTbZxTX1aSPspBC1CfH40tCCWi1MImZkPLyv7MGOZb_oRDkSBzi0pEzSCqJcCQbyORXQnBSkLpGIZQwQLh8uukScDjEpj8e6GEN8f8w');"></div>
+<div class="flex flex-col">
+<span class="text-white text-xs">You</span>
+<span class="text-text-secondary text-[10px]">3 hours ago</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="rounded p-1.5 text-text-secondary hover:bg-white/10 hover:text-white" title="Copy">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+<button class="rounded p-1.5 text-text-secondary hover:bg-white/10 hover:text-white" title="Edit">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="rounded bg-purple-500/20 p-2 text-purple-400">
+<span class="material-symbols-outlined text-[20px]">mail</span>
+</div>
+<div>
+<div class="font-medium text-white font-mono">SENDGRID_API_KEY</div>
+<div class="text-xs text-text-secondary">Transactional Email</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center rounded-full bg-red-400/10 px-2.5 py-0.5 text-xs font-medium text-red-400 ring-1 ring-inset ring-red-400/20">
+                                            Production
+                                        </span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2 font-mono text-xs text-text-secondary bg-black/20 rounded px-2 py-1.5 w-fit border border-border-dark group/value cursor-pointer">
+<span class="text-primary mr-1">SG.</span>
+<span class="masked-value transition-all duration-300 group-hover/value:blur-none">29...L9x</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="h-6 w-6 rounded-full bg-cover" data-alt="User avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBz0r-iBmjni3QhiPxxzltaHrnEtp2jJ952od7nIe-Ale0wSWxIHiOVe6tjUwwGQa-8h2rgYEcVmbL1_DgQ4H5fySePPiXZamhA6o7jJ952639_PXDtWk_QLHlVyRqr-KeaCz4tl_cQlDdgFAfaG3VRlZNOQDGR0TMT_P5_vUQLEbVH4fHb8NdzpkZ8KtXZodxAb35ckCXLgmV8rRkpE7c9d4gtSf16hKQAO8kwdHAtMxmQ8hbBbDDn74etdFlU9FErBSNDLrk66uPC');"></div>
+<div class="flex flex-col">
+<span class="text-white text-xs">James W.</span>
+<span class="text-text-secondary text-[10px]">Yesterday</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="rounded p-1.5 text-text-secondary hover:bg-white/10 hover:text-white" title="Copy">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+<button class="rounded p-1.5 text-text-secondary hover:bg-white/10 hover:text-white" title="Edit">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination footer -->
+<div class="flex items-center justify-between border-t border-border-dark px-6 py-3">
+<div class="flex flex-1 justify-between sm:hidden">
+<a class="relative inline-flex items-center rounded-md border border-border-dark bg-surface-dark px-4 py-2 text-sm font-medium text-text-secondary hover:bg-white/5" href="#">Previous</a>
+<a class="relative ml-3 inline-flex items-center rounded-md border border-border-dark bg-surface-dark px-4 py-2 text-sm font-medium text-text-secondary hover:bg-white/5" href="#">Next</a>
+</div>
+<div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+<div>
+<p class="text-sm text-text-secondary">
+                                    Showing <span class="font-medium text-white">1</span> to <span class="font-medium text-white">4</span> of <span class="font-medium text-white">42</span> results
+                                </p>
+</div>
+<div>
+<nav aria-label="Pagination" class="isolate inline-flex -space-x-px rounded-md shadow-sm">
+<a class="relative inline-flex items-center rounded-l-md px-2 py-2 text-text-secondary ring-1 ring-inset ring-border-dark hover:bg-white/5 focus:z-20 focus:outline-offset-0" href="#">
+<span class="sr-only">Previous</span>
+<span class="material-symbols-outlined text-[20px]">chevron_left</span>
+</a>
+<a aria-current="page" class="relative z-10 inline-flex items-center bg-primary px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" href="#">1</a>
+<a class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-text-secondary ring-1 ring-inset ring-border-dark hover:bg-white/5 focus:z-20 focus:outline-offset-0" href="#">2</a>
+<a class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-text-secondary ring-1 ring-inset ring-border-dark hover:bg-white/5 focus:z-20 focus:outline-offset-0" href="#">3</a>
+<span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-text-secondary ring-1 ring-inset ring-border-dark focus:outline-offset-0">...</span>
+<a class="relative inline-flex items-center rounded-r-md px-2 py-2 text-text-secondary ring-1 ring-inset ring-border-dark hover:bg-white/5 focus:z-20 focus:outline-offset-0" href="#">
+<span class="sr-only">Next</span>
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</a>
+</nav>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>

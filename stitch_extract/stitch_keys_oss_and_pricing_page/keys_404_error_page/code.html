@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KEYS - 404 Route Not Found</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                        "surface-dark": "#1a202c",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"],
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white min-h-screen flex flex-col overflow-hidden selection:bg-primary/30">
+<!-- Navbar -->
+<header class="w-full z-20 border-b border-slate-200 dark:border-slate-800/60 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md">
+<div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[24px]">key</span>
+</div>
+<h2 class="text-slate-900 dark:text-white text-lg font-bold tracking-tight">KEYS</h2>
+</div>
+<nav class="hidden sm:flex gap-6 text-sm font-medium text-slate-500 dark:text-slate-400">
+<a class="hover:text-primary transition-colors" href="#">Documentation</a>
+<a class="hover:text-primary transition-colors" href="#">Support</a>
+</nav>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow flex flex-col items-center justify-center relative w-full px-4">
+<!-- Large Background Graphic -->
+<div class="absolute inset-0 flex items-center justify-center z-0 overflow-hidden pointer-events-none select-none">
+<span class="text-[20vw] font-black text-slate-900/5 dark:text-white/5 tracking-tighter leading-none">404</span>
+</div>
+<!-- Content Container -->
+<div class="relative z-10 flex flex-col items-center text-center max-w-2xl w-full animate-fade-in-up">
+<!-- Icon/Indicator -->
+<div class="mb-8 p-4 rounded-full bg-slate-200/50 dark:bg-slate-800/50 ring-1 ring-inset ring-slate-300 dark:ring-slate-700/50">
+<span class="material-symbols-outlined text-4xl text-slate-400 dark:text-slate-500">dns</span>
+</div>
+<!-- Headings -->
+<h1 class="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 dark:text-white mb-4">
+                Route not found.
+            </h1>
+<p class="text-lg md:text-xl text-slate-500 dark:text-slate-400 font-normal max-w-md mx-auto mb-10 leading-relaxed">
+                This terminal leads nowhere. The requested resource is unavailable or has been moved.
+            </p>
+<!-- Action Buttons -->
+<div class="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+<button class="w-full sm:w-auto group flex items-center justify-center gap-2 h-12 px-6 bg-primary hover:bg-blue-600 text-white rounded-lg font-medium transition-all shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-[20px]">home</span>
+<span>Return Home</span>
+</button>
+<button class="w-full sm:w-auto flex items-center justify-center gap-2 h-12 px-6 bg-white dark:bg-[#282e39] hover:bg-slate-50 dark:hover:bg-[#323a46] text-slate-700 dark:text-white border border-slate-200 dark:border-slate-700 rounded-lg font-medium transition-colors">
+<span class="material-symbols-outlined text-[20px]">arrow_back</span>
+<span>Go Back</span>
+</button>
+<button class="w-full sm:w-auto flex items-center justify-center gap-2 h-12 px-6 bg-transparent hover:bg-slate-100 dark:hover:bg-[#282e39] text-slate-600 dark:text-slate-300 rounded-lg font-medium transition-colors">
+<span class="material-symbols-outlined text-[20px]">monitor_heart</span>
+<span>Check Status</span>
+</button>
+</div>
+</div>
+</main>
+<!-- Terminal Footer -->
+<footer class="w-full py-8 z-20">
+<div class="max-w-7xl mx-auto px-6 flex justify-center">
+<div class="font-mono text-xs sm:text-sm text-slate-400 dark:text-[#9da6b9] bg-slate-100 dark:bg-[#151b26] py-2 px-4 rounded border border-slate-200 dark:border-slate-800">
+<span class="text-emerald-500 dark:text-green-400">root@keys-system</span>:<span class="text-blue-500 dark:text-blue-400">~</span>$ error_log/404_init <span class="animate-pulse">_</span>
+</div>
+</div>
+</footer>
+</body></html>
