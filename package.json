@@ -11,16 +11,20 @@
     "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
     "dev:frontend": "cd frontend && npm run dev",
     "dev:backend": "cd backend && npm run dev",
-    "build": "npm run keys:index && npm run build:frontend && npm run build:backend",
+    "build": "npm run build:frontend && npm run build:backend",
     "build:frontend": "cd frontend && npm run build",
     "build:backend": "cd backend && npm run build",
     "lint": "npm run lint:frontend && npm run lint:backend",
     "lint:frontend": "cd frontend && npm run lint",
     "lint:backend": "cd backend && npm run lint",
-    "format:check": "npx prettier --check \"ENV_VARS.md\" \"outputs/smoke_report.md\" \"outputs/smoke_report.json\"",
+    "format:check": "cd frontend && npx prettier --check .",
+    "format:fix": "cd frontend && npx prettier --write .",
     "type-check": "npm run type-check:frontend && npm run type-check:backend",
     "type-check:frontend": "cd frontend && npm run type-check",
     "type-check:backend": "cd backend && npm run type-check",
+    "verify:fast": "npm run lint && npm run type-check",
+    "verify:full": "npm run verify:fast && npm run build && npm run test:all",
+    "test:all": "cd frontend && npm run test && cd ../backend && npm run test",
     "db:verify": "tsx scripts/db-verify.ts",
     "db:smoke": "tsx scripts/db-smoke.ts",
     "db:migrate": "cd backend && npm run migrate",
@@ -34,7 +38,8 @@
     "keys:index": "node scripts/keys-index.mjs",
     "keys:validate": "node scripts/keys-validate.mjs",
     "keys:smoke": "python scripts/run_notebooks_smoke.py --timeout 300",
-    "keys:audit": "detect-secrets scan --baseline .secrets.baseline && npm --workspace backend audit --audit-level=high && npm --workspace frontend audit --audit-level=high"
+    "keys:audit": "detect-secrets scan --baseline .secrets.baseline && npm --workspace backend audit --audit-level=high && npm --workspace frontend audit --audit-level=high",
+    "postinstall": "echo 'Run pnpm verify:fast before committing'"
   },
   "dependencies": {
     "react": "18.3.1",
@@ -46,6 +51,8 @@
   "devDependencies": {
     "@types/pg": "^8.16.0",
     "concurrently": "^8.2.2",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
     "pg": "^8.16.3"
   },
   "overrides": {
@@ -64,5 +71,17 @@
       "@next/eslint-plugin-next>glob": "10.5.0",
       "vite": "7.3.1"
     }
+  },
+  "lint-staged": {
+    "frontend/**/*.{js,jsx,ts,tsx}": [
+      "prettier --check",
+      "eslint --max-warnings 0"
+    ],
+    "frontend/**/*.{json,css,md}": [
+      "prettier --check"
+    ],
+    "backend/**/*.ts": [
+      "eslint --max-warnings 0"
+    ]
   }
 }

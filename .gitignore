@@ -67,3 +67,6 @@ logs/
 outputs/**
 !outputs/smoke_report.json
 !outputs/smoke_report.md
+
+# Internal documentation (agent notes, planning docs - not for public repo)
+internal/
