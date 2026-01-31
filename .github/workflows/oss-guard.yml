@@ -1,0 +1,63 @@
+name: OSS Safety Guard
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  oss-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Check for internal/ folder tracking
+        run: |
+          # Check if any internal/ files are tracked in git
+          INTERNAL_TRACKED=$(git ls-files | grep "^internal/" | wc -l)
+          if [ "$INTERNAL_TRACKED" -gt 0 ]; then
+            echo "❌ ERROR: Found $INTERNAL_TRACKED files in internal/ tracked by git"
+            echo "These files should NOT be in the public repo:"
+            git ls-files | grep "^internal/"
+            exit 1
+          fi
+          echo "✅ No internal/ files tracked in git"
+
+      - name: Check for agent/planning docs outside internal/
+        run: |
+          # Check for agent markdown files in root or other locations
+          PATTERNS='AGENTS.md|CLAUDE.md|\.claude/|prompts\.chat|_AGENTS|_CLAUDE'
+          VIOLATIONS=$(git ls-files | grep -E "$PATTERNS" | grep -v "^internal/" | wc -l)
+          if [ "$VIOLATIONS" -gt 0 ]; then
+            echo "❌ ERROR: Found agent/planning docs outside internal/:"
+            git ls-files | grep -E "$PATTERNS" | grep -v "^internal/"
+            exit 1
+          fi
+          echo "✅ No agent docs found outside internal/"
+
+      - name: Check .gitignore includes internal/
+        run: |
+          if ! grep -q "^internal/" .gitignore; then
+            echo "❌ ERROR: .gitignore does not include 'internal/'"
+            exit 1
+          fi
+          echo "✅ .gitignore properly excludes internal/"
+
+      - name: Verify no sensitive files in PR
+        run: |
+          # Check for common sensitive patterns in changed files
+          SENSITIVE_PATTERNS='password|secret|token|api_key|private_key'
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            CHANGED_FILES=$(git diff --name-only origin/main...HEAD | grep -E '\.(js|ts|json|env|md|yml|yaml)$' || true)
+            if [ -n "$CHANGED_FILES" ]; then
+              VIOLATIONS=$(git diff origin/main...HEAD -- $CHANGED_FILES | grep -iE "$SENSITIVE_PATTERNS" | grep -v "^#" | grep -v "example\|placeholder\|REDACTED\|_KEY_$" | wc -l)
+              if [ "$VIOLATIONS" -gt 0 ]; then
+                echo "⚠️ WARNING: Found potential sensitive data patterns in changes:"
+                git diff origin/main...HEAD -- $CHANGED_FILES | grep -iE "$SENSITIVE_PATTERNS" | grep -v "^#" | head -20
+              fi
+            fi
+          fi
+          echo "✅ Sensitive data check complete"
