@@ -8,6 +8,7 @@ from pathlib import Path
 from .indexer import KeysIndexer
 from .models import ArtifactType
 from .repro_generator import ReproPackGenerator
+from .validator import ArtifactValidator
 
 
 def setup_logging(verbose: bool = False):
@@ -49,6 +50,26 @@ def main():
         "--validate",
         action="store_true",
         help="Validate artifacts after indexing",
+    )
+    
+    parser.add_argument(
+        "--validate-only",
+        action="store_true",
+        help="Only validate existing index (don't re-index)",
+    )
+    
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        default=True,
+        help="Dry-run validation (don't actually execute code)",
+    )
+    
+    parser.add_argument(
+        "--no-dry-run",
+        action="store_true",
+        dest="dry_run",
+        help="Actually execute code during validation (USE WITH CAUTION)",
     )
     
     parser.add_argument(
@@ -95,7 +116,40 @@ def main():
         output_dir=args.output_dir,
     )
     
-    if args.index or (not args.query):
+    if args.validate_only:
+        # Load existing index and validate
+        artifacts = indexer.load_index()
+        if not artifacts:
+            print("Error: No index found. Run with --index first.")
+            return 1
+        
+        print(f"Validating {len(artifacts)} artifacts...")
+        validator = ArtifactValidator(
+            repo_root=args.repo_root,
+            dry_run=not args.no_dry_run if args.dry_run else True,
+        )
+        results = validator.validate_all(artifacts)
+        
+        # Save updated index with validation status
+        indexer.save_index()
+        
+        # Save validation report
+        report_path = validator.save_report()
+        
+        # Print summary
+        runnable = sum(1 for r in results.values() if r.status.value == "runnable")
+        partial = sum(1 for r in results.values() if r.status.value == "partially_runnable")
+        broken = sum(1 for r in results.values() if r.status.value == "broken")
+        
+        print(f"\nValidation Results:")
+        print(f"  Runnable: {runnable}")
+        print(f"  Partial: {partial}")
+        print(f"  Broken: {broken}")
+        print(f"\nReport saved to: {report_path}")
+        
+        return 0
+    
+    if args.index or (not args.query and not args.validate_only):
         # Default action: index everything
         artifacts = indexer.index(validate=args.validate)
         output_path = indexer.save_index()

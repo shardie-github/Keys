@@ -1,0 +1,189 @@
+name: Knowledge Reproducibility Check
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'keys-assets/**'
+      - 'runbook-keys/**'
+      - 'node-keys/**'
+      - 'tools/keys_indexer/**'
+      - '.github/workflows/knowledge-repro.yml'
+  pull_request:
+    branches: [main, master]
+    paths:
+      - 'keys-assets/**'
+      - 'runbook-keys/**'
+      - 'node-keys/**'
+      - 'tools/keys_indexer/**'
+  schedule:
+    # Run weekly on Sundays at 00:00 UTC
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+
+env:
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  index-and-validate:
+    runs-on: ubuntu-latest
+    name: Index and Validate Knowledge Artifacts
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r tools/keys_indexer/requirements.txt
+          pip install nbformat
+      
+      - name: Index knowledge artifacts
+        run: |
+          python -m tools.keys_indexer.cli \
+            --index \
+            --validate \
+            --verbose
+      
+      - name: Generate reproduction packs
+        run: |
+          python -m tools.keys_indexer.cli \
+            --validate-only \
+            --generate-repro
+      
+      - name: Upload index artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: kb_index
+          path: outputs/keys_index/kb_index.json
+          retention-days: 30
+      
+      - name: Upload validation report
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation_report
+          path: outputs/keys_index/validation_report.json
+          retention-days: 30
+      
+      - name: Upload repro packs
+        uses: actions/upload-artifact@v4
+        with:
+          name: repro_packs
+          path: outputs/repro_packs/*.zip
+          retention-days: 30
+
+  readiness-check:
+    runs-on: ubuntu-latest
+    name: ReadyLayer Readiness Check
+    needs: index-and-validate
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r tools/keys_indexer/requirements.txt
+          pip install nbformat
+      
+      - name: Download index
+        uses: actions/download-artifact@v4
+        with:
+          name: kb_index
+          path: outputs/keys_index/
+      
+      - name: Generate readiness report
+        run: |
+          python -c "
+          import sys
+          sys.path.insert(0, 'tools')
+          from pathlib import Path
+          from keys_indexer.indexer import KeysIndexer
+          from keys_indexer.readylayer import ReadyLayerAdapter
+          
+          indexer = KeysIndexer(repo_root=Path('.'))
+          artifacts = indexer.load_index()
+          
+          adapter = ReadyLayerAdapter(Path('.'))
+          readiness = adapter.convert(artifacts, fail_on_broken=True)
+          adapter.save(readiness)
+          
+          is_ready, failures = adapter.check_critical(readiness)
+          
+          print(f'Overall Status: {readiness[\"overall_status\"]}')
+          print(f'Readiness Score: {readiness[\"categories\"].get(\"notebook\", {}).get(\"readiness_score\", 0)}%')
+          
+          if not is_ready:
+              print('\\nCRITICAL: Knowledge assets are not reproducible!')
+              for failure in failures:
+                  print(f'  - {failure}')
+              sys.exit(1)
+          else:
+              print('\\nSUCCESS: All critical knowledge assets are reproducible.')
+          "
+      
+      - name: Upload readiness report
+        uses: actions/upload-artifact@v4
+        with:
+          name: readiness_report
+          path: outputs/keys_index/readiness.json
+          retention-days: 30
+      
+      - name: Comment PR with results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const readiness = JSON.parse(fs.readFileSync('outputs/keys_index/readiness.json', 'utf8'));
+            
+            const status = readiness.overall_status === 'ready' ? '✅ READY' : '❌ NOT READY';
+            
+            let body = `## Knowledge Reproducibility Check: ${status}\n\n`;
+            body += `**Generated:** ${new Date(readiness.generated_at).toLocaleString()}\n\n`;
+            
+            body += '### Category Status\n\n';
+            for (const [category, data] of Object.entries(readiness.categories)) {
+              const icon = data.status === 'ready' ? '✅' : data.status === 'degraded' ? '⚠️' : '❌';
+              body += `${icon} **${category}**: ${data.readiness_score}% (${data.runnable}/${data.total} runnable)\n`;
+            }
+            
+            if (readiness.recommendations.length > 0) {
+              body += '\n### Recommendations\n\n';
+              for (const rec of readiness.recommendations.slice(0, 5)) {
+                const icon = rec.severity === 'critical' ? '🔴' : '🟡';
+                body += `${icon} ${rec.message}\n`;
+              }
+            }
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
+
+  notify-on-failure:
+    runs-on: ubuntu-latest
+    name: Notify on Critical Failures
+    needs: readiness-check
+    if: failure()
+    
+    steps:
+      - name: Log failure
+        run: |
+          echo "CRITICAL: Knowledge reproducibility check failed!"
+          echo "Critical knowledge assets are broken or non-reproducible."
+          echo "Review the readiness report and validation artifacts."
