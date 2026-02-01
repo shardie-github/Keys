@@ -9,7 +9,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from ..keys_indexer.models import ArtifactType, Dependency, KnowledgeArtifact, RunnableStatus
+from .models import ArtifactType, Dependency, KnowledgeArtifact, RunnableStatus
 
 logger = logging.getLogger(__name__)
 
