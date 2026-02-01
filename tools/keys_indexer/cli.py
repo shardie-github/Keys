@@ -7,6 +7,7 @@ from pathlib import Path
 
 from .indexer import KeysIndexer
 from .models import ArtifactType
+from .repro_generator import ReproPackGenerator
 
 
 def setup_logging(verbose: bool = False):
@@ -63,6 +64,18 @@ def main():
     )
     
     parser.add_argument(
+        "--generate-repro",
+        action="store_true",
+        help="Generate reproduction packs for runnable artifacts",
+    )
+    
+    parser.add_argument(
+        "--repro-dir",
+        type=Path,
+        help="Directory for reproduction packs (default: <repo-root>/outputs/repro_packs)",
+    )
+    
+    parser.add_argument(
         "--verbose",
         action="store_true",
         help="Enable verbose logging",
@@ -97,6 +110,17 @@ def main():
             print(f"  Broken: {results['broken']}")
             if results["issues"]:
                 print(f"\n  Issues found: {len(results['issues'])}")
+        
+        if args.generate_repro:
+            print("\nGenerating reproduction packs...")
+            generator = ReproPackGenerator(
+                repo_root=args.repo_root,
+                output_dir=args.repro_dir,
+            )
+            packs = generator.generate_all(indexer.artifacts, runnable_only=True)
+            print(f"Generated {len(packs)} reproduction packs")
+            for artifact_id, pack_path in packs.items():
+                print(f"  {artifact_id}: {pack_path}")
     
     if args.query:
         # Load existing index and query
